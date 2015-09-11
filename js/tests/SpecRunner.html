@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Drilldown Widget Jasmine Spec Runner v2.3.4</title>
+
+        <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.3.4/jasmine_favicon.png">
+        <link rel="stylesheet" href="lib/jasmine-2.3.4/jasmine.css">
+
+        <script>
+            var dojoConfig = {
+                async: true,          
+                paths: {
+                    "app": location.pathname.replace(/\/[^/]+$/, "") + "/../../js"
+                }
+            };
+        </script>
+
+        <script src="lib/jasmine-2.3.4/jasmine.js"></script>
+        <script src="lib/jasmine-2.3.4/jasmine-html.js"></script>
+        <script src="lib/jasmine-2.3.4/console.js"></script>
+        <script src="lib/jasmine-2.3.4/boot.js"></script>
+        <script src="lib/sinon/sinon.js"></script>
+
+
+        <!-- include source files here... -->
+        <script src="//js.arcgis.com/3.13/"></script>
+
+        <!-- Helpers -->
+        <script src="helpers/llpgResults.js"></script>
+        <script src="helpers/agsllpgResults.js"></script>
+
+        <!-- include spec files here... -->
+        <script src="spec/DrilldownBaseSpec.js"></script>
+        <script src="spec/LocatorBaseSpec.js"></script>
+        <script src="spec/LLPGLocatorSpec.js"></script>
+        <script src="spec/AGS_LLPGLocatorSpec.js"></script>
+
+    </head>
+
+    <body>
+        <div id="widgetBase"></div>
+    </body>
+
+</html>

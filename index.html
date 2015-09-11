@@ -1,0 +1,188 @@
+﻿<!--
+ | Copyright 2015 ESRI (UK) Limited
+ |
+ | Licensed under the Apache License, Version 2.0 (the "License");
+ | you may not use this file except in compliance with the License.
+ | You may obtain a copy of the License at
+ |
+ |    http://www.apache.org/licenses/LICENSE-2.0
+ |
+ | Unless required by applicable law or agreed to in writing, software
+ | distributed under the License is distributed on an "AS IS" BASIS,
+ | WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ | See the License for the specific language governing permissions and
+ | limitations under the License.
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Drilldown Widget</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />
+
+        <!-- ESRI CSS -->
+        <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.13/esri/css/esri.css" />
+        
+        <!-- Nearest CSS -->
+        
+
+        <style type="text/css">
+            a:hover,a:focus {
+                text-decoration: none;
+            }
+
+        </style>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script>
+            var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            var dojoConfig = {
+                async: true,
+                has: { "native-xhr2": false },
+                packages: [{
+                    name: "app",
+                    location: package_path + '/js'
+                }]
+            };
+        </script>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+        <script src="//js.arcgis.com/3.13/"></script>
+
+        <script type="text/javascript">
+            require([
+               "esri/config",
+               "esri/ServerInfo",
+               "esri/IdentityManager",
+                "app/Drilldown",
+                "app/Locators/LLPGLocator",
+                "app/Locators/AGSLLPGLocator",
+                "dojo/on",
+                "esri/SpatialReference",
+                "dojo/dom-construct"
+            ],
+            function (esriConfig, ServerInfo, esriId, DrillDown, LLPGLocator, AGSLLPGLocator, on, SpatialReference, domConstruct) {
+                var drillDown; 
+                
+                esriConfig.defaults.io.proxyUrl = "http://oauthtest.localtest.me/RadarNode/app/iss/23/wmt/proxy";
+                esriConfig.defaults.io.alwaysUseProxy = false;
+
+                var serverInfo = new ServerInfo();
+                serverInfo.server = 'https://altagsdev.esriuk.com/LocatorHub/arcgis/rest/services/LLPG_Edinburgh/ADDRESS/GeocodeServer';
+                serverInfo.tokenServiceUrl = 'https://altagsdev.esriuk.com/LocatorHub/arcgis/tokens/generateToken';
+
+                esriId.registerServers([serverInfo]);
+
+                var llpgLocator = new LLPGLocator("http://vm-alt-as102/LocatorHub/arcgis/rest/services/LLPG_Edinburgh/ADDRESS/GeocodeServer?Fuzzy=true");
+                llpgLocator.setOutSpatialReference(new SpatialReference({ wkid: 27700 }));
+
+
+                drillDown = new DrillDown({
+                    // Need to set the default SR as it gets it from the map and completely ignores the one set for the Locator
+                    _defaultSR: new SpatialReference({ wkid: 27700 }),
+                    sources: [{
+                        locator: llpgLocator,
+                        singleLineFieldName: "LH_ADDRESS",
+                        outFields: ["*"],
+                        name: "LH 5.3 LLPG",
+                        maxResults: 250
+                    }, {
+                        locator: new AGSLLPGLocator("http://altagsdev.esriuk.com/arcgis/rest/services/LLPG_Edinburgh_UKAddress_Current_Locator/GeocodeServer?token=00000060E9xlSZAV8drhRLCEwAFYDnGzJF/YrNtF+fj8vLvkBsbNziyu/XcjdH9vem8Dps8+twopJzO7S961aEiFVHQTuyC2x33FGQxQxD0slmc/2rI="),
+                        singleLineFieldName: "Full_Address",
+                        outFields: ["*"],
+                        name: "AGS LH 5.3 LLPG",
+                        maxResults: 10
+                    }],
+                    enableSourcesMenu: true,
+                    enableSuggestions: false
+                }, "searchWidget");
+
+                on(drillDown, "search-results", function (e) {
+                    if (e.results[0].PickListItems.length > 0) {
+                        domConstruct.empty("results");
+                        var res = e.results[0].PickListItems;
+
+                        
+                        for (var i = 0; i < res.length; i++) {
+                            // Add top level
+                            var streetList = domConstruct.place("<li>" + res[i].Description + "</li>", "results");
+
+                            var premiseList = domConstruct.place("<ul></ul>", streetList);
+
+                            for (var j = 0; j < res[i].Addresses.length; j++) {
+                                // Add premise
+                                if (res[i].Addresses[j].Addresses.length > 1) {
+                                    var dd = domConstruct.place("<li>" + res[i].Addresses[j].Description + "</li>", premiseList);
+
+                                    if (res[i].Addresses[j].Addresses.length > 0) {
+
+                                        var subPremiseList = domConstruct.place("<ul></ul>", dd);
+
+                                        for (var k = 0; k < res[i].Addresses[j].Addresses.length; k++) {
+                                            domConstruct.place("<li>" + res[i].Addresses[j].Addresses[k].address + "</li>", subPremiseList);
+                                        }
+                                    }
+                                }
+                                else {
+                                    
+                                    domConstruct.place("<li>" + res[i].Addresses[j].Addresses[0].address + "</li>", premiseList);
+                                }
+                            }
+                        }
+                    }
+                });
+
+            });
+
+        </script>
+    </head>
+    <body class="claro">
+        <div class="container">
+
+            <!-- Jumbotron -->
+            <div class="jumbotron">
+                <h1>Drilldown Locator Widget</h1>
+                <p class="lead">Some examples of using the Drilldown Locator widget with Bootstrap CSS for style.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Widget</h2>
+                    <div id="searchWidget"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div>
+                        <ul id="results">
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Site footer -->
+            <!--<footer class="footer">
+                <p>&copy; Company 2014</p>
+            </footer>-->
+
+        </div>
+        <!-- /container -->
+
+        
+    </body>
+</html>
