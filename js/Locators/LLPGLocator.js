@@ -34,42 +34,28 @@ function (declare, _LocatorBase, PickList, PickListItem, Deferred) {
         resultsPickList: null,
         streetGrouping: ["ADMINISTRATIVE_AREA", "TOWN_NAME", "LOCALITY_NAME", "STREET_DESCRIPTOR"],
         premiseGrouping: ["PAO_TEXT", "PAO_END_SUFFIX", "PAO_END_NUMBER", "PAO_START_SUFFIX", "PAO_START_NUMBER"],
+        paoFields: {
+            PAO_TEXT: "PAO_TEXT",
+            PAO_START_NUMBER: "PAO_START_NUMBER",
+            PAO_START_SUFFIX: "PAO_START_SUFFIX",
+            PAO_END_NUMBER: "PAO_END_NUMBER",
+            PAO_END_SUFFIX: "PAO_END_SUFFIX"
+        },
 
+        saoFields: {
+            SAO_TEXT: "SAO_TEXT",
+            SAO_START_NUMBER: "SAO_START_NUMBER",
+            SAO_START_SUFFIX: "SAO_START_SUFFIX",
+            SAO_END_NUMBER: "SAO_END_NUMBER",
+            SAO_END_SUFFIX: "SAO_END_SUFFIX"
+        },
 
         constructor: function () {
             this.inherited(arguments);
         },
 
        
-        _getPAOText: function(attributes) {
-            var tpao = "", numberRange = "";
-
-            if (this._isNullOrEmpty(attributes.PAO_TEXT) === false) {
-                tpao = attributes.PAO_TEXT.trim();   
-            }
-            numberRange = this._paoSaoNumberRange(attributes.PAO_START_NUMBER, attributes.PAO_START_SUFFIX, attributes.PAO_END_NUMBER, attributes.PAO_END_SUFFIX);
-
-            if (this._isNullOrEmpty(numberRange) === false) {
-                tpao += numberRange;
-            }
-
-            return tpao.trim();
-        },
-
-        _getSAOText: function(attributes) {
-            var tsao = "", numberRange = "";
-
-            if (this._isNullOrEmpty(attributes.SAO_TEXT) === false) {
-                tsao = attributes.SAO_TEXT.trim();
-            }
-            numberRange = this._paoSaoNumberRange(attributes.SAO_START_NUMBER, attributes.SAO_START_SUFFIX, attributes.SAO_END_NUMBER, attributes.SAO_END_SUFFIX);
-
-            if (this._isNullOrEmpty(numberRange) === false) {
-                tsao += numberRange;
-            }
-
-            return tsao.trim();
-        },
+        
 
         _getListLevelDescription: function(level, attributes) {
             var description = "";

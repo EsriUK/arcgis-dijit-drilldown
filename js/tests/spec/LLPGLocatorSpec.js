@@ -44,7 +44,6 @@ describe("A set of tests for the LLPG Locator", function () {
         done();
     });
 
-
     it("should return an address value from the selected fields", function (done) {
         var addressFields = ["TOWN_NAME", "LOCALITY_NAME", "STREET_DESCRIPTOR"],
             finalAddress = "High Street, local, test town";
@@ -54,14 +53,12 @@ describe("A set of tests for the LLPG Locator", function () {
         done();
     });
 
-
     it("should populate a picklist", function (done) {
         widget._buildPickList(llpgResults).then(function () {
             expect(widget.resultsPickList.PickListItems.length).toEqual(1);
             done();
         });
     });
-
 
     it("should return the correct text for the PAO", function (done) {
         var correctText = "4A", paoValue = "", testAttrs = JSON.parse(JSON.stringify(testAttributes));
@@ -114,5 +111,12 @@ describe("A set of tests for the LLPG Locator", function () {
         expect(descriptionVal).toEqual("");
 
         done();
+    });
+
+    it("should populate a picklist with a single address", function (done) {
+        widget._buildPickList(singleLlpgResult).then(function () {
+            expect(widget.resultsPickList.PickListItems.length).toEqual(1);
+            done();
+        });
     });
 });

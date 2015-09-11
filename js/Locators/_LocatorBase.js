@@ -76,6 +76,21 @@ function (declare, Locator, PickList) {
         locatorType: "None",
         streetGrouping: [],
         premiseGrouping: [],
+        paoFields: {
+            PAO_TEXT: "",
+            PAO_START_NUMBER: "",
+            PAO_START_SUFFIX: "",
+            PAO_END_NUMBER: "",
+            PAO_END_SUFFIX: ""
+        },
+
+        saoFields: {
+            SAO_TEXT: "",
+            SAO_START_NUMBER: "",
+            SAO_START_SUFFIX: "",
+            SAO_END_NUMBER: "",
+            SAO_END_SUFFIX: ""
+        },
 
         constructor: function () {
 
@@ -142,7 +157,6 @@ function (declare, Locator, PickList) {
             return aa.length - bb.length;
         },
 
-
         _paoSaoNumberRange: function (startNumber, startSuffix, endNumber, endSuffix) {
             var start = startNumber.trim() + startSuffix.trim(),
                 end = endNumber.trim() + endSuffix.trim();
@@ -157,7 +171,35 @@ function (declare, Locator, PickList) {
             return start + end;
         },
 
-        
+        _getPAOText: function (attributes) {
+            var tpao = "", numberRange = "";
+
+            if (this._isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
+                tpao = attributes[this.paoFields.PAO_TEXT].trim();
+            }
+            numberRange = this._paoSaoNumberRange(attributes[this.paoFields.PAO_START_NUMBER], attributes[this.paoFields.PAO_START_SUFFIX], attributes[this.paoFields.PAO_END_NUMBER], attributes[this.paoFields.PAO_END_SUFFIX]);
+
+            if (this._isNullOrEmpty(numberRange) === false) {
+                tpao += numberRange;
+            }
+
+            return tpao.trim();
+        },
+
+        _getSAOText: function (attributes) {
+            var tsao = "", numberRange = "";
+
+            if (this._isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
+                tsao = attributes[this.saoFields.SAO_TEXT].trim();
+            }
+            numberRange = this._paoSaoNumberRange(attributes[this.saoFields.SAO_START_NUMBER], attributes[this.saoFields.SAO_START_SUFFIX], attributes[this.saoFields.SAO_END_NUMBER], attributes[this.saoFields.SAO_END_SUFFIX]);
+
+            if (this._isNullOrEmpty(numberRange) === false) {
+                tsao += numberRange;
+            }
+
+            return tsao.trim();
+        },
 
         _getGroupedAddressValue: function (fields, attributes) {
             var i = 0, iL = fields.length, addressValue = "", fieldName, fieldValue, addressParts = [];

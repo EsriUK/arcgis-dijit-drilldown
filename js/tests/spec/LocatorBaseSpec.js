@@ -39,7 +39,6 @@ describe("A set of tests for the Base Locator", function () {
         done();
     });
 
-
     it("should run the _geocodeHandler", function (done) {
         require(["dojo/Deferred"], function (Deferred) {
             widget._successHandler = function (results) {
@@ -57,5 +56,23 @@ describe("A set of tests for the Base Locator", function () {
 
             
         });
+    });
+
+    it("should sort the results by the description property", function (done) {
+        var descArray = [
+            { SortDescription: "HILL COURT" },
+            { SortDescription: "HILL STREET SOUTH LANE" },
+            { SortDescription: "HILL STREET" },
+            { SortDescription: "HILL STREET NORTH LANE" },
+            { SortDescription: "HILL SQUARE" },
+            { SortDescription: "HILL PLACE" }
+        ];
+
+        descArray.sort(widget._descriptionSort);
+
+        expect(descArray[0].SortDescription).toEqual("HILL COURT");
+        expect(descArray[5].SortDescription).toEqual("HILL STREET SOUTH LANE");
+
+        done();
     });
 });
