@@ -18,96 +18,94 @@
 
 define([
     "dojo/_base/declare",
-    "./_LocatorBase",
-    "./PickList",
-    "./PickListItem",
-    "dojo/Deferred"
+    "./_LocatorBase"
 ],
-function (declare, _LocatorBase, PickList, PickListItem, Deferred) {
+function (declare, _LocatorBase) {
     // module:
     //      _LocatorBase
 
     return declare([_LocatorBase], {
         // summary:
-        //		Base class for Drilldown Locators.
+        //		AGS LLPG Locator.
+
         locatorType: "AGS_LLPG",
         resultsPickList: null,
         streetGrouping: ["AdminArea", "Town", "LocalityName", "StreetDescriptor"],
         premiseGrouping: ["PAOText", "PAONumberRange"],
 
+        paoFields: {
+            PAO_TEXT: "PAOText",
+            PAO_START_NUMBER: "PAO_START_NUMBER",
+            PAO_START_SUFFIX: "PAO_START_SUFFIX",
+            PAO_END_NUMBER: "PAO_END_NUMBER",
+            PAO_END_SUFFIX: "PAO_END_SUFFIX",
+            PAONumberRange: "PAONumberRange"
+        },
+
+        saoFields: {
+            SAO_TEXT: "SAOText",
+            SAO_START_NUMBER: "SAO_START_NUMBER",
+            SAO_START_SUFFIX: "SAO_START_SUFFIX",
+            SAO_END_NUMBER: "SAO_END_NUMBER",
+            SAO_END_SUFFIX: "SAO_END_SUFFIX"
+        },
+
         constructor: function () {
             this.inherited(arguments);
-        },      
+        },
 
-        
+        _getPAOText: function (attributes) {
+            var tpao = "", numberRange = "";
 
-        _buildPickList: function (results) {
-            var result = new Deferred(), i = 0, iL = 0, pickList = {}, premisePicklist = {}, candidates, candidate, attributes, addressKey;
+            if (this._isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
+                tpao = attributes[this.paoFields.PAO_TEXT].trim();
+            }
+            numberRange = attributes.PAONumberRange.trim();
 
-            this.resultsPickList = new PickList();
-
-            // Build picklist entries by concatenating fields in list
-            if (results.candidates.length > 0) {
-                candidates = results.candidates;
-                
-                for (i = 0, iL = candidates.length; i < iL; i++) {
-                    candidate = candidates[i];
-                    attributes = candidate.attributes;
-
-                    // Build up street level grouping
-                    addressKey = this._getGroupedAddressValue(this.streetGrouping, attributes);
-
-                    if (addressKey.length > 0) {
-                        if (pickList.hasOwnProperty(addressKey)) {
-                            pickList[addressKey].addCandidate(candidate);
-                        }
-                        else {
-                            pickList[addressKey] = new PickListItem({ Description: addressKey, Addresses: [candidate] });
-                        }
-                    }
-                    
-
-                }
-
-                for (var key in pickList) {
-                    // Now do premise lists
-                    
-                    if (pickList[key].Addresses.length > 1) {
-                        var item = new PickListItem({ Description: key });
-
-                        // We have more than 1 results so need another picklist level
-                        var children = pickList[key].Addresses;
-
-                        for (var k = 0, kL = children.length; k < kL; k++) {
-                            addressKey = this._getGroupedAddressValue(this.premiseGrouping, children[k].attributes);
-
-                            if (addressKey.length > 0) {
-                                if (premisePicklist.hasOwnProperty(addressKey)) {
-                                    premisePicklist[addressKey].addCandidate(children[k]);
-                                }
-                                else {
-                                    premisePicklist[addressKey] = new PickListItem({ Description: addressKey, Addresses: [children[k]] });
-                                }
-                            }
-                            
-                        }
-
-                        for (var key in premisePicklist) {
-                            item.addCandidate(premisePicklist[key])
-                        }
-
-                        this.resultsPickList.addItem(item);
-                    }
-                    else {
-                        // no children
-                        this.resultsPickList.addItem(pickList[key]);
-                    }
-                }
-                result.resolve();
+            if (this._isNullOrEmpty(numberRange) === false) {
+                tpao += numberRange;
             }
 
+            return tpao.trim();
+        },
 
-            return result.promise;
+        _getSAOText: function (attributes) {
+            var tsao = "", numberRange = "";
+
+            if (this._isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
+                tsao = attributes[this.saoFields.SAO_TEXT].trim();
+            }
+            numberRange = attributes.SAONumberRange.trim();
+
+            if (this._isNullOrEmpty(numberRange) === false) {
+                tsao += numberRange;
+            }
+
+            return tsao.trim();
+        },
+
+        _getListLevelDescription: function (level, attributes) {
+            // summary:
+            //      Gets the correct description depending on the address level
+            // tags:
+            //      private
+
+            var description = "";
+
+            switch (level) {
+                case 1: // Sub Premise
+                    description = [attributes[this.paoFields.PAO_TEXT], attributes[this.paoFields.PAONumberRange]].filter(Boolean).join(", ");
+                    break;
+
+                case 2: // Street
+                    description = [attributes.StreetDescriptor.trim(), attributes.LocalityName.trim(), attributes.Town.trim(), attributes.AdminArea.trim()].filter(Boolean).join(", ");
+                    break;
+
+                default:
+                    break;
+            }
+
+            return description;
         }
     });
 });

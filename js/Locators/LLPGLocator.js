@@ -18,18 +18,16 @@
 
 define([
     "dojo/_base/declare",
-    "./_LocatorBase",
-    "./PickList",
-    "./PickListItem",
-    "dojo/Deferred"
+    "./_LocatorBase"
 ],
-function (declare, _LocatorBase, PickList, PickListItem, Deferred) {
+function (declare, _LocatorBase) {
     // module:
-    //      _LocatorBase
+    //      LLPGLocator
 
     return declare([_LocatorBase], {
         // summary:
-        //		Base class for Drilldown Locators.
+        //		LLPG Locator.
+
         locatorType: "LLPG",
         resultsPickList: null,
         streetGrouping: ["ADMINISTRATIVE_AREA", "TOWN_NAME", "LOCALITY_NAME", "STREET_DESCRIPTOR"],
@@ -50,14 +48,47 @@ function (declare, _LocatorBase, PickList, PickListItem, Deferred) {
             SAO_END_SUFFIX: "SAO_END_SUFFIX"
         },
 
+
         constructor: function () {
             this.inherited(arguments);
         },
 
-       
-        
+        _getPAOText: function (attributes) {
+            var tpao = "", numberRange = "";
+
+            if (this._isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
+                tpao = attributes[this.paoFields.PAO_TEXT].trim();
+            }
+            numberRange = this._paoSaoNumberRange(attributes[this.paoFields.PAO_START_NUMBER], attributes[this.paoFields.PAO_START_SUFFIX], attributes[this.paoFields.PAO_END_NUMBER], attributes[this.paoFields.PAO_END_SUFFIX]);
+
+            if (this._isNullOrEmpty(numberRange) === false) {
+                tpao += numberRange;
+            }
+
+            return tpao.trim();
+        },
+
+        _getSAOText: function (attributes) {
+            var tsao = "", numberRange = "";
+
+            if (this._isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
+                tsao = attributes[this.saoFields.SAO_TEXT].trim();
+            }
+            numberRange = this._paoSaoNumberRange(attributes[this.saoFields.SAO_START_NUMBER], attributes[this.saoFields.SAO_START_SUFFIX], attributes[this.saoFields.SAO_END_NUMBER], attributes[this.saoFields.SAO_END_SUFFIX]);
+
+            if (this._isNullOrEmpty(numberRange) === false) {
+                tsao += numberRange;
+            }
+
+            return tsao.trim();
+        },
 
         _getListLevelDescription: function(level, attributes) {
+            // summary:
+            //      Gets the correct description depending on the address level
+            // tags:
+            //      private
+
             var description = "";
 
             switch (level) {
@@ -74,104 +105,7 @@ function (declare, _LocatorBase, PickList, PickListItem, Deferred) {
             }
 
             return description;
-        },
-
-        
-
-        _buildPickList: function (results) {
-            var result = new Deferred(), i = 0, iL = 0, pickList = {}, premisePicklist = {}, candidates, candidate, attributes, addressKey,
-                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate;
-
-            this.resultsPickList = new PickList();
-
-            // Build picklist entries by concatenating fields in list
-            if (results.candidates.length > 0) {
-                candidates = results.candidates;
-                
-                for (i = 0, iL = candidates.length; i < iL; i++) {
-                    candidate = candidates[i];
-                    attributes = candidate.attributes;
-
-                    // Build up street level grouping
-                    addressKey = this._getGroupedAddressValue(this.streetGrouping, attributes);
-
-                    if (addressKey.length > 0) {
-                        if (pickList.hasOwnProperty(addressKey)) {
-                            pickList[addressKey].addCandidate(candidate);
-                        }
-                        else {
-                            pickList[addressKey] = new PickListItem({
-                                SortDescription: attributes.STREET_DESCRIPTOR,
-                                Description: this._getListLevelDescription(2, attributes),
-                                Addresses: [candidate],
-                                Level: 2
-                            });
-                        }
-                    }
-                }
-
-                for (key in pickList) {
-                    // Now do premise lists
-                    if (pickList.hasOwnProperty(key)) {
-
-                        premisePicklist = {};
-
-                        if (pickList[key].Addresses.length > 1) {
-                            item = new PickListItem({ Description: key });
-
-                            // We have more than 1 results so need another picklist level
-                            children = pickList[key].Addresses;
-
-                            for (k = 0, kL = children.length; k < kL; k++) {
-                                addressKey = this._getGroupedAddressValue(this.premiseGrouping, children[k].attributes);
-                                childAddressCandidate = null;
-
-                                if (addressKey.length > 0) {
-                                    childAddressCandidate = children[k];
-                                    childAddressCandidate.SortDescription = this._getSAOText(children[k].attributes);
-
-                                    if (premisePicklist.hasOwnProperty(addressKey)) {
-                                        premisePicklist[addressKey].addCandidate(childAddressCandidate);
-                                    }
-                                    else {
-                                        premisePicklist[addressKey] = new PickListItem({
-                                            SortDescription: this._getPAOText(children[k].attributes),
-                                            Description: this._getListLevelDescription(1, children[k].attributes),
-                                            Addresses: [childAddressCandidate],
-                                            Level: 1
-                                        });
-                                    }
-                                }
-                            }
-
-                            for (premKey in premisePicklist) {
-                                if (premisePicklist.hasOwnProperty(premKey)) {
-                                    premisePicklist[premKey].Addresses.sort(this._alphanumSort);
-                                    item.addCandidate(premisePicklist[premKey]);
-                                }
-                            }
-
-                            // Sort premise list
-                            item.Addresses.sort(this._alphanumSort);
-
-                            this.resultsPickList.addItem(item);
-                        }
-                        else {
-                            // no children
-                            this.resultsPickList.addItem(pickList[key]);
-                        }
-                    }
-                }
-
-                // Sort street list
-                this.resultsPickList.PickListItems.sort(this._descriptionSort);
-                this.resultsPickList.PickListItems.reverse();
-
-                result.resolve();
-            }
-
-
-            return result.promise;
         }
+        
     });
 });
