@@ -67,8 +67,6 @@
         <script type="text/javascript">
             require([
                "esri/config",
-               "esri/ServerInfo",
-               "esri/IdentityManager",
                 "app/Drilldown",
                 "app/Locators/LLPGLocator",
                 "app/Locators/AGSLLPGLocator",
@@ -76,17 +74,11 @@
                 "esri/SpatialReference",
                 "dojo/dom-construct"
             ],
-            function (esriConfig, ServerInfo, esriId, DrillDown, LLPGLocator, AGSLLPGLocator, on, SpatialReference, domConstruct) {
+            function (esriConfig, DrillDown, LLPGLocator, AGSLLPGLocator, on, SpatialReference, domConstruct) {
                 var drillDown; 
                 
                 esriConfig.defaults.io.proxyUrl = "http://oauthtest.localtest.me/RadarNode/app/iss/23/wmt/proxy";
                 esriConfig.defaults.io.alwaysUseProxy = false;
-
-                var serverInfo = new ServerInfo();
-                serverInfo.server = 'https://altagsdev.esriuk.com/LocatorHub/arcgis/rest/services/LLPG_Edinburgh/ADDRESS/GeocodeServer';
-                serverInfo.tokenServiceUrl = 'https://altagsdev.esriuk.com/LocatorHub/arcgis/tokens/generateToken';
-
-                esriId.registerServers([serverInfo]);
 
                 var llpgLocator = new LLPGLocator("http://vm-alt-as102/LocatorHub/arcgis/rest/services/LLPG_Edinburgh/ADDRESS/GeocodeServer?Fuzzy=true");
                 llpgLocator.setOutSpatialReference(new SpatialReference({ wkid: 27700 }));
@@ -101,52 +93,10 @@
                         outFields: ["*"],
                         name: "LH 5.3 LLPG",
                         maxResults: 250
-                    }, {
-                        locator: new AGSLLPGLocator("http://altagsdev.esriuk.com/arcgis/rest/services/LLPG_Edinburgh_UKAddress_Current_Locator/GeocodeServer?token=IByKR3peVjhqaH-U44A70RUjyj5cqKiNSHga5cpK3LXL_xAexwuEuKDT_0XCw386Gi-YO85yQbZypeBBRDvHtd6kPYjGyTGgMkib0SiGGyk."),
-                        singleLineFieldName: "Full_Address",
-                        outFields: ["*"],
-                        name: "AGS LH 5.3 LLPG",
-                        maxResults: 10
                     }],
                     enableSourcesMenu: true,
                     enableSuggestions: false
                 }, "searchWidget");
-
-                //on(drillDown, "search-results", function (e) {
-                //    if (e.results[0].PickListItems.length > 0) {
-                //        domConstruct.empty("results");
-                //        var res = e.results[0].PickListItems;
-
-                        
-                //        for (var i = 0; i < res.length; i++) {
-                //            // Add top level
-                //            var streetList = domConstruct.place("<li>" + res[i].Description + "</li>", "results");
-
-                //            var premiseList = domConstruct.place("<ul></ul>", streetList);
-
-                //            for (var j = 0; j < res[i].Addresses.length; j++) {
-                //                // Add premise
-                //                if (res[i].Addresses[j].Addresses.length > 1) {
-                //                    var dd = domConstruct.place("<li>" + res[i].Addresses[j].Description + "</li>", premiseList);
-
-                //                    if (res[i].Addresses[j].Addresses.length > 0) {
-
-                //                        var subPremiseList = domConstruct.place("<ul></ul>", dd);
-
-                //                        for (var k = 0; k < res[i].Addresses[j].Addresses.length; k++) {
-                //                            domConstruct.place("<li>" + res[i].Addresses[j].Addresses[k].address + "</li>", subPremiseList);
-                //                        }
-                //                    }
-                //                }
-                //                else {
-                                    
-                //                    domConstruct.place("<li>" + res[i].Addresses[j].Addresses[0].address + "</li>", premiseList);
-                //                }
-                //            }
-                //        }
-                //    }
-                //});
-
             });
 
         </script>
