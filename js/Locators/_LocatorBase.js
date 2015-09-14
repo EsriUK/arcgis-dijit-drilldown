@@ -124,6 +124,9 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
         },
 
         _descriptionSort: function (a, b) {
+            // summary:
+            //      Sorts the items of an array by their Description
+
             return a.SortDescription.trim().localeCompare(b.SortDescription.trim());
         },
 
