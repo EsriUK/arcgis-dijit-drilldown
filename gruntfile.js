@@ -1,10 +1,12 @@
-﻿module.exports = function (grunt) {
+﻿/*global grunt, module, require */
+
+module.exports = function (grunt) {
 
     var gruntconfig = {
         jshint: {
             all: [
-    			'Gruntfile.js',
-    			'tasks/**/*.js'
+                'Gruntfile.js',
+                'tasks/**/*.js'
             ],
             options: {
                 jshintrc: '.jshintrc'

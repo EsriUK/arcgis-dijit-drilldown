@@ -2,6 +2,28 @@ arcgis-dijit-drilldown
 ====================
 [![Build Status](https://travis-ci.org/EsriUK/arcgis-dijit-drilldown.svg?branch=master)](https://travis-ci.org/EsriUK/arcgis-dijit-drilldown) [![Coverage Status](https://coveralls.io/repos/EsriUK/arcgis-dijit-drilldown/badge.svg?branch=master)](https://coveralls.io/r/EsriUK/arcgis-dijit-drilldown?branch=master) [![Code Climate](https://codeclimate.com/github/EsriUK/arcgis-dijit-drilldown/badges/gpa.svg)](https://codeclimate.com/github/EsriUK/arcgis-dijit-drilldown)
 
+## Features
+The drilldown widget provides hierarchical address search results for LLPG Locators.
+
+The drilldown widget extends the functionality of the Esri Search widget, this means you use it in the same way. See the Esri Search widget doc [here](https://developers.arcgis.com/javascript/jsapi/search-amd.html)
+
+## Quickstart
+
+```javascript	
+myWidget = new Drilldown({
+	sources: [{
+		locator: new LLPGLocator("http://myserver/mylocator/ADDRESS/GeocodeServer"),
+        singleLineFieldName: "LH_ADDRESS",
+        outFields: ["*"],
+        name: "LH 5.3 LLPG",
+        maxResults: 250	
+	}]
+}, "DrilldownWidget");
+
+myWidget.startup();
+```
+ [New to Github? Get started here.](https://github.com/)
+
 
 ## Issues
 
