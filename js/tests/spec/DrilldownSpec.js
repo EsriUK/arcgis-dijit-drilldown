@@ -1,11 +1,11 @@
 ﻿
 
-describe("A set of tests for the Drilldown base widget", function () {
-    var _DrilldownBase, widget, server,
+describe("A set of tests for the Drilldown widget", function () {
+    var _Drilldown, widget, server,
         loadWidget = function (done) {
-            require(["app/_DrilldownBase"], function (_drilldownBase) {
-                widget = new _drilldownBase({}, 'widgetBase');
-                _DrilldownBase = _drilldownBase;
+            require(["app/Drilldown"], function (DrillDown) {
+                widget = new DrillDown({}, 'widget');
+                _Drilldown = DrillDown;
 
                 widget.startup();
                 done();
@@ -40,14 +40,5 @@ describe("A set of tests for the Drilldown base widget", function () {
         done();
     });
 
-    it("should replace the fields in the text with the values", function (done) {
-        var text = "blah blah {bob}, something else: {tings}. Then this happened {what}", values = {
-            bob: "Hello?",
-            tings: 1234,
-            what: "Morning"
-        }, finalText = "blah blah Hello?, something else: 1234. Then this happened Morning"
-
-        expect(widget._fieldReplace(text, values)).toEqual(finalText);
-        done();
-    });
+    
 });

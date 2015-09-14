@@ -134,7 +134,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 var tz = [], x = 0, y = -1, n = 0, i, j;
 
                 while (i = (j = t.charAt(x++)).charCodeAt(0)) {
-                    var m = (i === 46 || (i >= 48 && i <= 57));
+                    var m = (i == 46 || (i >= 48 && i <= 57));
                     if (m !== n) {
                         tz[++y] = "";
                         n = m;
@@ -150,7 +150,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             for (x = 0; aa[x] && bb[x]; x++) {
                 if (aa[x] !== bb[x]) {
                     var c = Number(aa[x]), d = Number(bb[x]);
-                    if (c === aa[x] && d === bb[x]) {
+                    if (c == aa[x] && d == bb[x]) {
                         return c - d;
                     }
                     return (aa[x] > bb[x]) ? 1 : -1;
@@ -287,7 +287,9 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                 result.resolve();
             }
-
+            else {
+                result.resolve();
+            }
 
             return result.promise;
         }

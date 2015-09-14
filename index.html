@@ -24,7 +24,9 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />
 
         <!-- ESRI CSS -->
+        <link rel="stylesheet" href="//js.arcgis.com/3.13/dijit/themes/claro/claro.css">
         <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.13/esri/css/esri.css" />
+        
         
         <!-- Nearest CSS -->
         
@@ -110,40 +112,40 @@
                     enableSuggestions: false
                 }, "searchWidget");
 
-                on(drillDown, "search-results", function (e) {
-                    if (e.results[0].PickListItems.length > 0) {
-                        domConstruct.empty("results");
-                        var res = e.results[0].PickListItems;
+                //on(drillDown, "search-results", function (e) {
+                //    if (e.results[0].PickListItems.length > 0) {
+                //        domConstruct.empty("results");
+                //        var res = e.results[0].PickListItems;
 
                         
-                        for (var i = 0; i < res.length; i++) {
-                            // Add top level
-                            var streetList = domConstruct.place("<li>" + res[i].Description + "</li>", "results");
+                //        for (var i = 0; i < res.length; i++) {
+                //            // Add top level
+                //            var streetList = domConstruct.place("<li>" + res[i].Description + "</li>", "results");
 
-                            var premiseList = domConstruct.place("<ul></ul>", streetList);
+                //            var premiseList = domConstruct.place("<ul></ul>", streetList);
 
-                            for (var j = 0; j < res[i].Addresses.length; j++) {
-                                // Add premise
-                                if (res[i].Addresses[j].Addresses.length > 1) {
-                                    var dd = domConstruct.place("<li>" + res[i].Addresses[j].Description + "</li>", premiseList);
+                //            for (var j = 0; j < res[i].Addresses.length; j++) {
+                //                // Add premise
+                //                if (res[i].Addresses[j].Addresses.length > 1) {
+                //                    var dd = domConstruct.place("<li>" + res[i].Addresses[j].Description + "</li>", premiseList);
 
-                                    if (res[i].Addresses[j].Addresses.length > 0) {
+                //                    if (res[i].Addresses[j].Addresses.length > 0) {
 
-                                        var subPremiseList = domConstruct.place("<ul></ul>", dd);
+                //                        var subPremiseList = domConstruct.place("<ul></ul>", dd);
 
-                                        for (var k = 0; k < res[i].Addresses[j].Addresses.length; k++) {
-                                            domConstruct.place("<li>" + res[i].Addresses[j].Addresses[k].address + "</li>", subPremiseList);
-                                        }
-                                    }
-                                }
-                                else {
+                //                        for (var k = 0; k < res[i].Addresses[j].Addresses.length; k++) {
+                //                            domConstruct.place("<li>" + res[i].Addresses[j].Addresses[k].address + "</li>", subPremiseList);
+                //                        }
+                //                    }
+                //                }
+                //                else {
                                     
-                                    domConstruct.place("<li>" + res[i].Addresses[j].Addresses[0].address + "</li>", premiseList);
-                                }
-                            }
-                        }
-                    }
-                });
+                //                    domConstruct.place("<li>" + res[i].Addresses[j].Addresses[0].address + "</li>", premiseList);
+                //                }
+                //            }
+                //        }
+                //    }
+                //});
 
             });
 
@@ -159,13 +161,11 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                     <h2>Widget</h2>
                     <div id="searchWidget"></div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                     <div>
                         <ul id="results">
 
@@ -174,6 +174,7 @@
                     </div>
                 </div>
             </div>
+            
 
             <!-- Site footer -->
             <!--<footer class="footer">

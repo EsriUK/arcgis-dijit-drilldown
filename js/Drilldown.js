@@ -20,25 +20,28 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang",
-    "dojo/promise/all",
     "dijit/_Widget",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
-    "./_DrilldownBase",
     "esri/dijit/Search",
-    "dojo/Deferred",
+    "dojo/dom-construct",
+    "dijit/layout/ContentPane", 
+    "dijit/TitlePane", 
+    "dojox/widget/TitleGroup",
+    "dojo/on",
     "dojo/i18n",
     "dojo/i18n!./nls/Drilldown"
-], function (declare, lang, all, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, _DrilldownBase, Search, Deferred, i18n) {
+], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, i18n) {
     
-    return declare([_Widget, _DrilldownBase, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
+    return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
         // description: 
         //      Search for and display address details in a hierarchical list
 
         
         baseClass: "drilldown",
         widgetsInTemplate: true,
-
+        resultsElement: null,
+        _titleGroups: [],
 
         constructor: function (args) {
             declare.safeMixin(this, args);
@@ -55,32 +58,156 @@ define([
             this.inherited(arguments);
         },
 
-        setupConnections: function () {
-            // summary:
-            //    wire events, and such
-            //
-
-        },
-
-
-        search: function (searchValue) {
+        search: function () {
             // Override the Search widget serach method
 
-            var result = new Deferred(), resultsArray;
+            var _this = this;
 
             this.inherited(arguments).then(function (res) {
-                var a = 0;
+                _this._buildPickListUi(res.results);
             });
 
             
         },
 
-        _hydrateResults: function (a, c) {
+        clear: function() {
+            this._clearPicklist();
+            this.inherited(arguments);
+        },
+
+        _hydrateResults: function (a) {
             if (a.PickListItems) {
                 return a;
             }
+            this.inherited(arguments);
+        },
+
+        _isNullOrEmpty: function (/*Anything*/ obj) {
+            // summary:
+            //		Checks to see if the passed in thing is undefined, null or empty.
+            // tags:
+            //		private
+
+            return (obj === undefined || obj === null || obj === '');
+        },
+
+        _clearPicklist: function() {
+            var m, mL;
+            if (this._titleGroups.length > 0) {
+                for (m = 0, mL = this._titleGroups.length; m < mL; m++) {
+                    this._titleGroups[m].destroy();
+                }
+                this._titleGroups = [];
+            }
+        },
+
+        _noResults: function() {
+            this._noResultsHTML(this.value);
+            this._showNoResultsMenu();
+        },
+
+        _buildPickListUi: function(results) {
+            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, subPremiseList, j = 0, jL = 0,
+                premiseTitleGroup, subPremiseTitleGroup, k = 0, kL = 0, m = 0, mL = 0;
+
+            // Clear list of title groups
+            if (this._titleGroups.length > 0) {
+                for (m = 0, mL = this._titleGroups.length; m < mL; m++) {
+                    this._titleGroups[m].destroy();
+
+                }
+                this._titleGroups = [];
+            }
+
+            // Check we have some results
+            if (!this._isNullOrEmpty(results) && !this._isNullOrEmpty(results[0]) && !this._isNullOrEmpty(results[0].PickListItems)) {
+                // Create the TitleGroup container
+                this.resultsElement = domConstruct.create("div", { id: "picklistResults" }, this.domNode, "last");
+                resultsContainer = new TitleGroup(null, this.resultsElement);
+
+                // Keep a list of all groups
+                this._titleGroups.push(resultsContainer);
+
+                // Get the picklist
+                pickListItems = results[0].PickListItems;
+                iL = pickListItems.length;
+
+                if (iL > 0) {
+                    if (iL > 1) {
+
+                        for (i = 0; i < iL; i++) {
+                            // Create the list of premises
+                            premiseList = [];
+                            if (!this._isNullOrEmpty(pickListItems[i].Addresses) && pickListItems[i].Addresses.length > 0) {
+
+                                // Create a title group to hold the premise list
+                                premiseTitleGroup = new TitleGroup();
+                                premiseList = pickListItems[i].Addresses;
+
+                                for (j = 0, jL = premiseList.length; j < jL; j++) {
+                                    // Do we have a sub premise list?
+                                    if (!this._isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
+                                        subPremiseTitleGroup = new TitleGroup();
+                                        subPremiseList = premiseList[j].Addresses;
+
+                                        for (k = 0, kL = subPremiseList.length; k < kL; k++) {
+                                            subPremiseTitleGroup.addChild(new ContentPane({
+                                                content: "<span class='drilldownResult'>" + subPremiseList[k].address + "</span>"
+                                            }));
+                                        }
+                                        subPremiseTitleGroup.startup();
+                                        premiseTitleGroup.addChild(new TitlePane({
+                                            title: premiseList[j].Description,
+                                            content: subPremiseTitleGroup,
+                                            open: false
+                                        }));
+                                    }
+                                    else {
+                                        // Single premise
+                                        premiseTitleGroup.addChild(new ContentPane({
+                                            content: "<span class='drilldownResult'>" + premiseList[j].Addresses[0].address + "</span>"
+                                        }));
+                                    }
+                                }
+
+                                premiseTitleGroup.startup();
+                            }
+
+                            // Output each street as a title pane
+                            resultsContainer.addChild(new TitlePane({
+                                title: pickListItems[i].Description,
+                                content: premiseTitleGroup,
+                                open: false
+                            }));
+
+                            //Strat the widget
+                            resultsContainer.startup();
+                        }
+                    }
+                    else {
+                        // Single result
+                        resultsContainer.addChild(new ContentPane({
+                            content: "<span class='drilldownResult'>" + pickListItems[0].Addresses[0].address + "</span>"
+                        }));
+
+                        //Strat the widget
+                        resultsContainer.startup();
+                    }
+                }
+                else {
+                    // No results
+                    this._noResults();
+                }
+            }
             else {
-                this.inherited(arguments);
+                // Output and error message
+                this._noResults();
+            }
+
+            if (!this._isNullOrEmpty(resultsContainer)) {
+                on(resultsContainer, ".drilldownResult:click", function (e) {
+                    _this.search(this.innerText);
+                });
             }
         }
 
