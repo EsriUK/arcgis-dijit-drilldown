@@ -41,4 +41,16 @@ describe("A set of tests for the Drilldown widget", function () {
     });
 
     
+    it("should clear the list of pricklists", function (done) {
+        var destroyFunc = function() {
+            return true;
+        };
+        widget._titleGroups.push({ destroy: destroyFunc }, { destroy: destroyFunc });
+
+        widget._clearPicklist();
+        expect(widget._titleGroups.length).toEqual(0);
+
+
+        done();
+    });
 });
