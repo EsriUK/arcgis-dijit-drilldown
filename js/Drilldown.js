@@ -79,7 +79,7 @@ define([
             if (a.PickListItems) {
                 return a;
             }
-            this.inherited(arguments);
+            return this.inherited(arguments);
         },
 
         _isNullOrEmpty: function (/*Anything*/ obj) {
@@ -107,7 +107,8 @@ define([
         },
 
         _buildPickListUi: function(results) {
-            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, m = 0, mL = 0;
+            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, m = 0, mL = 0,
+                resultSource, noResults = false;
 
             // Clear list of title groups
             if (this._titleGroups.length > 0) {
@@ -118,51 +119,66 @@ define([
                 this._titleGroups = [];
             }
 
-            // Check we have some results
-            if (!this._isNullOrEmpty(results) && !this._isNullOrEmpty(results[0]) && !this._isNullOrEmpty(results[0].PickListItems)) {
-                // Create the TitleGroup container
-                this.resultsElement = domConstruct.create("div", { id: "picklistResults" }, this.domNode, "last");
-                resultsContainer = new TitleGroup(null, this.resultsElement);
+            // Create the TitleGroup container
+            this.resultsElement = domConstruct.create("div", { id: "picklistResults" }, this.domNode, "last");
 
-                // Keep a list of all groups
-                this._titleGroups.push(resultsContainer);
+            if (!this._isNullOrEmpty(results)) {
+                for (resultSource in results) {
 
-                // Get the picklist
-                pickListItems = results[0].PickListItems;
-                iL = pickListItems.length;
+                    // Check we have some results
+                    if (!this._isNullOrEmpty(results[resultSource]) && !this._isNullOrEmpty(results[resultSource].PickListItems)) {
+                        // Get the picklist
+                        pickListItems = results[resultSource].PickListItems;
+                        iL = pickListItems.length;
 
-                if (iL > 0) {
-                    for (i = 0; i < iL; i++) {
-                        // Create the list of premises
-                        premiseList = [];
+                        if (iL > 0) {
+                            var sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
+                            resultsContainer = new TitleGroup(null, sourceContainer);
 
-                        premiseTitleGroup = this._createGroup(pickListItems[i]);
+                            // Keep a list of all groups
+                            this._titleGroups.push(resultsContainer);
 
-                        // Output each street as a title pane
-                        resultsContainer.addChild(new TitlePane({
-                            title: pickListItems[i].Description,
-                            content: premiseTitleGroup,
-                            open: false
-                        }));
+                            for (i = 0; i < iL; i++) {
+                                // Create the list of premises
+                                premiseList = [];
 
-                        //Strat the widget
-                        resultsContainer.startup();
+                                premiseTitleGroup = this._createGroup(pickListItems[i]);
+
+                                // Output each street as a title pane
+                                resultsContainer.addChild(new TitlePane({
+                                    title: pickListItems[i].Description,
+                                    content: premiseTitleGroup,
+                                    open: false
+                                }));
+
+                                //Strat the widget
+                                resultsContainer.startup();
+                                noResults = false;
+                            }
+                        }
+                        else {
+                            // No results
+                            noResults = true;
+                            //this._noResults();
+                        }
                     }
+                    else {
+                        // Output and error message
+                        noResults = true;
+                        //this._noResults();
+                    }
+
+                    if (!this._isNullOrEmpty(resultsContainer)) {
+                        on(resultsContainer, ".drilldownResult:click", function (e) {
+                            _this.search(this.innerText);
+                        });
+                    }
+
                 }
-                else {
-                    // No results
-                    this._noResults();
-                }
-            }
-            else {
-                // Output and error message
-                this._noResults();
             }
 
-            if (!this._isNullOrEmpty(resultsContainer)) {
-                on(resultsContainer, ".drilldownResult:click", function (e) {
-                    _this.search(this.innerText);
-                });
+            if (noResults) {
+                this._noResults();
             }
         },
 
