@@ -133,61 +133,17 @@ define([
                 iL = pickListItems.length;
 
                 if (iL > 0) {
-                    if (iL > 1) {
+                    for (i = 0; i < iL; i++) {
+                        // Create the list of premises
+                        premiseList = [];
 
-                        for (i = 0; i < iL; i++) {
-                            // Create the list of premises
-                            premiseList = [];
-                            if (!this._isNullOrEmpty(pickListItems[i].Addresses) && pickListItems[i].Addresses.length > 0) {
+                        premiseTitleGroup = this._createGroup(pickListItems[i]);
 
-                                // Create a title group to hold the premise list
-                                premiseTitleGroup = new TitleGroup();
-                                premiseList = pickListItems[i].Addresses;
-
-                                for (j = 0, jL = premiseList.length; j < jL; j++) {
-                                    // Do we have a sub premise list?
-                                    if (!this._isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
-                                        subPremiseTitleGroup = new TitleGroup();
-                                        subPremiseList = premiseList[j].Addresses;
-
-                                        for (k = 0, kL = subPremiseList.length; k < kL; k++) {
-                                            subPremiseTitleGroup.addChild(new ContentPane({
-                                                content: "<span class='drilldownResult'>" + subPremiseList[k].address + "</span>"
-                                            }));
-                                        }
-                                        subPremiseTitleGroup.startup();
-                                        premiseTitleGroup.addChild(new TitlePane({
-                                            title: premiseList[j].Description,
-                                            content: subPremiseTitleGroup,
-                                            open: false
-                                        }));
-                                    }
-                                    else {
-                                        // Single premise
-                                        premiseTitleGroup.addChild(new ContentPane({
-                                            content: "<span class='drilldownResult'>" + premiseList[j].Addresses[0].address + "</span>"
-                                        }));
-                                    }
-                                }
-
-                                premiseTitleGroup.startup();
-                            }
-
-                            // Output each street as a title pane
-                            resultsContainer.addChild(new TitlePane({
-                                title: pickListItems[i].Description,
-                                content: premiseTitleGroup,
-                                open: false
-                            }));
-
-                            //Strat the widget
-                            resultsContainer.startup();
-                        }
-                    }
-                    else {
-                        // Single result
-                        resultsContainer.addChild(new ContentPane({
-                            content: "<span class='drilldownResult'>" + pickListItems[0].Addresses[0].address + "</span>"
+                        // Output each street as a title pane
+                        resultsContainer.addChild(new TitlePane({
+                            title: pickListItems[i].Description,
+                            content: premiseTitleGroup,
+                            open: false
                         }));
 
                         //Strat the widget
@@ -209,6 +165,68 @@ define([
                     _this.search(this.innerText);
                 });
             }
+        },
+
+        _createSubGroup: function (premiseList, titleGroup) {
+            var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
+                subPremiseList = premiseList.Addresses;
+
+            for (k = 0, kL = subPremiseList.length; k < kL; k++) {
+                subPremiseTitleGroup.addChild(new ContentPane({
+                    content: "<span class='drilldownResult'>" + subPremiseList[k].address + "</span>"
+                }));
+            }
+            subPremiseTitleGroup.startup();
+
+            titleGroup.addChild(new TitlePane({
+                title: premiseList.Description,
+                content: subPremiseTitleGroup,
+                open: false
+            }));
+        },
+
+        _createGroup: function (pickList) {
+            var _this = this, premiseTitleGroup = new TitleGroup(), premiseList, address = "";
+
+            if (!this._isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
+
+                // Create a title group to hold the premise list
+                premiseList = pickList.Addresses;
+
+                for (j = 0, jL = premiseList.length; j < jL; j++) {
+                    // Do we have a sub premise list?
+                    if (!this._isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
+                        _this._createSubGroup(premiseList[j], premiseTitleGroup);
+                    }
+                    else {
+                        // Single premise
+                        if (!this._isNullOrEmpty(premiseList[j].address)) {
+                            address = premiseList[j].address;
+                        }
+                        else {
+                            address = premiseList[j].Addresses[0].address
+                        }
+                        premiseTitleGroup.addChild(new ContentPane({
+                            content: "<span class='drilldownResult'>" + address + "</span>"
+                        }));
+                    }
+                }
+
+                premiseTitleGroup.startup();
+            }
+            else {
+                // Single result
+                if (!this._isNullOrEmpty(pickList.Addresses[0].address)) {
+                    premiseTitleGroup = new ContentPane({
+                        content: "<span class='drilldownResult'>" + pickList.Addresses[0].address + "</span>"
+                    });
+                }
+                else if (!this._isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
+                    _this._createSubGroup(pickList.Addresses[0], premiseTitleGroup);
+                    premiseTitleGroup.startup();
+                }
+            }
+            return premiseTitleGroup;
         }
 
     });

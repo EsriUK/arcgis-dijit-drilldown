@@ -9,7 +9,10 @@
 
         <script>
             var dojoConfig = {
-                async: true,          
+                has: {
+                    'native-xhr2': false // Because our xhr wrapper doesn't have these methods.
+                },
+                async: true,
                 paths: {
                     "app": location.pathname.replace(/\/[^/]+$/, "") + "/../../js"
                 }
