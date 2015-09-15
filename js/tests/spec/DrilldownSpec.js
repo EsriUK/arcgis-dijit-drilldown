@@ -47,11 +47,6 @@ describe("A set of tests for the Drilldown widget", function () {
             },
             JSON.stringify(postcodeResults)
         ]);
-
-
-
-       // sinon.stub(dojo, "ajax");
-       // sinon.assert.calledOnce(dojo.ajax);
     };
 
     beforeEach(function (done) {

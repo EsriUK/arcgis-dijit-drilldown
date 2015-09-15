@@ -107,8 +107,7 @@ define([
         },
 
         _buildPickListUi: function(results) {
-            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, subPremiseList, j = 0, jL = 0,
-                premiseTitleGroup, subPremiseTitleGroup, k = 0, kL = 0, m = 0, mL = 0;
+            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, m = 0, mL = 0;
 
             // Clear list of title groups
             if (this._titleGroups.length > 0) {
@@ -186,7 +185,7 @@ define([
         },
 
         _createGroup: function (pickList) {
-            var _this = this, premiseTitleGroup = new TitleGroup(), premiseList, address = "";
+            var _this = this, j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, address = "";
 
             if (!this._isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
 
@@ -204,7 +203,7 @@ define([
                             address = premiseList[j].address;
                         }
                         else {
-                            address = premiseList[j].Addresses[0].address
+                            address = premiseList[j].Addresses[0].address;
                         }
                         premiseTitleGroup.addChild(new ContentPane({
                             content: "<span class='drilldownResult'>" + address + "</span>"
