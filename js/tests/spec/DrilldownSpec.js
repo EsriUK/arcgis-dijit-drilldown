@@ -130,7 +130,7 @@ describe("A set of tests for the Drilldown widget", function () {
             this._buildPickListUi([res]);
         });
         widget.search("")
-        expect(widget._titleGroups.length).toEqual(1);
+        expect(widget._titleGroups.length).toEqual(0);
         done();
     });
 
