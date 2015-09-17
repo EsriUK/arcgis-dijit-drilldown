@@ -173,14 +173,15 @@ define([
         },
 
         _isSingleResult: function(results) {
-            var numberOfResults = 0, pickListItems;
+            var numberOfResults = 0, pickListItems, singleSource;
 
             for (var source in results) {
                 numberOfResults++;
+                singleSource = source;
             }
 
             if (numberOfResults === 1) {
-                pickListItems = results[0].PickListItems;
+                pickListItems = results[singleSource].PickListItems;
 
                 if (pickListItems.length === 1 && pickListItems[0].Addresses.length === 1) {
                     if (this._isNullOrEmpty(pickListItems[0].Addresses[0].Addresses)) {
