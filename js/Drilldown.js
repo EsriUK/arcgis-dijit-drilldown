@@ -204,7 +204,7 @@ define([
             this._clearPicklist();
 
             // Create the TitleGroup container
-            this.resultsElement = domConstruct.create("div", { id: "picklistResults", "class": "arcgisSearch" }, this.domNode, "last");
+            this.resultsElement = domConstruct.create("div", { id: "picklistResults", "class": "arcgisSearch searchGroup" }, this.domNode, "last");
 
             // Check to see if we only have a single results
             if ((_this.activeSourceIndex !== this._allIndex) && this._isSingleResult(results)) {
