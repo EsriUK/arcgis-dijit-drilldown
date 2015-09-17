@@ -870,3 +870,54 @@ var agsLLPGResults = {
      }
     ]
 };
+
+var singleAGSLLPGResults = {
+    "spatialReference": {
+        "wkid": 27700,
+        "latestWkid": 27700
+    },
+    "candidates": [
+     {
+         "address": "FLAT 3, 205, PORTOBELLO HIGH STREET, EDINBURGH, CITY OF EDINBURGH, EH15 1EU",
+         "location": {
+             "x": 330582.00039980002,
+             "y": 673808.00036345003
+         },
+         "score": 100,
+         "attributes": {
+             "Score": 100,
+             "Match_addr": "FLAT 3, 205, PORTOBELLO HIGH STREET, EDINBURGH, CITY OF EDINBURGH, EH15 1EU",
+             "X": 330582.00040000002,
+             "Y": 673808.00036299997,
+             "UPRN": "906201313",
+             "USRN": "7902439",
+             "BLPULogicalStatus": 1,
+             "RPC": 1,
+             "PostalAddress": "Y",
+             "Organisation": "",
+             "LPIKey": "9064L000115261",
+             "LPILogicalStatus": 1,
+             "SAOStartNumber": 0,
+             "SAOEndNumber": 0,
+             "SAOStartSuffix": "",
+             "SAOEndSuffix": "",
+             "SAONumberRange": "",
+             "SAOText": "FLAT 3",
+             "PAOStartNumber": 205,
+             "PAOEndNumber": 0,
+             "PAOStartSuffix": "",
+             "PAOEndSuffix": "",
+             "PAONumberRange": "205",
+             "PAOText": "",
+             "StreetDescriptor": "PORTOBELLO HIGH STREET",
+             "LocalityName": "",
+             "Town": "EDINBURGH",
+             "AdminArea": "CITY OF EDINBURGH",
+             "Postcode": "EH15 1EU",
+             "Language": "English",
+             "Currency": "Current",
+             "Addr_type": "Address"
+         }
+     }
+    ]
+};

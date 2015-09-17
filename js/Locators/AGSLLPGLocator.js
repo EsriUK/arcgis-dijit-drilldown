@@ -33,6 +33,13 @@ function (declare, _LocatorBase) {
         streetGrouping: ["AdminArea", "Town", "LocalityName", "StreetDescriptor"],
         premiseGrouping: ["PAOText", "PAONumberRange"],
 
+        streetFields: {
+            STREET_DESCRIPTOR: "StreetDescriptor",
+            LOCALITY_NAME: "LocalityName",
+            TOWN_NAME: "Town",
+            ADMINISTRATIVE_AREA: "AdminArea"
+        },
+
         paoFields: {
             PAO_TEXT: "PAOText",
             PAO_START_NUMBER: "PAO_START_NUMBER",
@@ -47,7 +54,8 @@ function (declare, _LocatorBase) {
             SAO_START_NUMBER: "SAO_START_NUMBER",
             SAO_START_SUFFIX: "SAO_START_SUFFIX",
             SAO_END_NUMBER: "SAO_END_NUMBER",
-            SAO_END_SUFFIX: "SAO_END_SUFFIX"
+            SAO_END_SUFFIX: "SAO_END_SUFFIX",
+            SAONumberRange: "SAONumberRange"
         },
 
         constructor: function () {
@@ -60,7 +68,7 @@ function (declare, _LocatorBase) {
             if (this._isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
                 tpao = attributes[this.paoFields.PAO_TEXT].trim();
             }
-            numberRange = attributes.PAONumberRange.trim();
+            numberRange = attributes[this.paoFields.PAONumberRange].trim();
 
             if (this._isNullOrEmpty(numberRange) === false) {
                 tpao += numberRange;
@@ -75,7 +83,7 @@ function (declare, _LocatorBase) {
             if (this._isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
                 tsao = attributes[this.saoFields.SAO_TEXT].trim();
             }
-            numberRange = attributes.SAONumberRange.trim();
+            numberRange = attributes[this.saoFields.SAONumberRange].trim();
 
             if (this._isNullOrEmpty(numberRange) === false) {
                 tsao += numberRange;
@@ -90,11 +98,11 @@ function (declare, _LocatorBase) {
             // tags:
             //      private
 
-            var description = "";
+            var description = "", streetF = this.streetFields, paoF = this.paoFields;
 
             switch (level) {
                 case 1: // Sub Premise
-                    description = [attributes[this.paoFields.PAO_TEXT], attributes[this.paoFields.PAONumberRange]].filter(Boolean).join(", ");
+                    description = [attributes[paoF.PAO_TEXT], attributes[paoF.PAONumberRange], attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
                     break;
 
                 case 2: // Street

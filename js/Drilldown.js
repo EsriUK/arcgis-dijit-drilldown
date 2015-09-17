@@ -71,13 +71,6 @@ define([
             return results.promise;
         },
 
-        _hydratePickListResult: function (picklist) {
-
-
-
-
-            return this.inherited(arguments);
-        },
 
         clear: function() {
             this._clearPicklist();
@@ -108,8 +101,7 @@ define([
                 numErrors: 0,
                 errors: null,
                 results: null
-            };
-            var d = {}, e = {};
+            }, d = {}, e = {}, b = 0;
 
             if (resultArray) {
                 if(sourceIndex === this._allIndex) {
@@ -128,17 +120,17 @@ define([
                     c.err = d;
                     return c;
                 }
-                else {
-                    if (!this._isNullOrEmpty(this.activeSource.locator.locatorType)) {
-                        // Custom locator with picklists
-                        e[sourceIndex] = resultArray[0];
-                        c.numResults += resultArray[0].PickListItems.length;
-                        c.results = e;
-                        c.err = d;
-                        return c;
-                    }
-                    return this.inherited(arguments);
+                
+                if (!this._isNullOrEmpty(this.activeSource.locator.locatorType)) {
+                    // Custom locator with picklists
+                    e[sourceIndex] = resultArray[0];
+                    c.numResults += resultArray[0].PickListItems.length;
+                    c.results = e;
+                    c.err = d;
+                    return c;
                 }
+                return this.inherited(arguments);
+                
             }
             return c;
         },
@@ -153,19 +145,6 @@ define([
             }
         },
 
-        _toggleTitleGroups: function(close) {
-            var m, mL;
-            if (this._titleGroups.length > 0) {
-                for (m = 0, mL = this._titleGroups.length; m < mL; m++) {
-                    if (close && this._titleGroups[m].open) {
-                        this._titleGroups[m].toggle();
-                    }
-                    if (!close && !this._titleGroups[m].open) {
-                        this._titleGroups[m].toggle;
-                    }
-                }
-            }
-        },
 
         _showNoResults: function() {
             this._noResults(this.value);
@@ -173,11 +152,13 @@ define([
         },
 
         _isSingleResult: function(results) {
-            var numberOfResults = 0, pickListItems, singleSource;
+            var numberOfResults = 0, pickListItems, singleSource, source;
 
-            for (var source in results) {
-                numberOfResults++;
-                singleSource = source;
+            for (source in results) {
+                if (results.hasOwnProperty(source)) {
+                    numberOfResults++;
+                    singleSource = source;
+                }
             }
 
             if (numberOfResults === 1) {
@@ -198,8 +179,8 @@ define([
         },
 
         _buildPickListUi: function(results) {
-            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, m = 0, mL = 0,
-                resultSource, noResults = false;
+            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, 
+                resultSource, noResults = false, res, sourceContainer, titlePane;
 
             // Clear list of title groups
             this._clearPicklist();
@@ -209,83 +190,78 @@ define([
 
             // Check to see if we only have a single results
             if ((_this.activeSourceIndex !== this._allIndex) && this._isSingleResult(results)) {
-                var res = this._hydrateResult(results[0].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
+                res = this._hydrateResult(results[0].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
                 this.select(res);
             }
             else {
-
                 if (!this._isNullOrEmpty(results)) {
                     for (resultSource in results) {
+                        if (results.hasOwnProperty(resultSource)) {
+                            // Check we have some results
+                            if (!this._isNullOrEmpty(results[resultSource]) && !this._isNullOrEmpty(results[resultSource].PickListItems)) {
+                                // Get the picklist
+                                pickListItems = results[resultSource].PickListItems;
+                                iL = pickListItems.length;
 
-                        // Check we have some results
-                        if (!this._isNullOrEmpty(results[resultSource]) && !this._isNullOrEmpty(results[resultSource].PickListItems)) {
-                            // Get the picklist
-                            pickListItems = results[resultSource].PickListItems;
-                            iL = pickListItems.length;
+                                if (iL > 0) {
+                                    sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
+                                    resultsContainer = new TitleGroup(null, sourceContainer);
 
-                            if (iL > 0) {
-                                var sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
-                                resultsContainer = new TitleGroup(null, sourceContainer);
+                                    // Keep a list of all groups
+                                    this._titleGroups.push(resultsContainer);
 
-                                // Keep a list of all groups
-                                this._titleGroups.push(resultsContainer);
+                                    for (i = 0; i < iL; i++) {
+                                        // Create the list of premises
+                                        premiseList = [];
 
-                                for (i = 0; i < iL; i++) {
-                                    // Create the list of premises
-                                    premiseList = [];
+                                        premiseTitleGroup = this._createGroup(pickListItems[i]);
 
-                                    premiseTitleGroup = this._createGroup(pickListItems[i]);
+                                        titlePane = new TitlePane({
+                                            title: pickListItems[i].Description,
+                                            content: premiseTitleGroup,
+                                            open: (iL === 1) ? true : false
+                                        });
+                                        titlePane.startup();
 
-                                    titlePane = new TitlePane({
-                                        title: pickListItems[i].Description,
-                                        content: premiseTitleGroup,
-                                        open: (iL === 1) ? true : false
-                                    });
-                                    titlePane.startup();
+                                        resultsContainer.startup();
 
-                                    resultsContainer.startup();
-
-                                    // Output each street as a title pane
-                                    resultsContainer.addChild(titlePane);
-                                    noResults = false;
+                                        // Output each street as a title pane
+                                        resultsContainer.addChild(titlePane);
+                                        noResults = false;
+                                    }
+                                }
+                                else {
+                                    // No results
+                                    noResults = true;
                                 }
                             }
                             else {
-                                // No results
+                                // Output and error message
                                 noResults = true;
                             }
                         }
-                        else {
-                            // Output and error message
-                            noResults = true;
-                        }
-
-                        if (!this._isNullOrEmpty(resultsContainer)) {
-                            on(resultsContainer, ".drilldownResult:click", function (e) {
-                                var loc = query(this).data()[0];
-                                var res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
-
-                                _this._toggleTitleGroups(true);
-
-                                _this.select(res);
-                            });
-                        }
-
                     }
                 }
 
                 if (noResults) {
                     this._showNoResults();
                 }
+                if (!this._isNullOrEmpty(this.resultsElement)) {
+                    on(this.resultsElement, ".drilldownResult:click", function () {
+                        var loc = query(this).data()[0],
+                            res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
+                        _this.select(res);
+                    });
+                }
             }
         },
 
         _createSubGroup: function (premiseList, titleGroup) {
             var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
-                subPremiseList = premiseList.Addresses;
+                subPremiseList = premiseList.Addresses, node;
 
             for (k = 0, kL = subPremiseList.length; k < kL; k++) {
-                var node = domConstruct.toDom("<span class='drilldownResult'>" + subPremiseList[k].address + "</span>");
+                node = domConstruct.toDom("<span class='drilldownResult'>" + subPremiseList[k].address + "</span>");
                 query(node).data("result", subPremiseList[k]);
 
                 subPremiseTitleGroup.addChild(new ContentPane({
@@ -302,7 +278,7 @@ define([
         },
 
         _createGroup: function (pickList) {
-            var _this = this, j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, address = "", node;
+            var _this = this, j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
 
             if (!this._isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
 

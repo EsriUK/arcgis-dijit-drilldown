@@ -32,6 +32,14 @@ function (declare, _LocatorBase) {
         resultsPickList: null,
         streetGrouping: ["ADMINISTRATIVE_AREA", "TOWN_NAME", "LOCALITY_NAME", "STREET_DESCRIPTOR"],
         premiseGrouping: ["PAO_TEXT", "PAO_END_SUFFIX", "PAO_END_NUMBER", "PAO_START_SUFFIX", "PAO_START_NUMBER"],
+
+        streetFields: {
+            STREET_DESCRIPTOR: "STREET_DESCRIPTOR",
+            LOCALITY_NAME: "LOCALITY_NAME",
+            TOWN_NAME: "TOWN_NAME",
+            ADMINISTRATIVE_AREA: "ADMINISTRATIVE_AREA"
+        },
+
         paoFields: {
             PAO_TEXT: "PAO_TEXT",
             PAO_START_NUMBER: "PAO_START_NUMBER",
@@ -89,15 +97,15 @@ function (declare, _LocatorBase) {
             // tags:
             //      private
 
-            var description = "";
+            var description = "", streetF = this.streetFields;
 
             switch (level) {
                 case 1: // Sub Premise
-                    description = [this._getPAOText(attributes), attributes.STREET_DESCRIPTOR, attributes.LOCALITY_NAME, attributes.TOWN_NAME, attributes.ADMINISTRATIVE_AREA].filter(Boolean).join(", ");
+                    description = [this._getPAOText(attributes), attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
                     break;
 
                 case 2: // Street
-                    description = [attributes.STREET_DESCRIPTOR.trim(), attributes.LOCALITY_NAME.trim(), attributes.TOWN_NAME.trim(), attributes.ADMINISTRATIVE_AREA.trim()].filter(Boolean).join(", ");
+                    description = [attributes[streetF.STREET_DESCRIPTOR].trim(), attributes[streetF.LOCALITY_NAME].trim(), attributes[streetF.TOWN_NAME].trim(), attributes[streetF.ADMINISTRATIVE_AREA].trim()].filter(Boolean).join(", ");
                     break;
 
                 default:
