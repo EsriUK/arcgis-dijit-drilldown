@@ -120,10 +120,10 @@ describe("A set of tests for the Drilldown widget", function () {
     });
 
     it("should handle no results", function (done) {
+        widget.clear();
         widget.search("")
         expect(widget._titleGroups.length).toEqual(0);
         widget.clear();
-        expect(widget._titleGroups.length).toEqual(0);
 
         var searchStub = sinon.stub(widget, "search", function () {
             var res = { PickListItems: []};

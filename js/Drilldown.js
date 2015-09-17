@@ -29,9 +29,10 @@ define([
     "dijit/TitlePane", 
     "dojox/widget/TitleGroup",
     "dojo/on",
+    "dojo/Deferred",
     "dojo/i18n",
     "dojo/i18n!./nls/Drilldown"
-], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, i18n) {
+], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, i18n) {
     
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
         // description: 
@@ -48,26 +49,26 @@ define([
         },
 
 
-        startup: function () {
-
-        },
-
         destroy: function () {
             // connections/subscriptions will be cleaned up during the destroy() lifecycle phase
             // call the superclass method of the same name.
+            this._clearPicklist();
             this.inherited(arguments);
+
         },
 
         search: function () {
-            // Override the Search widget serach method
+            // Override the Search widget search method
 
-            var _this = this;
+            var _this = this, results = new Deferred();
 
             this.inherited(arguments).then(function (res) {
-                _this._buildPickListUi(res.results);
+
+                _this._buildPickListUi(res);
+                _this._selectFirstResult(res.results, res.activeSourceIndex);
             });
 
-            
+            return results.promise;
         },
 
         clear: function() {
@@ -91,6 +92,49 @@ define([
             return (obj === undefined || obj === null || obj === '');
         },
 
+        _formatResults: function (resultArray, sourceIndex, searchValue) {
+            var c = {
+                activeSourceIndex: sourceIndex,
+                value: searchValue,
+                numResults: 0,
+                numErrors: 0,
+                errors: null,
+                results: null
+            };
+            var d = {}, e = {};
+
+            if (resultArray) {
+                if(sourceIndex === this._allIndex) {
+                    // Using all locators
+                    for (b = 0; b < resultArray.length; b++) {
+                        if (!this._isNullOrEmpty(this.sources[b].locator.locatorType)) {
+                            // Custom locator with picklists
+                            e[sourceIndex] = resultArray[0];
+                            c.numResults += resultArray[0].PickListItems.length;
+                        }
+                        else {
+                            c = this.inherited(arguments);
+                        }
+                    }
+                    c.results = e;
+                    c.err = d;
+                    return c;
+                }
+                else {
+                    if (!this._isNullOrEmpty(this.activeSource.locator.locatorType)) {
+                        // Custom locator with picklists
+                        e[sourceIndex] = resultArray[0];
+                        c.numResults += resultArray[0].PickListItems.length;
+                        c.results = e;
+                        c.err = d;
+                        return c
+                    }
+                    return this.inherited(arguments);
+                }
+            }
+            return c;
+        },
+
         _clearPicklist: function() {
             var m, mL;
             if (this._titleGroups.length > 0) {
@@ -101,9 +145,17 @@ define([
             }
         },
 
-        _noResults: function() {
-            this._noResultsHTML(this.value);
+        _showNoResults: function() {
+            this._noResults(this.value);
             this._showNoResultsMenu();
+        },
+
+        _selectFirstResult: function (a, b) {
+            if (this.autoSelect && a) {
+                var c;
+                b === this._allIndex ? c = this._getFirstResult(a) : a[b] && a[b][0] && (c = a[b][0]);
+                c && this.select(c)
+            }
         },
 
         _buildPickListUi: function(results) {
@@ -111,13 +163,7 @@ define([
                 resultSource, noResults = false;
 
             // Clear list of title groups
-            if (this._titleGroups.length > 0) {
-                for (m = 0, mL = this._titleGroups.length; m < mL; m++) {
-                    this._titleGroups[m].destroy();
-
-                }
-                this._titleGroups = [];
-            }
+            this._clearPicklist();
 
             // Create the TitleGroup container
             this.resultsElement = domConstruct.create("div", { id: "picklistResults" }, this.domNode, "last");
@@ -159,18 +205,16 @@ define([
                         else {
                             // No results
                             noResults = true;
-                            //this._noResults();
                         }
                     }
                     else {
                         // Output and error message
                         noResults = true;
-                        //this._noResults();
                     }
 
                     if (!this._isNullOrEmpty(resultsContainer)) {
                         on(resultsContainer, ".drilldownResult:click", function (e) {
-                            _this.search(this.innerText);
+                            _this.select(this.innerText);
                         });
                     }
 
@@ -178,7 +222,7 @@ define([
             }
 
             if (noResults) {
-                this._noResults();
+                this._showNoResults();
             }
         },
 

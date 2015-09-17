@@ -31,7 +31,7 @@ module.exports = function (grunt) {
                                 app: '/../js'
                             }
                         },
-                        dojoFile: 'http://js.arcgis.com/3.13/'
+                        dojoFile: 'http://js.arcgis.com/3.14/'
                     }
                 }
             },
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                                     app: '/../.grunt/grunt-contrib-jasmine/js'
                                 }
                             },
-                            dojoFile: 'http://js.arcgis.com/3.13/'
+                            dojoFile: 'http://js.arcgis.com/3.14/'
                         }
                     }
                 }
@@ -85,7 +85,7 @@ module.exports = function (grunt) {
                                     app: '/../.grunt/grunt-contrib-jasmine/js'
                                 }
                             },
-                            dojoFile: 'http://js.arcgis.com/3.13/'
+                            dojoFile: 'http://js.arcgis.com/3.14/'
                         }
                     }
                 }
