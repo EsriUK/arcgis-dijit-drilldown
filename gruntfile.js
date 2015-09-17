@@ -76,7 +76,6 @@ module.exports = function (grunt) {
                     templateOptions: {
                         coverage: 'coverage/coverage.json',
                         report: 'coverage',
-                        srcCopy: ['js/nls/Drilldown.js', 'js/nls/en-gb/Drilldown.js'],
                         template: require('grunt-template-jasmine-dojo'),
                         templateOptions: {
                             dojoConfig: {
@@ -106,7 +105,6 @@ module.exports = function (grunt) {
                                 dir: 'coverage/lcov'
                             }
                         },
-                        srcCopy: ['js/nls/Drilldown.js', 'js/nls/en-gb/Drilldown.js'],
                         template: require('grunt-template-jasmine-dojo'),
                         templateOptions: {
                             dojoConfig: {
