@@ -30,9 +30,11 @@ define([
     "dojox/widget/TitleGroup",
     "dojo/on",
     "dojo/Deferred",
+    "dojo/query",
     "dojo/i18n",
+    "dojo/NodeList-data",
     "dojo/i18n!./nls/Drilldown"
-], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, i18n) {
+], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, i18n) {
     
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
         // description: 
@@ -63,12 +65,18 @@ define([
             var _this = this, results = new Deferred();
 
             this.inherited(arguments).then(function (res) {
-
                 _this._buildPickListUi(res);
-                _this._selectFirstResult(res.results, res.activeSourceIndex);
             });
 
             return results.promise;
+        },
+
+        _hydratePickListResult: function (picklist) {
+
+
+
+
+            return this.inherited(arguments);
         },
 
         clear: function() {
@@ -78,7 +86,7 @@ define([
 
         _hydrateResults: function (a) {
             if (a.PickListItems) {
-                return a;
+                return a; //this._hydratePickListResult(a);
             }
             return this.inherited(arguments);
         },
@@ -127,7 +135,7 @@ define([
                         c.numResults += resultArray[0].PickListItems.length;
                         c.results = e;
                         c.err = d;
-                        return c
+                        return c;
                     }
                     return this.inherited(arguments);
                 }
@@ -150,13 +158,7 @@ define([
             this._showNoResultsMenu();
         },
 
-        _selectFirstResult: function (a, b) {
-            if (this.autoSelect && a) {
-                var c;
-                b === this._allIndex ? c = this._getFirstResult(a) : a[b] && a[b][0] && (c = a[b][0]);
-                c && this.select(c)
-            }
-        },
+        
 
         _buildPickListUi: function(results) {
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, m = 0, mL = 0,
@@ -168,61 +170,71 @@ define([
             // Create the TitleGroup container
             this.resultsElement = domConstruct.create("div", { id: "picklistResults" }, this.domNode, "last");
 
-            if (!this._isNullOrEmpty(results)) {
-                for (resultSource in results) {
+            // Check to see if we only have a single results
+            if ((_this.activeSourceIndex !== this._allIndex) && (results[0].PickListItems.length === 1 && results[0].PickListItems[0].Addresses.length === 1)) {
+                var res = this._hydrateResult(results[0].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
+                this.select(res);
+            }
+            else {
 
-                    // Check we have some results
-                    if (!this._isNullOrEmpty(results[resultSource]) && !this._isNullOrEmpty(results[resultSource].PickListItems)) {
-                        // Get the picklist
-                        pickListItems = results[resultSource].PickListItems;
-                        iL = pickListItems.length;
+                if (!this._isNullOrEmpty(results)) {
+                    for (resultSource in results) {
 
-                        if (iL > 0) {
-                            var sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
-                            resultsContainer = new TitleGroup(null, sourceContainer);
+                        // Check we have some results
+                        if (!this._isNullOrEmpty(results[resultSource]) && !this._isNullOrEmpty(results[resultSource].PickListItems)) {
+                            // Get the picklist
+                            pickListItems = results[resultSource].PickListItems;
+                            iL = pickListItems.length;
 
-                            // Keep a list of all groups
-                            this._titleGroups.push(resultsContainer);
+                            if (iL > 0) {
+                                var sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
+                                resultsContainer = new TitleGroup(null, sourceContainer);
 
-                            for (i = 0; i < iL; i++) {
-                                // Create the list of premises
-                                premiseList = [];
+                                // Keep a list of all groups
+                                this._titleGroups.push(resultsContainer);
 
-                                premiseTitleGroup = this._createGroup(pickListItems[i]);
+                                for (i = 0; i < iL; i++) {
+                                    // Create the list of premises
+                                    premiseList = [];
 
-                                // Output each street as a title pane
-                                resultsContainer.addChild(new TitlePane({
-                                    title: pickListItems[i].Description,
-                                    content: premiseTitleGroup,
-                                    open: false
-                                }));
+                                    premiseTitleGroup = this._createGroup(pickListItems[i]);
 
-                                //Strat the widget
-                                resultsContainer.startup();
-                                noResults = false;
+                                    // Output each street as a title pane
+                                    resultsContainer.addChild(new TitlePane({
+                                        title: pickListItems[i].Description,
+                                        content: premiseTitleGroup,
+                                        open: false
+                                    }));
+
+                                    //Strat the widget
+                                    resultsContainer.startup();
+                                    noResults = false;
+                                }
+                            }
+                            else {
+                                // No results
+                                noResults = true;
                             }
                         }
                         else {
-                            // No results
+                            // Output and error message
                             noResults = true;
                         }
-                    }
-                    else {
-                        // Output and error message
-                        noResults = true;
-                    }
 
-                    if (!this._isNullOrEmpty(resultsContainer)) {
-                        on(resultsContainer, ".drilldownResult:click", function (e) {
-                            _this.select(this.innerText);
-                        });
-                    }
+                        if (!this._isNullOrEmpty(resultsContainer)) {
+                            on(resultsContainer, ".drilldownResult:click", function (e) {
+                                var loc = query(this).data()[0];
+                                var res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
+                                _this.select(res);
+                            });
+                        }
 
+                    }
                 }
-            }
 
-            if (noResults) {
-                this._showNoResults();
+                if (noResults) {
+                    this._showNoResults();
+                }
             }
         },
 
@@ -231,8 +243,11 @@ define([
                 subPremiseList = premiseList.Addresses;
 
             for (k = 0, kL = subPremiseList.length; k < kL; k++) {
+                var node = domConstruct.toDom("<span class='drilldownResult'>" + subPremiseList[k].address + "</span>");
+                query(node).data("result", subPremiseList[k]);
+
                 subPremiseTitleGroup.addChild(new ContentPane({
-                    content: "<span class='drilldownResult'>" + subPremiseList[k].address + "</span>"
+                    content: node
                 }));
             }
             subPremiseTitleGroup.startup();
@@ -245,7 +260,7 @@ define([
         },
 
         _createGroup: function (pickList) {
-            var _this = this, j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, address = "";
+            var _this = this, j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, address = "", node;
 
             if (!this._isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
 
@@ -260,13 +275,15 @@ define([
                     else {
                         // Single premise
                         if (!this._isNullOrEmpty(premiseList[j].address)) {
-                            address = premiseList[j].address;
+                            node = domConstruct.toDom("<span class='drilldownResult'>" + premiseList[j].address + "</span>");
+                            query(node).data("result", premiseList[j]);
                         }
                         else {
-                            address = premiseList[j].Addresses[0].address;
+                            node = domConstruct.toDom("<span class='drilldownResult'>" + premiseList[j].Addresses[0].address + "</span>");
+                            query(node).data("result", premiseList[j].Addresses[0]);
                         }
                         premiseTitleGroup.addChild(new ContentPane({
-                            content: "<span class='drilldownResult'>" + address + "</span>"
+                            content: node
                         }));
                     }
                 }
@@ -276,8 +293,11 @@ define([
             else {
                 // Single result
                 if (!this._isNullOrEmpty(pickList.Addresses[0].address)) {
+                    node = domConstruct.toDom("<span class='drilldownResult'>" + pickList.Addresses[0].address + "</span>");
+                    query(node).data("result", pickList.Addresses[0]);
+
                     premiseTitleGroup = new ContentPane({
-                        content: "<span class='drilldownResult'>" + pickList.Addresses[0].address + "</span>"
+                        content: node
                     });
                 }
                 else if (!this._isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
