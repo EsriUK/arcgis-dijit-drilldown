@@ -153,6 +153,20 @@ define([
             }
         },
 
+        _toggleTitleGroups: function(close) {
+            var m, mL;
+            if (this._titleGroups.length > 0) {
+                for (m = 0, mL = this._titleGroups.length; m < mL; m++) {
+                    if (close && this._titleGroups[m].open) {
+                        this._titleGroups[m].toggle();
+                    }
+                    if (!close && !this._titleGroups[m].open) {
+                        this._titleGroups[m].toggle;
+                    }
+                }
+            }
+        },
+
         _showNoResults: function() {
             this._noResults(this.value);
             this._showNoResultsMenu();
@@ -221,15 +235,17 @@ define([
 
                                     premiseTitleGroup = this._createGroup(pickListItems[i]);
 
-                                    // Output each street as a title pane
-                                    resultsContainer.addChild(new TitlePane({
+                                    titlePane = new TitlePane({
                                         title: pickListItems[i].Description,
                                         content: premiseTitleGroup,
-                                        open: false
-                                    }));
+                                        open: (iL === 1) ? true : false
+                                    });
+                                    titlePane.startup();
 
-                                    //Strat the widget
                                     resultsContainer.startup();
+
+                                    // Output each street as a title pane
+                                    resultsContainer.addChild(titlePane);
                                     noResults = false;
                                 }
                             }
@@ -247,6 +263,9 @@ define([
                             on(resultsContainer, ".drilldownResult:click", function (e) {
                                 var loc = query(this).data()[0];
                                 var res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
+
+                                _this._toggleTitleGroups(true);
+
                                 _this.select(res);
                             });
                         }
