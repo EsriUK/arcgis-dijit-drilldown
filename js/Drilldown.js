@@ -158,7 +158,29 @@ define([
             this._showNoResultsMenu();
         },
 
-        
+        _isSingleResult: function(results) {
+            var numberOfResults = 0, pickListItems;
+
+            for (var source in results) {
+                numberOfResults++;
+            }
+
+            if (numberOfResults === 1) {
+                pickListItems = results[0].PickListItems;
+
+                if (pickListItems.length === 1 && pickListItems[0].Addresses.length === 1) {
+                    if (this._isNullOrEmpty(pickListItems[0].Addresses[0].Addresses)) {
+                        return true;
+                    }
+                    if (!this._isNullOrEmpty(pickListItems[0].Addresses[0].Addresses) && pickListItems[0].Addresses[0].Addresses.length === 1) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            return false;
+        },
 
         _buildPickListUi: function(results) {
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, m = 0, mL = 0,
@@ -171,7 +193,7 @@ define([
             this.resultsElement = domConstruct.create("div", { id: "picklistResults" }, this.domNode, "last");
 
             // Check to see if we only have a single results
-            if ((_this.activeSourceIndex !== this._allIndex) && (results[0].PickListItems.length === 1 && results[0].PickListItems[0].Addresses.length === 1)) {
+            if ((_this.activeSourceIndex !== this._allIndex) && this._isSingleResult(results)) {
                 var res = this._hydrateResult(results[0].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
                 this.select(res);
             }

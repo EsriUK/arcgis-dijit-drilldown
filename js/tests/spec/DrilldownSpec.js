@@ -142,7 +142,7 @@ describe("A set of tests for the Drilldown widget", function () {
 
         widget.search("7 Harrison Road")
 
-        expect(widget._titleGroups.length).toEqual(1);
+        expect(widget._titleGroups.length).toEqual(0);
         widget.clear();
 
         done();
