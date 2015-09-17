@@ -31,10 +31,8 @@ define([
     "dojo/on",
     "dojo/Deferred",
     "dojo/query",
-    "dojo/i18n",
     "dojo/NodeList-data",
-    "dojo/i18n!./nls/Drilldown"
-], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, i18n) {
+], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
     
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
         // description: 
@@ -186,6 +184,7 @@ define([
             this._clearPicklist();
 
             // Create the TitleGroup container
+            domConstruct.destroy(this.resultsElement);
             this.resultsElement = domConstruct.create("div", { "class": "arcgisSearch searchGroup picklistResults" }, this.domNode, "last");
 
             // Check to see if we only have a single results

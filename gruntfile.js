@@ -12,6 +12,37 @@ module.exports = function (grunt) {
                 jshintrc: '.jshintrc'
             }
         },
+        clean: {
+            options: { force: true },
+            src: ["js/build/", "dist/"]
+        },
+        uglify: {
+            locators: {
+                files: [{
+                    expand: true,
+                    cwd: 'js/',
+                    src: ['Locators/*.js'],
+                    dest: 'build/'
+                }]
+            },
+            widget: {
+                files: [{
+                    expand: true,
+                    cwd: 'js/',
+                    src: ['*.js'],
+                    dest: 'dist/'
+                }]
+            }
+        },
+        concat: {
+            options: {
+                separator: ';',
+            },
+            locators: {
+                src: ['build/Locators/PickList.js', 'build/Locators/PickListItem.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js'],
+                dest: 'dist/DrilldownLocators.js',
+            }
+        },
         debug: {
             options: {
                 open: true // do not open node-inspector in Chrome automatically
@@ -112,17 +143,20 @@ module.exports = function (grunt) {
     grunt.initConfig(gruntconfig);
 
     // Load grunt tasks
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-coveralls');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Add default task(s)
     grunt.registerTask('default', ['jasmine:test']);
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 
-
+    grunt.registerTask('build', ['clean', 'uglify:locators', 'uglify:widget', 'concat']);
 
     grunt.registerTask('travis', ['jasmine:coverageci']);
 };
