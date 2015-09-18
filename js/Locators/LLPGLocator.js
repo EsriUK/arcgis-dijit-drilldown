@@ -31,6 +31,19 @@ function (declare, _LocatorBase) {
         //		private
 
         return (obj === undefined || obj === null || obj === '');
+    },
+    _paoSaoNumberRange = function (startNumber, startSuffix, endNumber, endSuffix) {
+        var start = startNumber.trim() + startSuffix.trim(),
+            end = endNumber.trim() + endSuffix.trim();
+
+        if ((_isNullOrEmpty(start) === false) && (_isNullOrEmpty(end) === false)) {
+            return start + "-" + end;
+        }
+
+        // Only start or end has a value so the below code will return the one 
+        // that has a value.
+
+        return start + end;
     };
 
     return declare([_LocatorBase], {
@@ -105,7 +118,7 @@ function (declare, _LocatorBase) {
             if (_isNullOrEmpty(attributes[paoFields.PAO_TEXT]) === false) {
                 tpao = attributes[paoFields.PAO_TEXT].trim();
             }
-            numberRange = this._paoSaoNumberRange(attributes[paoFields.PAO_START_NUMBER], attributes[paoFields.PAO_START_SUFFIX], attributes[paoFields.PAO_END_NUMBER], attributes[paoFields.PAO_END_SUFFIX]);
+            numberRange = _paoSaoNumberRange(attributes[paoFields.PAO_START_NUMBER], attributes[paoFields.PAO_START_SUFFIX], attributes[paoFields.PAO_END_NUMBER], attributes[paoFields.PAO_END_SUFFIX]);
 
             if (_isNullOrEmpty(numberRange) === false) {
                 tpao += numberRange;
@@ -122,7 +135,7 @@ function (declare, _LocatorBase) {
             if (_isNullOrEmpty(attributes[saoFields.SAO_TEXT]) === false) {
                 tsao = attributes[saoFields.SAO_TEXT].trim();
             }
-            numberRange = this._paoSaoNumberRange(attributes[saoFields.SAO_START_NUMBER], attributes[saoFields.SAO_START_SUFFIX], attributes[saoFields.SAO_END_NUMBER], attributes[saoFields.SAO_END_SUFFIX]);
+            numberRange = _paoSaoNumberRange(attributes[saoFields.SAO_START_NUMBER], attributes[saoFields.SAO_START_SUFFIX], attributes[saoFields.SAO_END_NUMBER], attributes[saoFields.SAO_END_SUFFIX]);
 
             if (_isNullOrEmpty(numberRange) === false) {
                 tsao += numberRange;

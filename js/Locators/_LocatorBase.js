@@ -73,28 +73,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
     //      _LocatorBase
 
     var reA = /[^a-zA-Z]/g, reN = /[^0-9]/g,
-        _isNullOrEmpty = function (/*Anything*/ obj) {
-            // summary:
-            //		Checks to see if the passed in thing is undefined, null or empty.
-            // tags:
-            //		private
-
-            return (obj === undefined || obj === null || obj === '');
-        },
-        descriptionSort = function (a, b) {
-            return a.localeCompare(b);
-        },
-        sortAlphaNum = function (a, b) {
-            var aA = a.replace(reA, "");
-            var bA = b.replace(reA, "");
-            if (aA === bA) {
-                var aN = parseInt(a.replace(reN, ""), 10);
-                var bN = parseInt(b.replace(reN, ""), 10);
-                return aN === bN ? 0 : aN > bN ? 1 : -1;
-            } else {
-                return aA > bA ? 1 : -1;
-            }
-        },
         _getGroupedAddressValue = function (fields, attributes) {
             var i = 0, iL = fields.length, addressValue = "", fieldName, fieldValue, addressParts = [];
 
@@ -113,6 +91,45 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
 
             return addressValue;
+        },
+        _getStreets = function (candidates, pickList, streetField, streetGroups) {
+            var i = 0, iL = 0, candidate, attributes, addressKey;
+
+            for (i = 0, iL = candidates.length; i < iL; i += 1) {
+                candidate = candidates[i];
+                attributes = candidate.attributes;
+
+                // Build up street level grouping
+                addressKey = _getGroupedAddressValue(streetGroups, attributes);
+
+                if (addressKey.length > 0) {
+                    if (pickList.hasOwnProperty(addressKey)) {
+                        pickList[addressKey].addCandidate(candidate);
+                    }
+                    else {
+                        pickList[addressKey] = new PickListItem({
+                            SortDescription: attributes[streetField],
+                            Description: addressKey,
+                            Addresses: [candidate],
+                            Level: 2
+                        });
+                    }
+                }
+            }
+        },
+
+        descriptionSort = function (a, b) {
+            return a.localeCompare(b);
+        },
+        sortAlphaNum = function (a, b) {
+            var aA = a.replace(reA, ""), bA = b.replace(reA, ""), aN, bN;
+
+            if (aA === bA) {
+                aN = parseInt(a.replace(reN, ""), 10);
+                bN = parseInt(b.replace(reN, ""), 10);
+                return aN === bN ? 0 : aN > bN ? 1 : -1;
+            }
+            return aA > bA ? 1 : -1;
         };
 
     return declare([Locator], {
@@ -158,25 +175,12 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
         },
      
-
-        _paoSaoNumberRange: function (startNumber, startSuffix, endNumber, endSuffix) {
-            var start = startNumber.trim() + startSuffix.trim(),
-                end = endNumber.trim() + endSuffix.trim();
-
-            if ((_isNullOrEmpty(start) === false) && (_isNullOrEmpty(end) === false)) {
-                return start + "-" + end;
-            }
-
-            // Only start or end has a value so the below code will return the one 
-            // that has a value.
-
-            return start + end;
-        },
-
+        
 
         _buildPickList: function (results) {
-            var result = new Deferred(), i = 0, iL = 0, pickList = {}, premisePicklist = {}, candidates, candidate, attributes, addressKey,
-                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), 
+            var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey,
+                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), childAttributes,
+                streetDescriptor = this.streetFields.STREET_DESCRIPTOR, streetGroups = this.streetGrouping, premiseGroups = this.premiseGrouping,
                 descFunc = function (a, b) {
                     return descriptionSort(a.SortDescription, b.SortDescription);
                 },
@@ -188,27 +192,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             if (results.candidates.length > 0) {
                 candidates = results.candidates;
 
-                for (i = 0, iL = candidates.length; i < iL; i+=1) {
-                    candidate = candidates[i];
-                    attributes = candidate.attributes;
-
-                    // Build up street level grouping
-                    addressKey = _getGroupedAddressValue(this.streetGrouping, attributes);
-
-                    if (addressKey.length > 0) {
-                        if (pickList.hasOwnProperty(addressKey)) {
-                            pickList[addressKey].addCandidate(candidate);
-                        }
-                        else {
-                            pickList[addressKey] = new PickListItem({
-                                SortDescription: attributes[this.streetFields.STREET_DESCRIPTOR],
-                                Description: addressKey,
-                                Addresses: [candidate],
-                                Level: 2
-                            });
-                        }
-                    }
-                }
+                _getStreets(candidates, pickList, streetDescriptor, streetGroups);
 
                 for (key in pickList) {
                     // Now do premise lists
@@ -222,21 +206,22 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                             // We have more than 1 results so need another picklist level
                             children = pickList[key].Addresses;
 
-                            for (k = 0, kL = children.length; k < kL; k+=1) {
-                                addressKey = _getGroupedAddressValue(this.premiseGrouping, children[k].attributes);
+                            for (k = 0, kL = children.length; k < kL; k += 1) {
+                                childAttributes = children[k].attributes;
+                                addressKey = _getGroupedAddressValue(premiseGroups, childAttributes);
                                 childAddressCandidate = null;
 
                                 if (addressKey.length > 0) {
                                     childAddressCandidate = children[k];
-                                    childAddressCandidate.SortDescription = this._getSAOText(children[k].attributes);
+                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes);
 
                                     if (premisePicklist.hasOwnProperty(addressKey)) {
                                         premisePicklist[addressKey].addCandidate(childAddressCandidate);
                                     }
                                     else {
                                         premisePicklist[addressKey] = new PickListItem({
-                                            SortDescription: this._getPAOText(children[k].attributes),
-                                            Description: this._getListLevelDescription(1, children[k].attributes),
+                                            SortDescription: this._getPAOText(childAttributes),
+                                            Description: this._getListLevelDescription(1, childAttributes),
                                             Addresses: [childAddressCandidate],
                                             Level: 1
                                         });
