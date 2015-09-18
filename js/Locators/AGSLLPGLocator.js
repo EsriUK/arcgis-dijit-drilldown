@@ -24,6 +24,15 @@ function (declare, _LocatorBase) {
     // module:
     //      _LocatorBase
 
+    var _isNullOrEmpty = function (/*Anything*/ obj) {
+        // summary:
+        //		Checks to see if the passed in thing is undefined, null or empty.
+        // tags:
+        //		private
+
+        return (obj === undefined || obj === null || obj === '');
+    };
+
     return declare([_LocatorBase], {
         // summary:
         //		AGS LLPG Locator.
@@ -65,12 +74,12 @@ function (declare, _LocatorBase) {
         _getPAOText: function (attributes) {
             var tpao = "", numberRange = "";
 
-            if (this._isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
+            if (_isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
                 tpao = attributes[this.paoFields.PAO_TEXT].trim();
             }
             numberRange = attributes[this.paoFields.PAONumberRange].trim();
 
-            if (this._isNullOrEmpty(numberRange) === false) {
+            if (_isNullOrEmpty(numberRange) === false) {
                 tpao += numberRange;
             }
 
@@ -80,12 +89,12 @@ function (declare, _LocatorBase) {
         _getSAOText: function (attributes) {
             var tsao = "", numberRange = "";
 
-            if (this._isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
+            if (_isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
                 tsao = attributes[this.saoFields.SAO_TEXT].trim();
             }
             numberRange = attributes[this.saoFields.SAONumberRange].trim();
 
-            if (this._isNullOrEmpty(numberRange) === false) {
+            if (_isNullOrEmpty(numberRange) === false) {
                 tsao += numberRange;
             }
 

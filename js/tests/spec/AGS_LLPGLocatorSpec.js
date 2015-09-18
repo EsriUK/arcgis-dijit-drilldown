@@ -45,15 +45,6 @@ describe("A set of tests for the AGS LLPG Locator", function () {
     });
 
 
-    it("should return an address value from the selected fields", function (done) {
-        var addressFields = ["Town", "LocalityName", "StreetDescriptor"],
-            attributes = { Town: "test town", LocalityName: "local", StreetDescriptor: "High Street", ANOTHER_FIELD: "Uh oh" },
-            finalAddress = "High Street, local, test town";
-
-        expect(widget._getGroupedAddressValue(addressFields, attributes)).toEqual(finalAddress);
-
-        done();
-    });
 
 
     it("should populate a picklist", function (done) {

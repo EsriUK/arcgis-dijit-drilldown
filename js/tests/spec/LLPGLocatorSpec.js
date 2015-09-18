@@ -44,14 +44,7 @@ describe("A set of tests for the LLPG Locator", function () {
         done();
     });
 
-    it("should return an address value from the selected fields", function (done) {
-        var addressFields = ["TOWN_NAME", "LOCALITY_NAME", "STREET_DESCRIPTOR"],
-            finalAddress = "High Street, local, test town";
 
-        expect(widget._getGroupedAddressValue(addressFields, testAttributes)).toEqual(finalAddress);
-
-        done();
-    });
 
     it("should populate a picklist", function (done) {
         widget._buildPickList(llpgResults).then(function () {

@@ -60,19 +60,6 @@ if (!Array.prototype.filter) {
     };
 }
 
-function _chunkify(t) {
-    var tz = [], x = 0, y = -1, n = 0, i, j;
-
-    while (i = (j = t.charAt(x++)).charCodeAt(0)) {
-        var m = (i == 46 || (i >= 48 && i <= 57));
-        if (m !== n) {
-            tz[++y] = "";
-            n = m;
-        }
-        tz[y] += j;
-    }
-    return tz;
-}
 
 define([
     'dojo/_base/declare',
@@ -84,6 +71,49 @@ define([
 function (declare, Locator, PickList, PickListItem, Deferred) {
     // module:
     //      _LocatorBase
+
+    var reA = /[^a-zA-Z]/g, reN = /[^0-9]/g,
+        _isNullOrEmpty = function (/*Anything*/ obj) {
+            // summary:
+            //		Checks to see if the passed in thing is undefined, null or empty.
+            // tags:
+            //		private
+
+            return (obj === undefined || obj === null || obj === '');
+        },
+        descriptionSort = function (a, b) {
+            return a.localeCompare(b);
+        },
+        sortAlphaNum = function (a, b) {
+            var aA = a.replace(reA, "");
+            var bA = b.replace(reA, "");
+            if (aA === bA) {
+                var aN = parseInt(a.replace(reN, ""), 10);
+                var bN = parseInt(b.replace(reN, ""), 10);
+                return aN === bN ? 0 : aN > bN ? 1 : -1;
+            } else {
+                return aA > bA ? 1 : -1;
+            }
+        },
+        _getGroupedAddressValue = function (fields, attributes) {
+            var i = 0, iL = fields.length, addressValue = "", fieldName, fieldValue, addressParts = [];
+
+            for (i = 0; i < iL; i += 1) {
+                fieldName = fields[i];
+
+                fieldValue = attributes[fieldName];
+
+                if (fieldValue.length > 0) {
+                    addressParts.push(fieldValue);
+                }
+            }
+
+            if (addressParts.length > 0) {
+                addressValue = addressParts.join(", ");
+            }
+
+            return addressValue;
+        };
 
     return declare([Locator], {
         // summary:
@@ -112,15 +142,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
         },
 
-        _isNullOrEmpty: function (/*Anything*/ obj) {
-            // summary:
-            //		Checks to see if the passed in thing is undefined, null or empty.
-            // tags:
-            //		private
-
-            return (obj === undefined || obj === null || obj === "");
-        },
-
         _geocodeHandler: function (results, b, k, g, c) {
             // Process the results, constructing the picklist if needed
             var _this = this;
@@ -136,38 +157,13 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 this._errorHandler(ex, g, c);
             }
         },
-
-        _descriptionSort: function (a, b) {
-            // summary:
-            //      Sorts the items of an array by their Description
-
-            return a.SortDescription.trim().localeCompare(b.SortDescription.trim());
-        },
-
-        
-        _alphanumSort: function (a, b) {
-            var aString = a.SortDescription, bString = b.SortDescription, aa, bb, x;
-
-            aa = _chunkify(aString);
-            bb = _chunkify(bString);
-
-            for (x = 0; aa[x] && bb[x]; x+=1) {
-                if (aa[x] !== bb[x]) {
-                    var c = Number(aa[x]), d = Number(bb[x]);
-                    if (c == aa[x] && d == bb[x]) {
-                        return c - d;
-                    }
-                    return (aa[x] > bb[x]) ? 1 : -1;
-                }
-            }
-            return aa.length - bb.length;
-        },
+     
 
         _paoSaoNumberRange: function (startNumber, startSuffix, endNumber, endSuffix) {
             var start = startNumber.trim() + startSuffix.trim(),
-                end = endNumber.trim() + endSuffix.trim(), nullOrEmpty = this._isNullOrEmpty;
+                end = endNumber.trim() + endSuffix.trim();
 
-            if ((nullOrEmpty(start) === false) && (nullOrEmpty(end) === false)) {
+            if ((_isNullOrEmpty(start) === false) && (_isNullOrEmpty(end) === false)) {
                 return start + "-" + end;
             }
 
@@ -177,33 +173,16 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             return start + end;
         },
 
-        
-
-        _getGroupedAddressValue: function (fields, attributes) {
-            var i = 0, iL = fields.length, addressValue = "", fieldName, fieldValue, addressParts = [];
-
-            for (i = 0; i < iL; i+=1) {
-                fieldName = fields[i];
-
-                fieldValue = attributes[fieldName];
-
-                if (fieldValue.length > 0) {
-                    addressParts.push(fieldValue);
-                }
-            }
-
-            if (addressParts.length > 0) {
-                addressParts.reverse();
-                addressValue = addressParts.join(", ");
-            }
-
-            return addressValue;
-        },
 
         _buildPickList: function (results) {
             var result = new Deferred(), i = 0, iL = 0, pickList = {}, premisePicklist = {}, candidates, candidate, attributes, addressKey,
-                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, groupedAddress = this._getGroupedAddressValue,
-                resultsPickList = new PickList();
+                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), 
+                descFunc = function (a, b) {
+                    return descriptionSort(a.SortDescription, b.SortDescription);
+                },
+                sortFunc = function (a, b) {
+                    return sortAlphaNum(a.SortDescription, b.SortDescription);
+                };
 
             // Build picklist entries by concatenating fields in list
             if (results.candidates.length > 0) {
@@ -214,7 +193,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                     attributes = candidate.attributes;
 
                     // Build up street level grouping
-                    addressKey = groupedAddress(this.streetGrouping, attributes);
+                    addressKey = _getGroupedAddressValue(this.streetGrouping, attributes);
 
                     if (addressKey.length > 0) {
                         if (pickList.hasOwnProperty(addressKey)) {
@@ -223,7 +202,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                         else {
                             pickList[addressKey] = new PickListItem({
                                 SortDescription: attributes[this.streetFields.STREET_DESCRIPTOR],
-                                Description: this._getListLevelDescription(2, attributes),
+                                Description: addressKey,
                                 Addresses: [candidate],
                                 Level: 2
                             });
@@ -244,7 +223,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                             children = pickList[key].Addresses;
 
                             for (k = 0, kL = children.length; k < kL; k+=1) {
-                                addressKey = groupedAddress(this.premiseGrouping, children[k].attributes);
+                                addressKey = _getGroupedAddressValue(this.premiseGrouping, children[k].attributes);
                                 childAddressCandidate = null;
 
                                 if (addressKey.length > 0) {
@@ -267,13 +246,13 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                             for (premKey in premisePicklist) {
                                 if (premisePicklist.hasOwnProperty(premKey)) {
-                                    premisePicklist[premKey].Addresses.sort(this._alphanumSort);
+                                    premisePicklist[premKey].Addresses.sort(sortFunc);
                                     item.addCandidate(premisePicklist[premKey]);
                                 }
                             }
 
                             // Sort premise list
-                            item.Addresses.sort(this._alphanumSort);
+                            item.Addresses.sort(sortFunc);
 
                             resultsPickList.addItem(item);
                         }
@@ -285,7 +264,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 }
 
                 // Sort street list
-                resultsPickList.PickListItems.sort(this._descriptionSort);
+                resultsPickList.PickListItems.sort(descFunc);
                 resultsPickList.PickListItems.reverse();
 
                 this.resultsPickList = resultsPickList;

@@ -58,21 +58,21 @@ describe("A set of tests for the Base Locator", function () {
         });
     });
 
-    it("should sort the results by the description property", function (done) {
-        var descArray = [
-            { SortDescription: "HILL COURT" },
-            { SortDescription: "HILL STREET SOUTH LANE" },
-            { SortDescription: "HILL STREET" },
-            { SortDescription: "HILL STREET NORTH LANE" },
-            { SortDescription: "HILL SQUARE" },
-            { SortDescription: "HILL PLACE" }
-        ];
+    //it("should sort the results by the description property", function (done) {
+    //    var descArray = [
+    //        { SortDescription: "HILL COURT" },
+    //        { SortDescription: "HILL STREET SOUTH LANE" },
+    //        { SortDescription: "HILL STREET" },
+    //        { SortDescription: "HILL STREET NORTH LANE" },
+    //        { SortDescription: "HILL SQUARE" },
+    //        { SortDescription: "HILL PLACE" }
+    //    ];
 
-        descArray.sort(widget._descriptionSort);
+    //    descArray.sort(widget._descriptionSort);
 
-        expect(descArray[0].SortDescription).toEqual("HILL COURT");
-        expect(descArray[5].SortDescription).toEqual("HILL STREET SOUTH LANE");
+    //    expect(descArray[0].SortDescription).toEqual("HILL COURT");
+    //    expect(descArray[5].SortDescription).toEqual("HILL STREET SOUTH LANE");
 
-        done();
-    });
+    //    done();
+    //});
 });

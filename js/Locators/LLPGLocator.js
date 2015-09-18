@@ -24,6 +24,15 @@ function (declare, _LocatorBase) {
     // module:
     //      LLPGLocator
 
+    var _isNullOrEmpty = function (/*Anything*/ obj) {
+        // summary:
+        //		Checks to see if the passed in thing is undefined, null or empty.
+        // tags:
+        //		private
+
+        return (obj === undefined || obj === null || obj === '');
+    };
+
     return declare([_LocatorBase], {
         // summary:
         //		        LLPG Locator
@@ -42,7 +51,7 @@ function (declare, _LocatorBase) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["ADMINISTRATIVE_AREA", "TOWN_NAME", "LOCALITY_NAME", "STREET_DESCRIPTOR"],
+        streetGrouping: ["STREET_DESCRIPTOR", "LOCALITY_NAME", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
@@ -91,14 +100,14 @@ function (declare, _LocatorBase) {
         _getPAOText: function (attributes) {
             // summary: 
             //      Constructs the PAO text from the PAO fields. 
-            var tpao = "", numberRange = "", paoFields = this.paoFields, nullOrEmpty = this._isNullOrEmpty;
+            var tpao = "", numberRange = "", paoFields = this.paoFields;
 
-            if (nullOrEmpty(attributes[paoFields.PAO_TEXT]) === false) {
+            if (_isNullOrEmpty(attributes[paoFields.PAO_TEXT]) === false) {
                 tpao = attributes[paoFields.PAO_TEXT].trim();
             }
             numberRange = this._paoSaoNumberRange(attributes[paoFields.PAO_START_NUMBER], attributes[paoFields.PAO_START_SUFFIX], attributes[paoFields.PAO_END_NUMBER], attributes[paoFields.PAO_END_SUFFIX]);
 
-            if (nullOrEmpty(numberRange) === false) {
+            if (_isNullOrEmpty(numberRange) === false) {
                 tpao += numberRange;
             }
 
@@ -108,14 +117,14 @@ function (declare, _LocatorBase) {
         _getSAOText: function (attributes) {
             // summary: 
             //      Constructs the SAO text from the SAO fields. 
-            var tsao = "", numberRange = "", nullOrEmpty = this._isNullOrEmpty, saoFields = this.saoFields;
+            var tsao = "", numberRange = "", saoFields = this.saoFields;
 
-            if (nullOrEmpty(attributes[saoFields.SAO_TEXT]) === false) {
+            if (_isNullOrEmpty(attributes[saoFields.SAO_TEXT]) === false) {
                 tsao = attributes[saoFields.SAO_TEXT].trim();
             }
             numberRange = this._paoSaoNumberRange(attributes[saoFields.SAO_START_NUMBER], attributes[saoFields.SAO_START_SUFFIX], attributes[saoFields.SAO_END_NUMBER], attributes[saoFields.SAO_END_SUFFIX]);
 
-            if (nullOrEmpty(numberRange) === false) {
+            if (_isNullOrEmpty(numberRange) === false) {
                 tsao += numberRange;
             }
 
