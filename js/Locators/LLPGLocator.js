@@ -91,14 +91,14 @@ function (declare, _LocatorBase) {
         _getPAOText: function (attributes) {
             // summary: 
             //      Constructs the PAO text from the PAO fields. 
-            var tpao = "", numberRange = "";
+            var tpao = "", numberRange = "", paoFields = this.paoFields, nullOrEmpty = this._isNullOrEmpty;
 
-            if (this._isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
-                tpao = attributes[this.paoFields.PAO_TEXT].trim();
+            if (nullOrEmpty(attributes[paoFields.PAO_TEXT]) === false) {
+                tpao = attributes[paoFields.PAO_TEXT].trim();
             }
-            numberRange = this._paoSaoNumberRange(attributes[this.paoFields.PAO_START_NUMBER], attributes[this.paoFields.PAO_START_SUFFIX], attributes[this.paoFields.PAO_END_NUMBER], attributes[this.paoFields.PAO_END_SUFFIX]);
+            numberRange = this._paoSaoNumberRange(attributes[paoFields.PAO_START_NUMBER], attributes[paoFields.PAO_START_SUFFIX], attributes[paoFields.PAO_END_NUMBER], attributes[paoFields.PAO_END_SUFFIX]);
 
-            if (this._isNullOrEmpty(numberRange) === false) {
+            if (nullOrEmpty(numberRange) === false) {
                 tpao += numberRange;
             }
 
@@ -108,14 +108,14 @@ function (declare, _LocatorBase) {
         _getSAOText: function (attributes) {
             // summary: 
             //      Constructs the SAO text from the SAO fields. 
-            var tsao = "", numberRange = "";
+            var tsao = "", numberRange = "", nullOrEmpty = this._isNullOrEmpty, saoFields = this.saoFields;
 
-            if (this._isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
-                tsao = attributes[this.saoFields.SAO_TEXT].trim();
+            if (nullOrEmpty(attributes[saoFields.SAO_TEXT]) === false) {
+                tsao = attributes[saoFields.SAO_TEXT].trim();
             }
-            numberRange = this._paoSaoNumberRange(attributes[this.saoFields.SAO_START_NUMBER], attributes[this.saoFields.SAO_START_SUFFIX], attributes[this.saoFields.SAO_END_NUMBER], attributes[this.saoFields.SAO_END_SUFFIX]);
+            numberRange = this._paoSaoNumberRange(attributes[saoFields.SAO_START_NUMBER], attributes[saoFields.SAO_START_SUFFIX], attributes[saoFields.SAO_END_NUMBER], attributes[saoFields.SAO_END_SUFFIX]);
 
-            if (this._isNullOrEmpty(numberRange) === false) {
+            if (nullOrEmpty(numberRange) === false) {
                 tsao += numberRange;
             }
 

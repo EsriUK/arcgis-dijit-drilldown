@@ -69,10 +69,6 @@ describe("A set of tests for the Drilldown widget", function () {
         done();
     });
 
-    it("should provide _isNullOrEmpty function", function (done) {
-        expect(widget._isNullOrEmpty(null)).toEqual(true);
-        done();
-    });
 
     
     it("should clear the list of picklists", function (done) {

@@ -29,6 +29,8 @@ node_modules
 
 # Demo page
 index.html
+perf.html
 
 # Build folder
 build/
+dist/

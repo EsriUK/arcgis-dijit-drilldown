@@ -19,7 +19,6 @@
 
 define([
     "dojo/_base/declare",
-    "dojo/_base/lang",
     "dijit/_Widget",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
@@ -31,9 +30,37 @@ define([
     "dojo/on",
     "dojo/Deferred",
     "dojo/query",
-    "dojo/NodeList-data",
-], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
-    
+    "dojo/NodeList-data"
+], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
+    var _isNullOrEmpty = function (/*Anything*/ obj) {
+        // summary:
+        //		Checks to see if the passed in thing is undefined, null or empty.
+        // tags:
+        //		private
+
+        return (obj === undefined || obj === null || obj === '');
+    },
+    _createSubGroup = function (premiseList, titleGroup) {
+        var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
+            subPremiseList = premiseList.Addresses, node;
+
+        for (k = 0, kL = subPremiseList.length; k < kL; k+=1) {
+            node = domConstruct.toDom("<span class='drilldownResult'>" + subPremiseList[k].address + "</span>");
+            query(node).data("result", subPremiseList[k]);
+
+            subPremiseTitleGroup.addChild(new ContentPane({
+                content: node
+            }));
+        }
+        subPremiseTitleGroup.startup();
+
+        titleGroup.addChild(new TitlePane({
+            title: premiseList.Description,
+            content: subPremiseTitleGroup,
+            open: false
+        }));
+    };
+
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
         // description: 
         //      Search for and display address details in a hierarchical list
@@ -82,14 +109,6 @@ define([
             return this.inherited(arguments);
         },
 
-        _isNullOrEmpty: function (/*Anything*/ obj) {
-            // summary:
-            //		Checks to see if the passed in thing is undefined, null or empty.
-            // tags:
-            //		private
-
-            return (obj === undefined || obj === null || obj === '');
-        },
 
         _formatResults: function (resultArray, sourceIndex, searchValue) {
             var c = {
@@ -105,7 +124,7 @@ define([
                 if(sourceIndex === this._allIndex) {
                     // Using all locators
                     for (b = 0; b < resultArray.length; b++) {
-                        if (!this._isNullOrEmpty(this.sources[b].locator.locatorType)) {
+                        if (!_isNullOrEmpty(this.sources[b].locator.locatorType)) {
                             // Custom locator with picklists
                             e[sourceIndex] = resultArray[0];
                             c.numResults += resultArray[0].PickListItems.length;
@@ -119,7 +138,7 @@ define([
                     return c;
                 }
                 
-                if (!this._isNullOrEmpty(this.activeSource.locator.locatorType)) {
+                if (!_isNullOrEmpty(this.activeSource.locator.locatorType)) {
                     // Custom locator with picklists
                     e[sourceIndex] = resultArray[0];
                     c.numResults += resultArray[0].PickListItems.length;
@@ -163,10 +182,10 @@ define([
                 pickListItems = results[singleSource].PickListItems;
 
                 if (pickListItems.length === 1 && pickListItems[0].Addresses.length === 1) {
-                    if (this._isNullOrEmpty(pickListItems[0].Addresses[0].Addresses)) {
+                    if (_isNullOrEmpty(pickListItems[0].Addresses[0].Addresses)) {
                         return true;
                     }
-                    if (!this._isNullOrEmpty(pickListItems[0].Addresses[0].Addresses) && pickListItems[0].Addresses[0].Addresses.length === 1) {
+                    if (!_isNullOrEmpty(pickListItems[0].Addresses[0].Addresses) && pickListItems[0].Addresses[0].Addresses.length === 1) {
                         return true;
                     }
                 }
@@ -178,7 +197,7 @@ define([
 
         _buildPickListUi: function(results) {
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, 
-                resultSource, noResults = false, res, sourceContainer, titlePane;
+                resultSource, noResults = false, res, sourceContainer, titlePane, _createGroup = this._createGroup;
 
             // Clear list of title groups
             this._clearPicklist();
@@ -193,11 +212,11 @@ define([
                 this.select(res);
             }
             else {
-                if (!this._isNullOrEmpty(results)) {
+                if (!_isNullOrEmpty(results)) {
                     for (resultSource in results) {
                         if (results.hasOwnProperty(resultSource)) {
                             // Check we have some results
-                            if (!this._isNullOrEmpty(results[resultSource]) && !this._isNullOrEmpty(results[resultSource].PickListItems)) {
+                            if (!_isNullOrEmpty(results[resultSource]) && !_isNullOrEmpty(results[resultSource].PickListItems)) {
                                 // Get the picklist
                                 pickListItems = results[resultSource].PickListItems;
                                 iL = pickListItems.length;
@@ -209,11 +228,11 @@ define([
                                     // Keep a list of all groups
                                     this._titleGroups.push(resultsContainer);
 
-                                    for (i = 0; i < iL; i++) {
+                                    for (i = 0; i < iL; i+=1) {
                                         // Create the list of premises
                                         premiseList = [];
 
-                                        premiseTitleGroup = this._createGroup(pickListItems[i]);
+                                        premiseTitleGroup = _createGroup(pickListItems[i]);
 
                                         titlePane = new TitlePane({
                                             title: pickListItems[i].Description,
@@ -245,7 +264,7 @@ define([
                 if (noResults) {
                     this._showNoResults();
                 }
-                if (!this._isNullOrEmpty(this.resultsElement)) {
+                if (!_isNullOrEmpty(this.resultsElement)) {
                     on(this.resultsElement, ".drilldownResult:click", function () {
                         var loc = query(this).data()[0],
                             res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
@@ -255,43 +274,24 @@ define([
             }
         },
 
-        _createSubGroup: function (premiseList, titleGroup) {
-            var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
-                subPremiseList = premiseList.Addresses, node;
-
-            for (k = 0, kL = subPremiseList.length; k < kL; k++) {
-                node = domConstruct.toDom("<span class='drilldownResult'>" + subPremiseList[k].address + "</span>");
-                query(node).data("result", subPremiseList[k]);
-
-                subPremiseTitleGroup.addChild(new ContentPane({
-                    content: node
-                }));
-            }
-            subPremiseTitleGroup.startup();
-
-            titleGroup.addChild(new TitlePane({
-                title: premiseList.Description,
-                content: subPremiseTitleGroup,
-                open: false
-            }));
-        },
+        
 
         _createGroup: function (pickList) {
-            var _this = this, j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
+            var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
 
-            if (!this._isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
+            if (!_isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
 
                 // Create a title group to hold the premise list
                 premiseList = pickList.Addresses;
 
                 for (j = 0, jL = premiseList.length; j < jL; j++) {
                     // Do we have a sub premise list?
-                    if (!this._isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
-                        _this._createSubGroup(premiseList[j], premiseTitleGroup);
+                    if (!_isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
+                        _createSubGroup(premiseList[j], premiseTitleGroup);
                     }
                     else {
                         // Single premise
-                        if (!this._isNullOrEmpty(premiseList[j].address)) {
+                        if (!_isNullOrEmpty(premiseList[j].address)) {
                             node = domConstruct.toDom("<span class='drilldownResult'>" + premiseList[j].address + "</span>");
                             query(node).data("result", premiseList[j]);
                         }
@@ -309,7 +309,7 @@ define([
             }
             else {
                 // Single result
-                if (!this._isNullOrEmpty(pickList.Addresses[0].address)) {
+                if (!_isNullOrEmpty(pickList.Addresses[0].address)) {
                     node = domConstruct.toDom("<span class='drilldownResult'>" + pickList.Addresses[0].address + "</span>");
                     query(node).data("result", pickList.Addresses[0]);
 
@@ -317,8 +317,8 @@ define([
                         content: node
                     });
                 }
-                else if (!this._isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
-                    _this._createSubGroup(pickList.Addresses[0], premiseTitleGroup);
+                else if (!_isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
+                    _createSubGroup(pickList.Addresses[0], premiseTitleGroup);
                     premiseTitleGroup.startup();
                 }
             }

@@ -60,6 +60,20 @@ if (!Array.prototype.filter) {
     };
 }
 
+function _chunkify(t) {
+    var tz = [], x = 0, y = -1, n = 0, i, j;
+
+    while (i = (j = t.charAt(x++)).charCodeAt(0)) {
+        var m = (i == 46 || (i >= 48 && i <= 57));
+        if (m !== n) {
+            tz[++y] = "";
+            n = m;
+        }
+        tz[y] += j;
+    }
+    return tz;
+}
+
 define([
     'dojo/_base/declare',
     "esri/tasks/locator",
@@ -130,27 +144,14 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             return a.SortDescription.trim().localeCompare(b.SortDescription.trim());
         },
 
+        
         _alphanumSort: function (a, b) {
             var aString = a.SortDescription, bString = b.SortDescription, aa, bb, x;
 
-            function chunkify(t) {
-                var tz = [], x = 0, y = -1, n = 0, i, j;
+            aa = _chunkify(aString);
+            bb = _chunkify(bString);
 
-                while (i = (j = t.charAt(x++)).charCodeAt(0)) {
-                    var m = (i == 46 || (i >= 48 && i <= 57));
-                    if (m !== n) {
-                        tz[++y] = "";
-                        n = m;
-                    }
-                    tz[y] += j;
-                }
-                return tz;
-            }
-
-            aa = chunkify(aString);
-            bb = chunkify(bString);
-
-            for (x = 0; aa[x] && bb[x]; x++) {
+            for (x = 0; aa[x] && bb[x]; x+=1) {
                 if (aa[x] !== bb[x]) {
                     var c = Number(aa[x]), d = Number(bb[x]);
                     if (c == aa[x] && d == bb[x]) {
@@ -164,9 +165,9 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
         _paoSaoNumberRange: function (startNumber, startSuffix, endNumber, endSuffix) {
             var start = startNumber.trim() + startSuffix.trim(),
-                end = endNumber.trim() + endSuffix.trim();
+                end = endNumber.trim() + endSuffix.trim(), nullOrEmpty = this._isNullOrEmpty;
 
-            if ((this._isNullOrEmpty(start) === false) && (this._isNullOrEmpty(end) === false)) {
+            if ((nullOrEmpty(start) === false) && (nullOrEmpty(end) === false)) {
                 return start + "-" + end;
             }
 
@@ -181,7 +182,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
         _getGroupedAddressValue: function (fields, attributes) {
             var i = 0, iL = fields.length, addressValue = "", fieldName, fieldValue, addressParts = [];
 
-            for (i = 0; i < iL; i++) {
+            for (i = 0; i < iL; i+=1) {
                 fieldName = fields[i];
 
                 fieldValue = attributes[fieldName];
@@ -201,20 +202,19 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
         _buildPickList: function (results) {
             var result = new Deferred(), i = 0, iL = 0, pickList = {}, premisePicklist = {}, candidates, candidate, attributes, addressKey,
-                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate;
-
-            this.resultsPickList = new PickList();
+                key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, groupedAddress = this._getGroupedAddressValue,
+                resultsPickList = new PickList();
 
             // Build picklist entries by concatenating fields in list
             if (results.candidates.length > 0) {
                 candidates = results.candidates;
 
-                for (i = 0, iL = candidates.length; i < iL; i++) {
+                for (i = 0, iL = candidates.length; i < iL; i+=1) {
                     candidate = candidates[i];
                     attributes = candidate.attributes;
 
                     // Build up street level grouping
-                    addressKey = this._getGroupedAddressValue(this.streetGrouping, attributes);
+                    addressKey = groupedAddress(this.streetGrouping, attributes);
 
                     if (addressKey.length > 0) {
                         if (pickList.hasOwnProperty(addressKey)) {
@@ -222,7 +222,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                         }
                         else {
                             pickList[addressKey] = new PickListItem({
-                                SortDescription: attributes.STREET_DESCRIPTOR,
+                                SortDescription: attributes[this.streetFields.STREET_DESCRIPTOR],
                                 Description: this._getListLevelDescription(2, attributes),
                                 Addresses: [candidate],
                                 Level: 2
@@ -243,8 +243,8 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                             // We have more than 1 results so need another picklist level
                             children = pickList[key].Addresses;
 
-                            for (k = 0, kL = children.length; k < kL; k++) {
-                                addressKey = this._getGroupedAddressValue(this.premiseGrouping, children[k].attributes);
+                            for (k = 0, kL = children.length; k < kL; k+=1) {
+                                addressKey = groupedAddress(this.premiseGrouping, children[k].attributes);
                                 childAddressCandidate = null;
 
                                 if (addressKey.length > 0) {
@@ -275,22 +275,25 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                             // Sort premise list
                             item.Addresses.sort(this._alphanumSort);
 
-                            this.resultsPickList.addItem(item);
+                            resultsPickList.addItem(item);
                         }
                         else {
                             // no children
-                            this.resultsPickList.addItem(pickList[key]);
+                            resultsPickList.addItem(pickList[key]);
                         }
                     }
                 }
 
                 // Sort street list
-                this.resultsPickList.PickListItems.sort(this._descriptionSort);
-                this.resultsPickList.PickListItems.reverse();
+                resultsPickList.PickListItems.sort(this._descriptionSort);
+                resultsPickList.PickListItems.reverse();
+
+                this.resultsPickList = resultsPickList;
 
                 result.resolve();
             }
             else {
+                this.resultsPickList = resultsPickList;
                 result.resolve();
             }
 
