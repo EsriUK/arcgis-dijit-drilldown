@@ -9,7 +9,7 @@ before_script:
  - grunt travis
 script: 
  - grunt coveralls:dijit_coverage --verbose
- addons:
+addons:
   sauce_connect:
     username: "sbatterby"
     access_key: "fbaa5a4c-de4f-4969-8119-14eafd496572"
