@@ -74,7 +74,12 @@ module.exports = function (grunt) {
 
                 options: {
                     specs: ['./js/tests/unit_tests/spec/*.js'],
-                    helpers: ['./js/tests/helpers/*.js', './js/tests/lib/sinon/sinon.js'],
+                    helpers: [
+                        './js/tests/helpers/agsllpgResults.js',
+                        './js/tests/helpers/llpgLargeList.js',
+                        './js/tests/helpers/llpgResults.js',
+                        './js/tests/lib/sinon/sinon.js'
+                    ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'coverage/coverage.json',
@@ -98,7 +103,12 @@ module.exports = function (grunt) {
 
                 options: {
                     specs: ['./js/tests/unit_tests/spec/*.js'],
-                    helpers: ['./js/tests/helpers/*.js', './js/tests/lib/sinon/sinon.js'],
+                    helpers: [
+                        './js/tests/helpers/agsllpgResults.js',
+                        './js/tests/helpers/llpgLargeList.js',
+                        './js/tests/helpers/llpgResults.js',
+                        './js/tests/lib/sinon/sinon.js'
+                    ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'coverage/coverage.json',
