@@ -1,4 +1,7 @@
 ﻿/*global grunt, module, require */
+var fs = require('fs'),
+    path = require('path'),
+    Zip = require('adm-zip');
 
 module.exports = function (grunt) {
 
@@ -36,11 +39,11 @@ module.exports = function (grunt) {
         },
         concat: {
             options: {
-                separator: ';',
+                separator: ';'
             },
             locators: {
                 src: ['build/Locators/PickList.js', 'build/Locators/PickListItem.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js'],
-                dest: 'dist/DrilldownLocators.js',
+                dest: 'dist/DrilldownLocators.js'
             }
         },
         debug: {
@@ -51,7 +54,7 @@ module.exports = function (grunt) {
         jasmine: {
             test: {
                 options: {
-                    specs: './js/tests/spec/*.js',
+                    specs: './js/tests/unit_tests/spec/*.js',
                     helpers: ['./js/tests/helpers/*.js', './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
@@ -59,7 +62,7 @@ module.exports = function (grunt) {
                             async: true,
                             has: { 'native-xhr2': false },
                             paths: {
-                                app: '/../js'
+                                app: '/../../js'
                             }
                         },
                         dojoFile: 'http://js.arcgis.com/3.14/'
@@ -70,7 +73,7 @@ module.exports = function (grunt) {
                 src: ['js/*.js', 'js/Locators/*.js'],
 
                 options: {
-                    specs: ['./js/tests/spec/*.js'],
+                    specs: ['./js/tests/unit_tests/spec/*.js'],
                     helpers: ['./js/tests/helpers/*.js', './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
@@ -94,7 +97,7 @@ module.exports = function (grunt) {
                 src: ['js/*.js', 'js/Locators/*.js'],
 
                 options: {
-                    specs: ['./js/tests/spec/*.js'],
+                    specs: ['./js/tests/unit_tests/spec/*.js'],
                     helpers: ['./js/tests/helpers/*.js', './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
@@ -133,6 +136,18 @@ module.exports = function (grunt) {
             dijit_coverage: {
                 src: 'coverage/lcov/lcov.info'
             }
+        },
+        webdriver: {
+            options: {
+                host: 'ondemand.saucelabs.com',
+                port: 80,
+                user: 'danbatsb',
+                key: 'fbaa5a4c-de4f-4969-8119-14eafd496572',
+                updateSauceJob: true
+            },
+            testconfig: {
+                configFile: "js/tests/integration_tests/wdio.conf.js"
+            }
         }
     };
 
@@ -148,6 +163,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-coveralls');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-webdriver');
+
 
     // Add default task(s)
     grunt.registerTask('default', ['jasmine:test']);
@@ -156,7 +173,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['clean', 'uglify:locators', 'uglify:widget', 'concat']);
 
-    grunt.registerTask('travis', ['jasmine:coverageci']);
+    grunt.registerTask('travis', ['jasmine:coverageci', 'webdriver']);
 };
 
 
