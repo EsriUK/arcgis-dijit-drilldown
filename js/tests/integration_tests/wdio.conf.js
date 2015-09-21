@@ -51,8 +51,7 @@
 		platform: "Windows 7",
 		name: "Drilldown - Chrome",
 		tags: ["Drilldown", "Chrome"],
-		build: process.env.TRAVIS_BUILD_NUMBER,
-		'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER
+		build: process.env.TRAVIS_BUILD_NUMBER
 	}],
 	//
 	// ===================
