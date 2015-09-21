@@ -9,10 +9,6 @@ before_script:
  - grunt travis
 script: 
  - grunt coveralls:dijit_coverage --verbose
-addons:
-  sauce_connect:
-    username: "sbatterby"
-    access_key: "fbaa5a4c-de4f-4969-8119-14eafd496572"
 env:
   global:
     - secure: YcB4wrv/RI6roxL65I/zIxp9fbfj9uKSGlv8e2akv7TaQ4KrqtLiqiYNcM75YmoCWgoLxuHWbu7fo0ybCesXCDcOzjN+BO5f/VUOCSFQuYeZzK2SJ6iMqBo/EknUG1Yv4uRDvoGPsjoDZXMvCI3OqK1McWMXF2CBep7jA5kc9P7ifMtGX+HU6v5+BlR6fYTjLRf+ddJF9bEpuC/WAMW2dGwjCb9/T0qVMS5dKkIANcLH1DcmaUR6LX84ov0evC4ztxAfxMj9S7U6N4i7iyT+Z6+b257ohYg1Ksz5fCS1g7PL3rNZEwtQc1l4h0Vh61wCaX636RXfA1l5zwEDuC/LteqyV0heW5LvqShW8XLbNYLbF6YbSFL3YgPIR//8gQl1hzE1+jCrxir7873WHXZANu0xrxVvPNtOAxFfMnJTmcLhhG5D5mx+eVqOzE5BfFVrOfhZoyqghi6HYolJ4ssyKIMNJTkFtnCEWWjOU2KvUWHSKYi8I8EntSV4coe9/HbGSzptVtM5WkIb/Ff0DJxKRKJcqrAmtCjcUVbTXqKChpzZ76oIRQ8GEA454rodEqzk2oqt9mD3DfMnuERIkUacVIbADAu9XveJWfiOZDXXLdpTSOzvlFDCQmM1QdDNlmjt/Tha1gmEQwGwirJYtJPR0vWwX2UjMndytzq2KD3esaQ=
