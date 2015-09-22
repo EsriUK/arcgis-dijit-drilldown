@@ -175,6 +175,10 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
         },
      
+        addressToLocations: function(params, callback, errback) {
+            
+            this.inherited(arguments);
+        },
         
 
         _buildPickList: function (results) {

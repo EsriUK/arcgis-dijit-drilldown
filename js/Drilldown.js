@@ -91,6 +91,7 @@ define([
 
             this.inherited(arguments).then(function (res) {
                 _this._buildPickListUi(res);
+              
             });
 
             return results.promise;
@@ -197,7 +198,8 @@ define([
 
         _buildPickListUi: function(results) {
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer, premiseList, premiseTitleGroup, 
-                resultSource, noResults = false, res, sourceContainer, titlePane, _createGroup = this._createGroup;
+                resultSource, noResults = false, res, sourceContainer, titlePane, _createGroup = this._createGroup,
+                finished = new Deferred();
 
             // Clear list of title groups
             this._clearPicklist();
@@ -259,6 +261,7 @@ define([
                             }
                         }
                     }
+                    finished.resolve();
                 }
 
                 if (noResults) {
@@ -272,6 +275,7 @@ define([
                     });
                 }
             }
+            return finished.promise;
         },
 
         

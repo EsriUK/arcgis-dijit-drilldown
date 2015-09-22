@@ -47,7 +47,7 @@ describe("A set of tests for the Base Locator", function () {
             };
 
             widget._buildPickList = function () {
-                this.resultsPickList.addItem({});
+                this.resultsPickList.PickListItems.push({});
                 var def = new Deferred();
                 return def.resolve();
             }

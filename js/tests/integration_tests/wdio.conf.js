@@ -144,7 +144,28 @@
 	// Gets executed after all tests are done. You still have access to all global variables from
 	// the test.
 	after: function () {
-		// do something
+		// mark travis job as passed
+		var options = {
+			headers: { 'Content-Type': 'text/json' },
+			url: 'http://' + process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY + '@saucelabs.com/rest/v1/' + process.env.SAUCE_USERNAME + '/jobs/' + client.requestHandler.sessionID,
+			method: 'PUT',
+			body: JSON.stringify({
+				passed: true,
+				public: true
+			})
+		};
+
+		request(options, function (err) {
+			if (err) {
+				client.end(function () {
+					done(err);
+				});
+				return false;
+			}
+
+			client.end(done);
+
+		});
 	},
 	//
 	// Gets executed after all workers got shut down and the process is about to exit. It is not
