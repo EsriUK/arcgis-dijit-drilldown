@@ -52,6 +52,12 @@
 		name: "Drilldown - Chrome",
 		tags: ["Drilldown", "Chrome"],
 		build: process.env.TRAVIS_BUILD_NUMBER
+	}, {
+	    browserName: 'firefox',
+	    platform: "Windows 7",
+	    name: "Drilldown - Firefox",
+	    tags: ["Drilldown", "Firefox"],
+	    build: process.env.TRAVIS_BUILD_NUMBER
 	}],
 	//
 	// ===================
