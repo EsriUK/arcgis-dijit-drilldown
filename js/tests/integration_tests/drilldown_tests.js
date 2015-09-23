@@ -40,7 +40,7 @@ describe('Drilldown tests: ' + helper.getBrowser(), function () {
             .pause(2000)
             .click(".esri-icon-search")
             .pause(10000)
-
+            //.click(".zoomTo")
             .call(done);
     });
 });
