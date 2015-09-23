@@ -79,19 +79,19 @@ define([
         destroy: function () {
             // connections/subscriptions will be cleaned up during the destroy() lifecycle phase
             // call the superclass method of the same name.
+            
             this._clearPicklist();
             this.inherited(arguments);
-
         },
 
-        search: function () {
+        search: function (val) {
             // Override the Search widget search method
 
             var _this = this, results = new Deferred();
 
             this.inherited(arguments).then(function (res) {
                 _this._buildPickListUi(res);
-              
+                results.resolve();
             });
 
             return results.promise;

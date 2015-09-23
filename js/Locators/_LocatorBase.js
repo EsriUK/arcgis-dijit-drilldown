@@ -175,11 +175,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
         },
      
-        addressToLocations: function(params, callback, errback) {
-            
-            this.inherited(arguments);
-        },
-        
+       
 
         _buildPickList: function (results) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey,
