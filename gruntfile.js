@@ -16,8 +16,14 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            options: { force: true },
-            src: ["build/", "dist/"]
+            pre: {
+                options: { force: true },
+                src: ["build/", "dist/"]
+            },
+            post: {
+                options: { force: true },
+                src: ["dist/Drilldown.js"]
+            }
         },
         uglify: {
             locators: {
@@ -205,7 +211,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['clean', 'uglify', 'concat']);
 
-    grunt.registerTask('travis', ['jasmine:coverageci', 'clean', 'uglify', 'concat']);
+    grunt.registerTask('travis', ['jasmine:coverageci', 'clean:pre', 'uglify', 'concat', 'clean:post']);
 };
 
 
