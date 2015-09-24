@@ -30,8 +30,9 @@ define([
     "dojo/on",
     "dojo/Deferred",
     "dojo/query",
+    "dojo/store/Memory",
     "dojo/NodeList-data"
-], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
+], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, Memory) {
     var _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
@@ -42,7 +43,8 @@ define([
     },
     _createSubGroup = function (premiseList, titleGroup) {
         var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
-            subPremiseList = premiseList.Addresses, node;
+            subPremiseList = premiseList.Addresses, node, panes = [];
+        subPremiseTitleGroup.startup();
 
         for (k = 0, kL = subPremiseList.length; k < kL; k+=1) {
             node = domConstruct.toDom("<span class='drilldownResult'>" + subPremiseList[k].address + "</span>");
@@ -52,7 +54,7 @@ define([
                 content: node
             }));
         }
-        subPremiseTitleGroup.startup();
+        
 
         titleGroup.addChild(new TitlePane({
             title: premiseList.Description,
@@ -70,6 +72,7 @@ define([
         widgetsInTemplate: true,
         resultsElement: null,
         _titleGroups: [],
+        _resultsStore: null,
 
         constructor: function (args) {
             declare.safeMixin(this, args);
@@ -84,7 +87,7 @@ define([
             this.inherited(arguments);
         },
 
-        search: function (val) {
+        search: function () {
             // Override the Search widget search method
 
             var _this = this, results = new Deferred();
@@ -203,6 +206,14 @@ define([
 
             // Clear list of title groups
             this._clearPicklist();
+
+            //this._resultsStore = new Memory({
+            //    data: results,
+            //    getChildren: function (object) {
+            //        return object.children || [];
+            //    }
+            //});
+
 
             // Create the TitleGroup container
             domConstruct.destroy(this.resultsElement);

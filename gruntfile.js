@@ -42,7 +42,7 @@ module.exports = function (grunt) {
                 separator: ';'
             },
             locators: {
-                src: ['build/Locators/PickList.js', 'build/Locators/PickListItem.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js'],
+                src: ['build/Locators/PickListItem.js', 'build/Locators/PickList.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js'],
                 dest: 'dist/DrilldownLocators.js'
             }
         },

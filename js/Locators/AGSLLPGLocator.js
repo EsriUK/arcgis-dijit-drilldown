@@ -39,7 +39,7 @@ function (declare, _LocatorBase) {
 
         locatorType: "AGS_LLPG",
         resultsPickList: null,
-        streetGrouping: ["AdminArea", "Town", "LocalityName", "StreetDescriptor"],
+        streetGrouping: ["StreetDescriptor", "LocalityName", "Town", "AdminArea"],
         premiseGrouping: ["PAOText", "PAONumberRange"],
 
         streetFields: {

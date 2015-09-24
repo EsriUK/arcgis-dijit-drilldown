@@ -18,7 +18,7 @@ describe('Drilldown tests: ' + helper.getBrowser(), function () {
     it('should open the drilldown test page', function (done) {
         // Load drilldown test site
         browser
-            .url("http://appsstage.esriuk.com/app/Drilldown-demo/13/wmt/view/416bf5a4f02f45158a0a893c73450878/index.html")
+            .url("http://appsstage.esriuk.com/app/Drilldown-demo/15/wmt/view/416bf5a4f02f45158a0a893c73450878/index.html")
 
             // Check the title
             .getTitle(function (err, title) {
@@ -31,7 +31,7 @@ describe('Drilldown tests: ' + helper.getBrowser(), function () {
     it('should do an address search for 13 Princes Street', function (done) {
         // Load drilldown test site
         browser
-            .url("http://appsstage.esriuk.com/app/Drilldown-demo/13/wmt/view/416bf5a4f02f45158a0a893c73450878/index.html")
+            .url("http://appsstage.esriuk.com/app/Drilldown-demo/15/wmt/view/416bf5a4f02f45158a0a893c73450878/index.html")
 
             // Perform a valid search
             .waitForExist("#searchWidget_input", 10000)

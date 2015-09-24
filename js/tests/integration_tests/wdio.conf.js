@@ -15,7 +15,7 @@
 	// If you are using Sauce Labs, WebdriverIO takes care to update the job information
 	// once the test is done. This option is set to `true` by default.
 	//
-	updateJob: false, // will get overwritten
+	updateJob: true, // will get overwritten
 
 	//
 	// ==================
@@ -47,18 +47,20 @@
 	// https://docs.saucelabs.com/reference/platforms-configurator
 	//
 	capabilities: [{
-		browserName: 'chrome',
-		platform: "Windows 7",
-		name: "Drilldown - Chrome",
-		tags: ["Drilldown", "Chrome"],
-		build: process.env.TRAVIS_BUILD_NUMBER
-	}, {
-	    browserName: 'firefox',
+	    browserName: 'chrome',
 	    platform: "Windows 7",
-	    name: "Drilldown - Firefox",
-	    tags: ["Drilldown", "Firefox"],
+	    name: "Drilldown - Chrome",
+	    tags: ["Drilldown", "Chrome"],
 	    build: process.env.TRAVIS_BUILD_NUMBER
-	}],
+	}
+	//}, {
+	//    browserName: 'firefox',
+	//    platform: "Windows 7",
+	//    name: "Drilldown - Firefox",
+	//    tags: ["Drilldown", "Firefox"],
+	//    build: process.env.TRAVIS_BUILD_NUMBER
+	//}
+	],
 	//
 	// ===================
 	// Test Configurations
@@ -66,7 +68,7 @@
 	// Define all options that are relevant for the WebdriverIO instance here
 	//
 	// Level of logging verbosity.
-	logLevel: 'silent',
+	logLevel: 'error',
 	//
 	// Enables colors for log output.
 	coloredLogs: true,
