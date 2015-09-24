@@ -27,7 +27,6 @@
 	"mocha": "*",
     "webdriverio": "3.2.4",
     "adm-zip": "*",
-	"grunt-webdriver": "*",
-	"grunt-injector": "*"
+	"grunt-webdriver": "*"
   }
 }

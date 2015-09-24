@@ -209,7 +209,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 
-    grunt.registerTask('build', ['clean', 'uglify', 'concat']);
+    grunt.registerTask('build', ['clean:pre', 'uglify', 'concat', 'clean:post']);
 
     grunt.registerTask('travis', ['jasmine:coverageci', 'clean:pre', 'uglify', 'concat', 'clean:post']);
 };
