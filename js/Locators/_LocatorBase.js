@@ -108,7 +108,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                     }
                     else {
                         pickList[addressKey] = new PickListItem({
-                            SortDescription: attributes[streetField],
+                            SortDescription: addressKey,
                             Description: addressKey,
                             Addresses: [candidate],
                             Level: 2
@@ -201,7 +201,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                         premisePicklist = {};
 
                         if (pickList[key].Addresses.length > 1) {
-                            item = new PickListItem({ Description: key });
+                            item = new PickListItem({ Description: key, SortDescription: pickList[key].SortDescription });
 
                             // We have more than 1 results so need another picklist level
                             children = pickList[key].Addresses;
@@ -250,7 +250,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                 // Sort street list
                 resultsPickList.PickListItems.sort(descFunc);
-                resultsPickList.PickListItems.reverse();
 
                 this.resultsPickList = resultsPickList;
 
