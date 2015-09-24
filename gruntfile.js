@@ -183,7 +183,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['clean', 'uglify:locators', 'uglify:widget', 'concat']);
 
-    grunt.registerTask('travis', ['jasmine:coverageci', 'webdriver']);
+    grunt.registerTask('travis', ['jasmine:coverageci']);
 };
 
 
