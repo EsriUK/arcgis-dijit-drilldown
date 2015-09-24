@@ -17,10 +17,15 @@ module.exports = function (grunt) {
         },
         clean: {
             options: { force: true },
-            src: ["js/build/", "dist/"]
+            src: ["build/", "dist/"]
         },
         uglify: {
             locators: {
+                options: {
+                    compress: true,
+                    mangle: true,
+                    sourceMap: false
+                },
                 files: [{
                     expand: true,
                     cwd: 'js/',
@@ -29,21 +34,38 @@ module.exports = function (grunt) {
                 }]
             },
             widget: {
+                options: {
+                    compress: true,
+                    mangle: true,
+                    sourceMap: false
+                },
                 files: [{
                     expand: true,
                     cwd: 'js/',
                     src: ['*.js'],
-                    dest: 'dist/'
+                    dest: 'build/'
                 }]
             }
         },
         concat: {
-            options: {
-                separator: ';'
+            dist: {
+                options: {
+                    separator: ',',
+                    process: function (src, filepath) {
+                        return '"esriuk/dijit/' + filepath.replace(".js", "").replace("build/", "") + '": function () {' + src + '}';
+                    }
+                },
+                src: ['build/Locators/PickListItem.js', 'build/Locators/PickList.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js', 'build/Drilldown.js'],
+                dest: 'dist/Drilldown.js' 
             },
-            locators: {
-                src: ['build/Locators/PickListItem.js', 'build/Locators/PickList.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js'],
-                dest: 'dist/DrilldownLocators.js'
+            final: {
+                options: {
+                    process: function (src, filepath) {
+                        return 'require({ cache: { '+ src +' } });';
+                    }
+                },
+                src: ['dist/Drilldown.js'],
+                dest: 'dist/Drilldown.min.js'
             }
         },
         debug: {
@@ -174,16 +196,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-coveralls');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-webdriver');
-
+ 
 
     // Add default task(s)
     grunt.registerTask('default', ['jasmine:test']);
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 
-    grunt.registerTask('build', ['clean', 'uglify:locators', 'uglify:widget', 'concat']);
+    grunt.registerTask('build', ['clean', 'uglify', 'concat']);
 
-    grunt.registerTask('travis', ['jasmine:coverageci']);
+    grunt.registerTask('travis', ['jasmine:coverageci', 'clean', 'uglify', 'concat']);
 };
 
 
