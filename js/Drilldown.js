@@ -277,8 +277,7 @@ define([
 
         _buildPickListUi: function(results) {
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer,
-                resultSource, noResults = false, res, sourceContainer, titlePane, _createGroup = this._createGroup,
-                finished = new Deferred();
+                resultSource, noResults = false, res, sourceContainer, titlePane, finished = new Deferred();
 
             // Clear list of title groups
             this._clearPicklist();
