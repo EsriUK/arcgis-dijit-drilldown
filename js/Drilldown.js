@@ -88,6 +88,55 @@ define([
             content: subPremiseTitleGroup,
             open: false
         }));
+    },
+    _createGroup = function (pickList) {
+        var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
+
+        if (!_isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
+
+            // Create a title group to hold the premise list
+            premiseList = pickList.Addresses;
+
+            for (j = 0, jL = premiseList.length; j < jL; j++) {
+                // Do we have a sub premise list?
+                if (!_isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
+                    _createSubGroup(premiseList[j], premiseTitleGroup);
+                }
+                else {
+                    // Single premise
+
+                    if (!_isNullOrEmpty(premiseList[j].address)) {
+                        node = _createNodeWithData(premiseList[j].address, premiseList[j]);
+                    }
+                    else {
+                        node = _createNodeWithData(premiseList[j].Addresses[0].address, premiseList[j].Addresses[0]);
+                    }
+                    premiseTitleGroup.addChild(new ContentPane({
+                        content: node
+                    }));
+                }
+            }
+
+            premiseTitleGroup.startup();
+        }
+        else {
+            // Single result
+            if (!_isNullOrEmpty(pickList.Addresses[0].address)) {
+                premiseTitleGroup = new ContentPane({
+                    content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0])
+                });
+            }
+            else if (!_isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
+                _createSubGroup(pickList.Addresses[0], premiseTitleGroup);
+            }
+        }
+        return premiseTitleGroup;
+    },
+    handlerFunc = function (list) {
+        if (this.get("contentSet") === false) {
+            this.set("content", _createGroup(list));
+            this.set("contentSet", true);
+        }
     };
 
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
@@ -227,14 +276,9 @@ define([
         },
 
         _buildPickListUi: function(results) {
-            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer,  
+            var _this = this, pickListItems, i = 0, iL = 0, resultsContainer,
                 resultSource, noResults = false, res, sourceContainer, titlePane, _createGroup = this._createGroup,
-                finished = new Deferred(), handlerFunc = function (list) {
-                    if (this.get("contentSet") === false) {
-                        this.set("content", _createGroup(list));
-                        this.set("contentSet", true);
-                    }
-                };
+                finished = new Deferred();
 
             // Clear list of title groups
             this._clearPicklist();
@@ -261,7 +305,6 @@ define([
                                 if (iL > 0) {
                                     sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
                                     resultsContainer = new TitleGroup(null, sourceContainer);
-                                    resultsContainer.startup();
 
                                     // Keep a list of all groups
                                     this._titleGroups.push(resultsContainer);
@@ -314,53 +357,6 @@ define([
                 }
             }
             return finished.promise;
-        },
-
-        
-
-        _createGroup: function (pickList) {
-            var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
-
-            if (!_isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
-
-                // Create a title group to hold the premise list
-                premiseList = pickList.Addresses;
-
-                for (j = 0, jL = premiseList.length; j < jL; j++) {
-                    // Do we have a sub premise list?
-                    if (!_isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
-                        _createSubGroup(premiseList[j], premiseTitleGroup);
-                    }
-                    else {
-                        // Single premise
-
-                        if (!_isNullOrEmpty(premiseList[j].address)) {
-                            node = _createNodeWithData(premiseList[j].address, premiseList[j]);
-                        }
-                        else {
-                            node = _createNodeWithData(premiseList[j].Addresses[0].address, premiseList[j].Addresses[0]);
-                        }
-                        premiseTitleGroup.addChild(new ContentPane({
-                            content: node
-                        }));
-                    }
-                }
-
-                premiseTitleGroup.startup();
-            }
-            else {
-                // Single result
-                if (!_isNullOrEmpty(pickList.Addresses[0].address)) {
-                    premiseTitleGroup = new ContentPane({
-                        content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0])
-                    });
-                }
-                else if (!_isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
-                    _createSubGroup(pickList.Addresses[0], premiseTitleGroup);
-                }
-            }
-            return premiseTitleGroup;
         }
-
     });
 });
