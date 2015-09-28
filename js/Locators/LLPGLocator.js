@@ -144,7 +144,7 @@ function (declare, _LocatorBase) {
             return tsao.trim();
         },
 
-        _getListLevelDescription: function(level, attributes) {
+        _getListLevelDescription: function (level, attributes) {
             // summary:
             //      Gets the correct description depending on the address level
             // tags:

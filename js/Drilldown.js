@@ -43,6 +43,8 @@ if (!Function.prototype.bind) {
     };
 }
 
+
+
 define([
     "dojo/_base/declare",
     "dijit/_Widget",
@@ -58,7 +60,7 @@ define([
     "dojo/query",
     "dojo/NodeList-data"
 ], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
-    var _isNullOrEmpty = function (/*Anything*/ obj) {
+    var _titleCase = false, _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
 
@@ -87,7 +89,6 @@ define([
             }));
         }
         
-
         titleGroup.addChild(new TitlePane({
             title: premiseList.Description,
             content: subPremiseTitleGroup,
@@ -175,11 +176,13 @@ define([
         //      Used to destroy these widgets if needed.
         _titleGroups: [],
 
+        titleCase: false,
 
         constructor: function (args) {
             declare.safeMixin(this, args);
+            
+            _titleCase = this.titleCase;
         },
-
 
         destroy: function () {
             // connections/subscriptions will be cleaned up during the destroy() lifecycle phase
@@ -208,7 +211,6 @@ define([
             return results.promise;
         },
 
-
         clear: function () {
             // summary:
             //      Clear the picklists and call the base clear method.
@@ -226,7 +228,6 @@ define([
             }
             return this.inherited(arguments);
         },
-
 
         _formatResults: function (resultArray, sourceIndex, searchValue) {
             // summary:
@@ -286,7 +287,6 @@ define([
                 this._titleGroups = [];
             }
         },
-
 
         _showNoResults: function() {
             // summary:
