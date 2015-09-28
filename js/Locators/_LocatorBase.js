@@ -70,7 +70,7 @@ define([
 ],
 function (declare, Locator, PickList, PickListItem, Deferred) {
     // module:
-    //      _LocatorBase
+    //      esriuk/dijit/locators/_LocatorBase
 
     var reA = /[^a-zA-Z]/g, reN = /[^0-9]/g,
         _getGroupedAddressValue = function (fields, attributes) {
@@ -134,7 +134,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
     return declare([Locator], {
         // summary:
-        //		Base class for Drilldown Locators.
+        //		Base class for Locators. Inherits from esri locator.
 
         locatorType: "None",
         streetGrouping: [],
@@ -153,10 +153,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             SAO_START_SUFFIX: "",
             SAO_END_NUMBER: "",
             SAO_END_SUFFIX: ""
-        },
-
-        constructor: function () {
-
         },
 
         _geocodeHandler: function (results, b, k, g, c) {

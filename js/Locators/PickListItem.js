@@ -21,14 +21,27 @@ define([
 ],
 function (declare) {
     // module:
-    //      _LocatorBase
+    //      esriuk/dijit/locators/PickListItem
 
     return declare(null, {
         // summary:
-        //		Base class for Drilldown Locators.
+        //		A class to represent a PickListItem.
+
+        // Description: String
+        //      The items address description
         Description: "",
+
+        // Addresses: Array
+        //      The list of addresses for this item
         Addresses: [],
+
+        // Level: Integer
+        //      The level within the picklist
         Level: 0,
+
+        // SortDescription: String
+        //      The description used for sorting. May be different
+        //      from the description.
         SortDescription: "",
 
         constructor: function (args) {
@@ -41,9 +54,10 @@ function (declare) {
         },
 
         addCandidate: function (address) {
+            // summary:
+            //      Adds an address to the current list of addresses.
+
             this.Addresses.push(address);
         }
-
-
     });
 });

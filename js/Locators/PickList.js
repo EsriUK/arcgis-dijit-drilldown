@@ -17,30 +17,29 @@
  */
 
 define([
-    "dojo/_base/declare",
-    "./PickListItem"
+    "dojo/_base/declare"
 ],
-function (declare, PickListItem) {
+function (declare) {
     // module:
-    //      _LocatorBase
+    //      esriuk/dijit/locators/PickList
 
     return declare(null, {
         // summary:
-        //		Base class for Drilldown Locators.
-        PickListItems: [],
-        Identifier: "",
-       
+        //      A container for a list of picklist items.
+
+        // PickListItems: Array
+        //      The list of PickListItems
+        PickListItems: [],       
 
         constructor: function () {
             this.PickListItems = [];
         },
 
-
-
         addItem: function (item) {
+            // summary:
+            //      Adds a picklist item to the current list.
+
             this.PickListItems.push(item);
         }
-
-
     });
 });

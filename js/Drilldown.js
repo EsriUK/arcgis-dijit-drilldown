@@ -403,11 +403,14 @@ define([
                 if (noResults) {
                     this._showNoResults();
                 }
+
+                // Set up the onclick event for an individual address.
                 if (!_isNullOrEmpty(this.resultsElement)) {
                     on(this.resultsElement, ".drilldownResult:click", function () {
                         var loc = query(this).data()[0],
                             res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
-                        _this.select(res);
+                        _this.select(res)
+                        _this._clearPicklist();
                     });
                 }
             }
