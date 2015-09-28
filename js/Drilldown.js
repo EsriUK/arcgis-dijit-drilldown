@@ -139,16 +139,30 @@ define([
         }
     };
 
+    // module:
+    //      esriuk/dijit/Drilldown
+
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
+        // summary:
+        //      A hierarchical address search widget that extends the functionality of the Esri Search widget.
+        //  
         // description: 
-        //      Search for and display address details in a hierarchical list
+        //      Search for and display address details in a hierarchical list. The Drilldown widget works with custom locators to 
+        //      create a picklist from the address results and output this as an interactive list.
 
         
         baseClass: "drilldown",
         widgetsInTemplate: true,
+
+        // resultsElement: DOM object
+        //      The element used to contain the results.
         resultsElement: null,
+
+        // _titleGroups: Array
+        //      A list of each title group created for the picklist results.
+        //      Used to destroy these widgets if needed.
         _titleGroups: [],
-        _resultsStore: null,
+
 
         constructor: function (args) {
             declare.safeMixin(this, args);
@@ -164,7 +178,13 @@ define([
         },
 
         search: function () {
-            // Override the Search widget search method
+            // summary: 
+            //      Override the Search widget search method.
+            //      
+            // description:
+            //      Call the base search method to get the results, this will use the custom locator, if set up, and build
+            //      the picklist from the results.
+            //      When we get the results back it will be a picklist so construct the picklist UI.
 
             var _this = this, results = new Deferred();
 
@@ -177,20 +197,29 @@ define([
         },
 
 
-        clear: function() {
+        clear: function () {
+            // summary:
+            //      Clear the picklists and call the base clear method.
+
             this._clearPicklist();
             this.inherited(arguments);
         },
 
         _hydrateResults: function (a) {
+            // summary:
+            //      Override base method to check if the results are a picklist.
+
             if (a.PickListItems) {
-                return a; //this._hydratePickListResult(a);
+                return a;
             }
             return this.inherited(arguments);
         },
 
 
         _formatResults: function (resultArray, sourceIndex, searchValue) {
+            // summary:
+            //      Override base method to correctly format picklist results if one is returned.
+
             var c = {
                 activeSourceIndex: sourceIndex,
                 value: searchValue,
@@ -233,6 +262,10 @@ define([
         },
 
         _clearPicklist: function() {
+            // summary:
+            //      Clear the picklist results if we have any. Go throught the list of 
+            //      title groups and destroy them. 
+
             var m, mL;
             if (this._titleGroups.length > 0) {
                 for (m = 0, mL = this._titleGroups.length; m < mL; m++) {
@@ -244,11 +277,18 @@ define([
 
 
         _showNoResults: function() {
+            // summary:
+            //      Function used to call the base no results functions. 
+
             this._noResults(this.value);
             this._showNoResultsMenu();
         },
 
         _isSingleResult: function(results) {
+            // summary:
+            //      Check to see if we only have a single result returned as a picklist.
+            //      It may be a single result but under one or two levels.
+
             var numberOfResults = 0, pickListItems, singleSource, source;
 
             for (source in results) {
@@ -276,6 +316,10 @@ define([
         },
 
         _buildPickListUi: function(results) {
+            // summary:
+            //      Main code used to construct the picklist UI. The picklist is built using nested titlegroups and titlepanes.
+            //      Only one level is constructed, the lower levels are lazy loaded when clicking on a title.
+
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer,
                 resultSource, noResults = false, res, sourceContainer, titlePane, finished = new Deferred();
 
