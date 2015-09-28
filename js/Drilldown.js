@@ -61,18 +61,23 @@ define([
     var _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
-        // tags:
-        //		private
 
         return (obj === undefined || obj === null || obj === '');
     },
     _createNodeWithData = function (address, addressData) {
+        // summary:
+        //      Creates a DOM node witht he address results data attched. This data is used
+        //      when clicking on an address.
+
         var node = domConstruct.toDom("<span class='drilldownResult'>" + address + "</span>");
         query(node).data("result", addressData);
 
         return node;
     },
     _createSubGroup = function (premiseList, titleGroup) {
+        // summary:
+        //      Creates the lowest level in the picklist. Creates the address results with the attached data.
+
         var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
             subPremiseList = premiseList.Addresses;
 
@@ -90,6 +95,9 @@ define([
         }));
     },
     _createGroup = function (pickList) {
+        // summary:
+        //      Creates a titlegroup. USed to create a premise level in the pick list.
+
         var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
 
         if (!_isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
@@ -133,6 +141,10 @@ define([
         return premiseTitleGroup;
     },
     handlerFunc = function (list) {
+        // summary:
+        //      Handles the onclick event of a titlepane.
+        //      Constructs the results if they have not been created yet.
+
         if (this.get("contentSet") === false) {
             this.set("content", _createGroup(list));
             this.set("contentSet", true);
