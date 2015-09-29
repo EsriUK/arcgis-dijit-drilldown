@@ -60,58 +60,6 @@ if (!Array.prototype.filter) {
     };
 }
 
-/*
- * Title Caps
- * 
- * Ported to JavaScript By John Resig - http://ejohn.org/ - 21 May 2008
- * Original by John Gruber - http://daringfireball.net/ - 10 May 2008
- * License: http://www.opensource.org/licenses/mit-license.php
- */
-
-(function () {
-    var small = "(a|an|and|as|at|but|by|en|for|if|in|of|on|or|the|to|v[.]?|via|vs[.]?)";
-    var punct = "([!\"#$%&'()*+,./:;<=>?@[\\\\\\]^_`{|}~-]*)";
-
-    this.titleCaps = function (title) {
-        var parts = [], split = /[:.;?!] |(?: |^)["Ò]/g, index = 0;
-
-        title = title.toLowerCase();
-
-        while (true) {
-            var m = split.exec(title);
-
-            parts.push(title.substring(index, m ? m.index : title.length)
-				.replace(/\b([A-Za-z][a-z.'Õ]*)\b/g, function (all) {
-				    return /[A-Za-z]\.[A-Za-z]/.test(all) ? all : upper(all);
-				})
-				.replace(RegExp("\\b" + small + "\\b", "ig"), lower)
-				.replace(RegExp("^" + punct + small + "\\b", "ig"), function (all, punct, word) {
-				    return punct + upper(word);
-				})
-				.replace(RegExp("\\b" + small + punct + "$", "ig"), upper));
-
-            index = split.lastIndex;
-
-            if (m) parts.push(m[0]);
-            else break;
-        }
-
-        return parts.join("").replace(/ V(s?)\. /ig, " v$1. ")
-			.replace(/(['Õ])S\b/ig, "$1s")
-			.replace(/\b(AT&T|Q&A)\b/ig, function (all) {
-			    return all.toUpperCase();
-			});
-    };
-
-    function lower(word) {
-        return word.toLowerCase();
-    }
-
-    function upper(word) {
-        return word.substr(0, 1).toUpperCase() + word.substr(1);
-    }
-})();
-
 define([
     'dojo/_base/declare',
     "esri/tasks/locator",
@@ -190,7 +138,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
         locatorType: "None",
         streetGrouping: [],
         premiseGrouping: [],
-        titleCase: false,
+        
 
         paoFields: {
             PAO_TEXT: "",
@@ -227,7 +175,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
        
 
         _buildPickList: function (results) {
-            var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, isTitleCase = this.titleCase,
+            var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
                 key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), childAttributes,
                 streetDescriptor = this.streetFields.STREET_DESCRIPTOR, streetGroups = this.streetGrouping, premiseGroups = this.premiseGrouping,
                 descFunc = function (a, b) {
@@ -250,7 +198,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                         premisePicklist = {};
 
                         if (pickList[key].Addresses.length > 1) {
-                            item = new PickListItem({ Description: this._formatDescription(key), SortDescription: pickList[key].SortDescription });
+                            item = new PickListItem({ Description: key, SortDescription: pickList[key].SortDescription });
 
                             // We have more than 1 results so need another picklist level
                             children = pickList[key].Addresses;
@@ -265,10 +213,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                                     childAddressCandidate.SortDescription = this._getSAOText(childAttributes);
 
                                     if (premisePicklist.hasOwnProperty(addressKey)) {
-                                        if (isTitleCase) {
-                                            childAddressCandidate.address = this._formatDescription(childAddressCandidate.address);
-                                        }
-                                        premisePicklist[addressKey].addCandidate(childAddressCandidate, isTitleCase);
+                                        premisePicklist[addressKey].addCandidate(childAddressCandidate);
                                     }
                                     else {
                                         premisePicklist[addressKey] = new PickListItem({
@@ -313,13 +258,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
 
             return result.promise;
-        },
-
-        _formatDescription: function (desc) {
-            if (this.titleCase) {
-                return titleCaps(desc);
-            }
-            return desc;
         }
     });
 });

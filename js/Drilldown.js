@@ -60,7 +60,7 @@ define([
     "dojo/query",
     "dojo/NodeList-data"
 ], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
-    var _titleCase = false, _isNullOrEmpty = function (/*Anything*/ obj) {
+    var _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
 
@@ -176,12 +176,8 @@ define([
         //      Used to destroy these widgets if needed.
         _titleGroups: [],
 
-        titleCase: false,
-
         constructor: function (args) {
             declare.safeMixin(this, args);
-            
-            _titleCase = this.titleCase;
         },
 
         destroy: function () {
@@ -409,7 +405,7 @@ define([
                     on(this.resultsElement, ".drilldownResult:click", function () {
                         var loc = query(this).data()[0],
                             res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
-                        _this.select(res)
+                        _this.select(res);
                         _this._clearPicklist();
                     });
                 }

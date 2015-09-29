@@ -42,8 +42,6 @@ function (declare, _LocatorBase) {
         resultsPickList: null,
         streetGrouping: ["StreetDescriptor", "LocalityName", "Town", "AdminArea"],
         premiseGrouping: ["PAOText", "PAONumberRange"],
-        titleCase: false,
-
 
         streetFields: {
             STREET_DESCRIPTOR: "StreetDescriptor",
@@ -110,16 +108,15 @@ function (declare, _LocatorBase) {
             // tags:
             //      private
 
-            var description = "", addressPart = "", streetF = this.streetFields, paoF = this.paoFields;
+            var description = "", streetF = this.streetFields, paoF = this.paoFields;
 
             switch (level) {
                 case 1: // Sub Premise
-                    addressPart = this._formatDescription([attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", "));
-                    description = [attributes[paoF.PAO_TEXT], addressPart].filter(Boolean).join(", ");
+                    description = [attributes[paoF.PAO_TEXT], attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
                     break;
 
                 case 2: // Street
-                    description = this._formatDescription([attributes.StreetDescriptor.trim(), attributes.LocalityName.trim(), attributes.Town.trim(), attributes.AdminArea.trim()].filter(Boolean).join(", "));
+                    description = [attributes.StreetDescriptor.trim(), attributes.LocalityName.trim(), attributes.Town.trim(), attributes.AdminArea.trim()].filter(Boolean).join(", ");
                     break;
 
                 default:
