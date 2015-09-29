@@ -52,15 +52,50 @@
 	    name: "Drilldown - Chrome",
 	    tags: ["Drilldown", "Chrome"],
 	    build: process.env.TRAVIS_BUILD_NUMBER
-	}
-	//}, {
-	//    browserName: 'firefox',
-	//    platform: "Windows 7",
-	//    name: "Drilldown - Firefox",
-	//    tags: ["Drilldown", "Firefox"],
-	//    build: process.env.TRAVIS_BUILD_NUMBER
-	//}
+	}, {
+	    browserName: 'firefox',
+	    platform: "Windows 7",
+	    name: "Drilldown - Firefox",
+	    tags: ["Drilldown", "Firefox"],
+	    build: process.env.TRAVIS_BUILD_NUMBER
+	},{
+	    browserName: 'internet explorer',
+	    version: "9.0",
+	    platform: "Windows 7",
+	    name: "Drilldown - Explorer9",
+	    tags: ["Drilldown", "Explorer9"],
+	    build: process.env.TRAVIS_BUILD_NUMBER
+	}, {
+	    browserName: 'internet explorer',
+	    version: "10.0",
+	    platform: "Windows 7",
+	    name: "Drilldown - Explorer10",
+	    tags: ["Drilldown", "Explorer10"],
+	    build: process.env.TRAVIS_BUILD_NUMBER
+	}, {
+	    browserName: 'internet explorer',
+	    version: "11.0",
+	    platform: "Windows 7",
+	    name: "Drilldown - Explorer11",
+	    tags: ["Drilldown", "Explorer11"],
+	    build: process.env.TRAVIS_BUILD_NUMBER
+	},{
+	    //browserName: 'safari',
+	    platform: "OS",
+	    deviceName: "iPhone 5",
+	    deviceOrientation: "portait",
+	    name: "Drilldown - iPhone5",
+	    tags: ["Drilldown", "iPhone5"],
+	    build: process.env.TRAVIS_BUILD_NUMBER
+	},{
+	    browserName: 'chrome',
+        platform: "Linux",
+        name: "Drilldown - ChromeAndroid",
+        tags: ["Drilldown", "ChromeAndroid"],
+        build: process.env.TRAVIS_BUILD_NUMBER
+    },
 	],
+		
 	//
 	// ===================
 	// Test Configurations

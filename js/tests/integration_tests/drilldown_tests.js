@@ -41,6 +41,7 @@ describe('Drilldown tests: ' + helper.getBrowser(), function () {
             .click(".esri-icon-search")
             .pause(10000)
 <<<<<<< HEAD
+<<<<<<< HEAD
             .click(".zoomTo")
             .pause(2000)
             .getText("#searchWidget_more_results div.moreItem").then(function (text) {
@@ -109,6 +110,9 @@ describe('Drilldown tests: ' + helper.getBrowser(), function () {
             .getText("#searchWidget_more_results div.moreItem").then(function (text) {
                 console.log(text);
             })
+=======
+
+>>>>>>> parent of daed6fe... Added different browsers
             .call(done);
     });
 
