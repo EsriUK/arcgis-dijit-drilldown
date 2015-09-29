@@ -16,6 +16,7 @@
  | limitations under the License.
  */
 
+
 define([
     "dojo/_base/declare",
     "./_LocatorBase"
@@ -39,7 +40,7 @@ function (declare, _LocatorBase) {
 
         locatorType: "AGS_LLPG",
         resultsPickList: null,
-        streetGrouping: ["AdminArea", "Town", "LocalityName", "StreetDescriptor"],
+        streetGrouping: ["StreetDescriptor", "LocalityName", "Town", "AdminArea"],
         premiseGrouping: ["PAOText", "PAONumberRange"],
 
         streetFields: {
@@ -111,7 +112,7 @@ function (declare, _LocatorBase) {
 
             switch (level) {
                 case 1: // Sub Premise
-                    description = [attributes[paoF.PAO_TEXT], attributes[paoF.PAONumberRange], attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
+                    description = [attributes[paoF.PAO_TEXT], attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
                     break;
 
                 case 2: // Street

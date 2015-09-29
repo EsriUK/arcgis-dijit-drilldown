@@ -60,7 +60,6 @@ if (!Array.prototype.filter) {
     };
 }
 
-
 define([
     'dojo/_base/declare',
     "esri/tasks/locator",
@@ -70,7 +69,7 @@ define([
 ],
 function (declare, Locator, PickList, PickListItem, Deferred) {
     // module:
-    //      _LocatorBase
+    //      esriuk/dijit/locators/_LocatorBase
 
     var reA = /[^a-zA-Z]/g, reN = /[^0-9]/g,
         _getGroupedAddressValue = function (fields, attributes) {
@@ -108,7 +107,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                     }
                     else {
                         pickList[addressKey] = new PickListItem({
-                            SortDescription: attributes[streetField],
+                            SortDescription: addressKey,
                             Description: addressKey,
                             Addresses: [candidate],
                             Level: 2
@@ -134,11 +133,13 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
     return declare([Locator], {
         // summary:
-        //		Base class for Drilldown Locators.
+        //		Base class for Locators. Inherits from esri locator.
 
         locatorType: "None",
         streetGrouping: [],
         premiseGrouping: [],
+        
+
         paoFields: {
             PAO_TEXT: "",
             PAO_START_NUMBER: "",
@@ -153,10 +154,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             SAO_START_SUFFIX: "",
             SAO_END_NUMBER: "",
             SAO_END_SUFFIX: ""
-        },
-
-        constructor: function () {
-
         },
 
         _geocodeHandler: function (results, b, k, g, c) {
@@ -178,7 +175,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
        
 
         _buildPickList: function (results) {
-            var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey,
+            var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
                 key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), childAttributes,
                 streetDescriptor = this.streetFields.STREET_DESCRIPTOR, streetGroups = this.streetGrouping, premiseGroups = this.premiseGrouping,
                 descFunc = function (a, b) {
@@ -201,7 +198,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                         premisePicklist = {};
 
                         if (pickList[key].Addresses.length > 1) {
-                            item = new PickListItem({ Description: key });
+                            item = new PickListItem({ Description: key, SortDescription: pickList[key].SortDescription });
 
                             // We have more than 1 results so need another picklist level
                             children = pickList[key].Addresses;
@@ -250,7 +247,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                 // Sort street list
                 resultsPickList.PickListItems.sort(descFunc);
-                resultsPickList.PickListItems.reverse();
 
                 this.resultsPickList = resultsPickList;
 

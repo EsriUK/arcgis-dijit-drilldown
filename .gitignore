@@ -32,6 +32,4 @@ index.html
 perf.html
 
 # Build folder
-build/
-dist/
 js/tests/performance/
