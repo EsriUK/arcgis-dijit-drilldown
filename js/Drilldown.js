@@ -340,7 +340,8 @@ define([
 
             // Check to see if we only have a single results
             if ((_this.activeSourceIndex !== this._allIndex) && this._isSingleResult(results)) {
-                res = this._hydrateResult(results[0].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
+                // Single result may not be first source so use active source index
+                res = this._hydrateResult(results[_this.activeSourceIndex].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
                 this.select(res);
             }
             else {
