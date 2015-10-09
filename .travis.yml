@@ -15,9 +15,10 @@ after_success:
 - git config --global user.name "Travis CI"
 - git clone https://github.com/EsriUK/wab-dijit-drilldown.git
 - cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* wab-dijit-drilldown/Drilldown/Drilldown/
-- cd wab-dijit-drilldown/Drilldown/Drilldown
+- cd wab-dijit-drilldown
 - git add --all -v
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
+- git status
 - git push -f -v "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown"
 - echo -e "Done with magic\n"
 
