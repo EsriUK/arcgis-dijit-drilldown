@@ -18,7 +18,7 @@ after_success:
 - cd wab-dijit-drilldown
 - git add .
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
-- git push "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown" master
+- git push --force "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown" master
 - echo -e "Done with magic\n"
 
 env:
