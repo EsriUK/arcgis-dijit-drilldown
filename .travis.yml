@@ -17,9 +17,9 @@ after_success:
 - cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* wab-dijit-drilldown/Drilldown/Drilldown/
 - cd wab-dijit-drilldown
 - dir
-- git add -A -v Drilldown
+- git add -A -v Drilldown/Drilldown/*
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
-- git push -v --force "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown" master
+- git push -f -v "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown"
 - echo -e "Done with magic\n"
 
 env:
