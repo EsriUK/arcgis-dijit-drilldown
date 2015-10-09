@@ -15,6 +15,7 @@
  | See the License for the specific language governing permissions and
  | limitations under the License.
  */
+
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
         if (typeof this !== 'function') {
@@ -42,8 +43,6 @@ if (!Function.prototype.bind) {
         return fBound;
     };
 }
-
-
 
 define([
     "dojo/_base/declare",
@@ -143,7 +142,7 @@ define([
     },
     handlerFunc = function (list) {
         // summary:
-        //      Handles the onclick event of a titlepane.
+        //      Handles the onclick event of a titlepane and lazy loads any child results.
         //      Constructs the results if they have not been created yet.
 
         if (this.get("contentSet") === false) {
@@ -162,6 +161,7 @@ define([
         // description: 
         //      Search for and display address details in a hierarchical list. The Drilldown widget works with custom locators to 
         //      create a picklist from the address results and output this as an interactive list.
+        //      Custom locators have their own class that can be used when creating the sources.
 
         
         baseClass: "drilldown",
