@@ -16,6 +16,7 @@ after_success:
 - git clone https://github.com/EsriUK/wab-dijit-drilldown.git
 - cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* wab-dijit-drilldown/Drilldown/Drilldown/
 - cd wab-dijit-drilldown
+- dir
 - git add -A -v Drilldown
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
 - git push -v --force "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown" master
