@@ -211,7 +211,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['clean:pre', 'uglify', 'concat', 'clean:post']);
 
-    grunt.registerTask('travis', ['jasmine:coverageci', 'clean:pre', 'uglify', 'concat', 'clean:post']);
+    grunt.registerTask('travis', ['clean:pre', 'uglify', 'concat', 'clean:post', 'jasmine:coverageci']);
 };
 
 
