@@ -26,9 +26,9 @@ if (!Function.prototype.bind) {
 
         var aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
-            fNOP = function () { },
+            FNOP = function () { },
             fBound = function () {
-                return fToBind.apply(this instanceof fNOP
+                return fToBind.apply(this instanceof FNOP
                        ? this
                        : oThis,
                        aArgs.concat(Array.prototype.slice.call(arguments)));
@@ -36,9 +36,9 @@ if (!Function.prototype.bind) {
 
         if (this.prototype) {
             // native functions don't have a prototype
-            fNOP.prototype = this.prototype;
+            FNOP.prototype = this.prototype;
         }
-        fBound.prototype = new fNOP();
+        fBound.prototype = new FNOP();
 
         return fBound;
     };
