@@ -10,14 +10,11 @@ before_script:
 script:
 - grunt coveralls:dijit_coverage --verbose
 after_success:
-- cat $DEPLOY_KEY > .travis/deploy_key.pem
-- chmod 600 .travis/deploy_key.pem # this key should have push access
-- ssh-add .travis/deploy_key.pem
 
 - git config --global user.email "sbatterby@esriuk.com"
 - git config --global user.name "Travis CI"
 - git clone https://github.com/EsriUK/wab-dijit-drilldown
-- cp -r build/* wab-dijit-drilldown/Drilldown/Drilldown/
+- cp -r /home/travis/build/EsriUK/arcgis-dijit-drilldown/build/* wab-dijit-drilldown/Drilldown/Drilldown/
 - cd wab-dijit-drilldown
 - git add .
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
