@@ -16,10 +16,10 @@ after_success:
 - git clone https://github.com/EsriUK/wab-dijit-drilldown.git
 - cd wab-dijit-drilldown
 - git checkout -qf
-- rm -rf wab-dijit-drilldown/Drilldown/Drilldown
-- rmdir --ignore-fail-on-non-empty wab-dijit-drilldown/Drilldown
-- mkdir -p wab-dijit-drilldown/Drilldown/Drilldown
-- cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* wab-dijit-drilldown/Drilldown/Drilldown/
+- rm -rf Drilldown/Drilldown
+- rmdir --ignore-fail-on-non-empty Drilldown
+- mkdir -p Drilldown/Drilldown
+- cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* Drilldown/Drilldown/
 
 - git add --all -v
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
