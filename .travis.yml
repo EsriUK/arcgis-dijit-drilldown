@@ -14,12 +14,13 @@ after_success:
 - git config --global user.email "sbatterby@esriuk.com"
 - git config --global user.name "Travis CI"
 - git clone https://github.com/EsriUK/wab-dijit-drilldown.git
+- cd wab-dijit-drilldown
+- git checkout -qf
 - rm -rf wab-dijit-drilldown/Drilldown/Drilldown
 - rmdir --ignore-fail-on-non-empty wab-dijit-drilldown/Drilldown
 - mkdir -p wab-dijit-drilldown/Drilldown/Drilldown
 - cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* wab-dijit-drilldown/Drilldown/Drilldown/
-- cd wab-dijit-drilldown
-- git checkout -qf
+
 - git add --all -v
 - git commit -m "Update from travis build of arcgis-dijit-drilldown"
 - git push -f -v "https://${DEPLOY_KEY}@github.com/EsriUK/wab-dijit-drilldown" master
