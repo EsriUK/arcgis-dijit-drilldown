@@ -14,6 +14,7 @@ after_success:
 - git config --global user.email "sbatterby@esriuk.com"
 - git config --global user.name "Travis CI"
 - git clone https://github.com/EsriUK/wab-dijit-drilldown.git
+- rm -rf wab-dijit-drilldown/Drilldown
 - mkdir wab-dijit-drilldown/Drilldown/Drilldown
 - cp -r -v -f ${TRAVIS_BUILD_DIR}/build/* wab-dijit-drilldown/Drilldown/Drilldown/
 - cd wab-dijit-drilldown
