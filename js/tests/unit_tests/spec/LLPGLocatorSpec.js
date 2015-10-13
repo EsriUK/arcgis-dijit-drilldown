@@ -112,4 +112,100 @@ describe("A set of tests for the LLPG Locator", function () {
             done();
         });
     });
+
+    it("should sort the results by the description property", function (done) {
+        var results = {
+            "candidates": [{
+                "address": "CONFERENCE CENTRE, 35A MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                "attributes": {
+                    "Match_addr": "39B MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "LOCATOR_DESCRIPTION": "39B MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "SAO_START_NUMBER": "",
+                    "SAO_END_NUMBER": "",
+                    "SAO_START_SUFFIX": "",
+                    "SAO_END_SUFFIX": "",
+                    "SAO_TEXT": "",
+                    "PAO_START_NUMBER": "39B",
+                    "PAO_END_NUMBER": "",
+                    "PAO_START_SUFFIX": "",
+                    "PAO_END_SUFFIX": "",
+                    "PAO_TEXT": "",
+                    "STREET_DESCRIPTOR": "MARYLEBONE HIGH STREET",
+                    "LOCALITY_NAME": "",
+                    "ADMINISTRATIVE_AREA": "CITY OF WESTMINSTER",
+                    "TOWN_NAME": "LONDON"
+                }
+            },{
+                "address": "35 MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                "attributes": {
+                    "Match_addr": "35 MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "LOCATOR_DESCRIPTION": "35 MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "SAO_START_NUMBER": "",
+                    "SAO_END_NUMBER": "",
+                    "SAO_START_SUFFIX": "",
+                    "SAO_END_SUFFIX": "",
+                    "SAO_TEXT": "",
+                    "PAO_START_NUMBER": "35",
+                    "PAO_END_NUMBER": "",
+                    "PAO_START_SUFFIX": "",
+                    "PAO_END_SUFFIX": "",
+                    "PAO_TEXT": "",
+                    "STREET_DESCRIPTOR": "MARYLEBONE HIGH STREET",
+                    "LOCALITY_NAME": "",
+                    "ADMINISTRATIVE_AREA": "CITY OF WESTMINSTER",
+                    "TOWN_NAME": "LONDON"
+                }
+            }, {
+                "address": "CONFERENCE CENTRE, 35A MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                "attributes": {
+                    "Match_addr": "35A MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "LOCATOR_DESCRIPTION": "35A MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "SAO_START_NUMBER": "",
+                    "SAO_END_NUMBER": "",
+                    "SAO_START_SUFFIX": "",
+                    "SAO_END_SUFFIX": "",
+                    "SAO_TEXT": "",
+                    "PAO_START_NUMBER": "35A",
+                    "PAO_END_NUMBER": "",
+                    "PAO_START_SUFFIX": "",
+                    "PAO_END_SUFFIX": "",
+                    "PAO_TEXT": "",
+                    "STREET_DESCRIPTOR": "MARYLEBONE HIGH STREET",
+                    "LOCALITY_NAME": "",
+                    "ADMINISTRATIVE_AREA": "CITY OF WESTMINSTER",
+                    "TOWN_NAME": "LONDON"
+                }
+            }, {
+                "address": "36 MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                "attributes": {
+                    "Match_addr": "36 MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "LOCATOR_DESCRIPTION": "36 MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER, W1U 4AA",
+                    "SAO_START_NUMBER": "",
+                    "SAO_END_NUMBER": "",
+                    "SAO_START_SUFFIX": "",
+                    "SAO_END_SUFFIX": "",
+                    "SAO_TEXT": "",
+                    "PAO_START_NUMBER": "36",
+                    "PAO_END_NUMBER": "",
+                    "PAO_START_SUFFIX": "",
+                    "PAO_END_SUFFIX": "",
+                    "PAO_TEXT": "",
+                    "STREET_DESCRIPTOR": "MARYLEBONE HIGH STREET",
+                    "LOCALITY_NAME": "",
+                    "ADMINISTRATIVE_AREA": "CITY OF WESTMINSTER",
+                    "TOWN_NAME": "LONDON"
+                }
+            }]
+        }
+
+        widget._buildPickList(results).then(function () {
+
+            //
+
+            expect(widget.resultsPickList.PickListItems[0].Addresses[1].Description).toEqual("35A, MARYLEBONE HIGH STREET, LONDON, CITY OF WESTMINSTER");
+            done();
+        });
+
+
+    });
 });

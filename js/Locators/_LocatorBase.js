@@ -120,16 +120,46 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
         descriptionSort = function (a, b) {
             return a.localeCompare(b);
         },
-        sortAlphaNum = function (a, b) {
-            var aA = a.replace(reA, ""), bA = b.replace(reA, ""), aN, bN;
 
-            if (aA === bA) {
-                aN = parseInt(a.replace(reN, ""), 10);
-                bN = parseInt(b.replace(reN, ""), 10);
-                return aN === bN ? 0 : aN > bN ? 1 : -1;
+        sortAlphaNum = function (a, b) {
+            function chunkify(t) {
+                var tz = [], x = 0, y = -1, n = 0, i, j;
+
+                while (i = (j = t.charAt(x++)).charCodeAt(0)) {
+                    var m = (i == 46 || (i >= 48 && i <= 57));
+                    if (m !== n) {
+                        tz[++y] = "";
+                        n = m;
+                    }
+                    tz[y] += j;
+                }
+                return tz;
             }
-            return aA > bA ? 1 : -1;
+
+            var aa = chunkify(a);
+            var bb = chunkify(b);
+
+            for (x = 0; aa[x] && bb[x]; x++) {
+                if (aa[x] !== bb[x]) {
+                    var c = Number(aa[x]), d = Number(bb[x]);
+                    if (c == aa[x] && d == bb[x]) {
+                        return c - d;
+                    } else return (aa[x] > bb[x]) ? 1 : -1;
+                }
+            }
+            return aa.length - bb.length;
         };
+
+        //sortAlphaNum = function (a, b) {
+        //    var aA = a.replace(reA, ""), bA = b.replace(reA, ""), aN, bN;
+
+        //    if (aA === bA) {
+        //        aN = parseInt(a.replace(reN, ""), 10);
+        //        bN = parseInt(b.replace(reN, ""), 10);
+        //        return aN === bN ? 0 : aN > bN ? 1 : -1;
+        //    }
+        //    return aA > bA ? 1 : -1;
+        //};
 
     return declare([Locator], {
         // summary:
