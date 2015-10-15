@@ -110,12 +110,12 @@ function (declare, _LocatorBase) {
             this.inherited(arguments);
         },
 
-        _getPAOText: function (attributes) {
+        _getPAOText: function (attributes, sortText) {
             // summary: 
             //      Constructs the PAO text from the PAO fields. 
             var tpao = "", numberRange = "", paoFields = this.paoFields;
 
-            if (_isNullOrEmpty(attributes[paoFields.PAO_TEXT]) === false) {
+            if ((_isNullOrEmpty(attributes[paoFields.PAO_TEXT]) === false) && (!sortText)) {
                 tpao = attributes[paoFields.PAO_TEXT].trim();
             }
             numberRange = _paoSaoNumberRange(attributes[paoFields.PAO_START_NUMBER], attributes[paoFields.PAO_START_SUFFIX], attributes[paoFields.PAO_END_NUMBER], attributes[paoFields.PAO_END_SUFFIX]);
@@ -127,12 +127,12 @@ function (declare, _LocatorBase) {
             return tpao.trim();
         },
 
-        _getSAOText: function (attributes) {
+        _getSAOText: function (attributes, sortText) {
             // summary: 
             //      Constructs the SAO text from the SAO fields. 
             var tsao = "", numberRange = "", saoFields = this.saoFields;
 
-            if (_isNullOrEmpty(attributes[saoFields.SAO_TEXT]) === false) {
+            if ((_isNullOrEmpty(attributes[saoFields.SAO_TEXT]) === false) && (!sortText)) {
                 tsao = attributes[saoFields.SAO_TEXT].trim();
             }
             numberRange = _paoSaoNumberRange(attributes[saoFields.SAO_START_NUMBER], attributes[saoFields.SAO_START_SUFFIX], attributes[saoFields.SAO_END_NUMBER], attributes[saoFields.SAO_END_SUFFIX]);

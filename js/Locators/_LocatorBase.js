@@ -212,7 +212,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
             switch (level) {
                 case 1: // Sub Premise
-                    description = [this._getPAOText(attributes), attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
+                    description = [this._getPAOText(attributes, false), attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
                     break;
 
                 case 2: // Street
@@ -262,14 +262,14 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                                 if (addressKey.length > 0) {
                                     childAddressCandidate = children[k];
-                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes);
+                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes, true);
 
                                     if (premisePicklist.hasOwnProperty(addressKey)) {
                                         premisePicklist[addressKey].addCandidate(childAddressCandidate);
                                     }
                                     else {
                                         premisePicklist[addressKey] = new PickListItem({
-                                            SortDescription: this._getPAOText(childAttributes),
+                                            SortDescription: this._getPAOText(childAttributes, true),
                                             Description: this._getListLevelDescription(1, childAttributes),
                                             Addresses: [childAddressCandidate],
                                             Level: 1

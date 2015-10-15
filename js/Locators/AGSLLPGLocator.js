@@ -72,10 +72,10 @@ function (declare, _LocatorBase) {
             this.inherited(arguments);
         },
 
-        _getPAOText: function (attributes) {
+        _getPAOText: function (attributes, sortText) {
             var tpao = "", numberRange = "";
 
-            if (_isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) {
+            if ((_isNullOrEmpty(attributes[this.paoFields.PAO_TEXT]) === false) && (!sortText)) {
                 tpao = attributes[this.paoFields.PAO_TEXT].trim();
             }
             numberRange = attributes[this.paoFields.PAONumberRange].trim();
@@ -87,10 +87,10 @@ function (declare, _LocatorBase) {
             return tpao.trim();
         },
 
-        _getSAOText: function (attributes) {
+        _getSAOText: function (attributes, sortText) {
             var tsao = "", numberRange = "";
 
-            if (_isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) {
+            if ((_isNullOrEmpty(attributes[this.saoFields.SAO_TEXT]) === false) && (!sortText)) {
                 tsao = attributes[this.saoFields.SAO_TEXT].trim();
             }
             numberRange = attributes[this.saoFields.SAONumberRange].trim();
