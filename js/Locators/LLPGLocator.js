@@ -121,7 +121,7 @@ function (declare, _LocatorBase) {
             numberRange = _paoSaoNumberRange(attributes[paoFields.PAO_START_NUMBER], attributes[paoFields.PAO_START_SUFFIX], attributes[paoFields.PAO_END_NUMBER], attributes[paoFields.PAO_END_SUFFIX]);
 
             if (_isNullOrEmpty(numberRange) === false) {
-                tpao += numberRange;
+                tpao += " " + numberRange;
             }
 
             return tpao.trim();
@@ -138,34 +138,10 @@ function (declare, _LocatorBase) {
             numberRange = _paoSaoNumberRange(attributes[saoFields.SAO_START_NUMBER], attributes[saoFields.SAO_START_SUFFIX], attributes[saoFields.SAO_END_NUMBER], attributes[saoFields.SAO_END_SUFFIX]);
 
             if (_isNullOrEmpty(numberRange) === false) {
-                tsao += numberRange;
+                tsao += " " + numberRange;
             }
 
             return tsao.trim();
-        },
-
-        _getListLevelDescription: function (level, attributes) {
-            // summary:
-            //      Gets the correct description depending on the address level
-            // tags:
-            //      private
-
-            var description = "", streetF = this.streetFields;
-
-            switch (level) {
-                case 1: // Sub Premise
-                    description = [this._getPAOText(attributes), attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
-                    break;
-
-                case 2: // Street
-                    description = [attributes[streetF.STREET_DESCRIPTOR].trim(), attributes[streetF.LOCALITY_NAME].trim(), attributes[streetF.TOWN_NAME].trim(), attributes[streetF.ADMINISTRATIVE_AREA].trim()].filter(Boolean).join(", ");
-                    break;
-
-                default:
-                    break;
-            }
-
-            return description;
         }
         
     });

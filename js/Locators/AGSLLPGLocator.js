@@ -100,30 +100,8 @@ function (declare, _LocatorBase) {
             }
 
             return tsao.trim();
-        },
-
-        _getListLevelDescription: function (level, attributes) {
-            // summary:
-            //      Gets the correct description depending on the address level
-            // tags:
-            //      private
-
-            var description = "", streetF = this.streetFields, paoF = this.paoFields;
-
-            switch (level) {
-                case 1: // Sub Premise
-                    description = [attributes[paoF.PAO_TEXT], attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
-                    break;
-
-                case 2: // Street
-                    description = [attributes.StreetDescriptor.trim(), attributes.LocalityName.trim(), attributes.Town.trim(), attributes.AdminArea.trim()].filter(Boolean).join(", ");
-                    break;
-
-                default:
-                    break;
-            }
-
-            return description;
         }
+
+        
     });
 });

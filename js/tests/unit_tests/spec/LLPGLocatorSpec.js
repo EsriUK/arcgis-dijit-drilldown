@@ -67,13 +67,13 @@ describe("A set of tests for the LLPG Locator", function () {
 
 
         paoValue = widget._getPAOText(testAttrs);
-        expect(paoValue).toEqual("Testing1C-3B");
+        expect(paoValue).toEqual("Testing 1C-3B");
 
         done();
     });
 
     it("should return the correct text for the SAO", function (done) {
-        var correctText = "bobZ-3", paoValue = "", testAttrs = JSON.parse(JSON.stringify(testAttributes));
+        var correctText = "bob Z-3", paoValue = "", testAttrs = JSON.parse(JSON.stringify(testAttributes));
 
         paoValue = widget._getSAOText(testAttributes);
         expect(paoValue).toEqual(correctText);
@@ -86,7 +86,7 @@ describe("A set of tests for the LLPG Locator", function () {
 
 
         paoValue = widget._getSAOText(testAttrs);
-        expect(paoValue).toEqual("Testing1C-3B");
+        expect(paoValue).toEqual("Testing 1C-3B");
 
         done();
     });

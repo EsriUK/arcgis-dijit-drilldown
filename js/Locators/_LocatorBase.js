@@ -202,7 +202,29 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
         },
      
-       
+        _getListLevelDescription: function (level, attributes) {
+            // summary:
+            //      Gets the correct description depending on the address level
+            // tags:
+            //      private
+
+            var description = "", streetF = this.streetFields, paoF = this.paoFields;
+
+            switch (level) {
+                case 1: // Sub Premise
+                    description = [this._getPAOText(attributes), attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
+                    break;
+
+                case 2: // Street
+                    description = [attributes[streetF.STREET_DESCRIPTOR], attributes[streetF.LOCALITY_NAME], attributes[streetF.TOWN_NAME], attributes[streetF.ADMINISTRATIVE_AREA]].filter(Boolean).join(", ");
+                    break;
+
+                default:
+                    break;
+            }
+
+            return description;
+        },
 
         _buildPickList: function (results) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
