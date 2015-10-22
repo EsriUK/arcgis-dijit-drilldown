@@ -133,26 +133,6 @@
     vertical-align: middle;
 }
 
-.dijitTitlePane .dijitArrowNodeInner, .dijitFieldset .dijitArrowNodeInner {
-    display: inline-block;
-}
-
-.dj_a11y .dijitTitlePane .dijitArrowNodeInner, .dj_a11y .dijitFieldset .dijitArrowNodeInner {
-    display: inline;
-    font-family: monospace;
-}
-
-.dj_a11y .dijitTitlePane .dijitArrowNode, .dj_a11y .dijitFieldset .dijitArrowNode {
-    display: none;
-}
-
-.dijitTitlePaneTitleFixedOpen .dijitArrowNode, .dijitTitlePaneTitleFixedOpen .dijitArrowNodeInner,.dijitTitlePaneTitleFixedClosed .dijitArrowNode, .dijitTitlePaneTitleFixedClosed .dijitArrowNodeInner,.dijitFieldsetTitleFixedOpen .dijitArrowNode, .dijitFieldsetTitleFixedOpen .dijitArrowNodeInner,.dijitFieldsetTitleFixedClosed .dijitArrowNode, .dijitFieldsetTitleFixedClosed .dijitArrowNodeInner {
-    display: none !important;
-}
-
-.dj_ie6 .dijitTitlePaneContentOuter,.dj_ie6 .dijitTitlePane .dijitTitlePaneTitle {
-    zoom: 1;
-}
 
 .dijitContentPane {
     padding: 8px;
