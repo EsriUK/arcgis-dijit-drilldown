@@ -95,7 +95,7 @@ define([
         }
         
         titleGroup.addChild(new TitlePane({
-            title: premiseList.Description + _createCount(subPremiseList, showCounts),
+            title: "<span class='drilldownTitle'>"+ premiseList.Description + "</span>"+ _createCount(subPremiseList, showCounts),
             content: subPremiseTitleGroup,
             open: false
         }));
@@ -374,7 +374,7 @@ define([
                                     for (i = 0; i < iL; i+=1) {
                                         // Create the list of premises
                                         titlePane = new TitlePane({
-                                            title: pickListItems[i].Description + _createCount(pickListItems[i].Addresses, this.showCounts),
+                                            title: "<span class='drilldownTitle'>" + pickListItems[i].Description + "</span>" + _createCount(pickListItems[i].Addresses, this.showCounts),
                                             open: false,
                                             contentSet: false
                                         });
