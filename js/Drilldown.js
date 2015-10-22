@@ -90,7 +90,7 @@ define([
 
         for (k = 0, kL = subPremiseList.length; k < kL; k+=1) {
             subPremiseTitleGroup.addChild(new ContentPane({
-                content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(subPremiseList[k].address, subPremiseList[k])]
+                content: [_createNodeWithData(subPremiseList[k].address, subPremiseList[k]), "<span class='drilldownResultIcon'></span>"]
             }));
         }
         
@@ -126,7 +126,7 @@ define([
                         node = _createNodeWithData(premiseList[j].Addresses[0].address, premiseList[j].Addresses[0]);
                     }
                     premiseTitleGroup.addChild(new ContentPane({
-                        content: ["<span class='drilldownResultIcon'></span>", node]
+                        content: [node, "<span class='drilldownResultIcon'></span>"]
                     }));
                 }
             }
