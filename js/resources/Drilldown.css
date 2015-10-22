@@ -165,8 +165,8 @@
 
 .drilldownCount {
     float: right;
-    background-color: #1F90EE;
-    color: #ffffff;
+    background-color: transparent;
+    color: #000000;
     padding: 1px 5px 1px 5px;
     border-radius: 3px;
 }
