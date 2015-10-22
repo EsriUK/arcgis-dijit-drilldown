@@ -75,7 +75,13 @@ define([
 
         return node;
     },
-    _createSubGroup = function (premiseList, titleGroup) {
+    _createCount = function (array, create) {
+        if (!_isNullOrEmpty(array) && array.length > 0 && create) {
+            return "<span class='drilldownCount'>" + array.length + "</span>";
+        }
+        return "";
+    },
+    _createSubGroup = function (premiseList, titleGroup, showCounts) {
         // summary:
         //      Creates the lowest level in the picklist. Creates the address results with the attached data.
 
@@ -89,12 +95,12 @@ define([
         }
         
         titleGroup.addChild(new TitlePane({
-            title: premiseList.Description,
+            title: premiseList.Description + _createCount(subPremiseList, showCounts),
             content: subPremiseTitleGroup,
             open: false
         }));
     },
-    _createGroup = function (pickList) {
+    _createGroup = function (pickList, showCounts) {
         // summary:
         //      Creates a titlegroup. USed to create a premise level in the pick list.
 
@@ -108,7 +114,7 @@ define([
             for (j = 0, jL = premiseList.length; j < jL; j++) {
                 // Do we have a sub premise list?
                 if (!_isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
-                    _createSubGroup(premiseList[j], premiseTitleGroup);
+                    _createSubGroup(premiseList[j], premiseTitleGroup, showCounts);
                 }
                 else {
                     // Single premise
@@ -140,13 +146,13 @@ define([
         }
         return premiseTitleGroup;
     },
-    handlerFunc = function (list) {
+    handlerFunc = function (list, showCounts) {
         // summary:
         //      Handles the onclick event of a titlepane and lazy loads any child results.
         //      Constructs the results if they have not been created yet.
 
         if (this.get("contentSet") === false) {
-            this.set("content", _createGroup(list));
+            this.set("content", _createGroup(list, showCounts));
             this.set("contentSet", true);
         }
     };
@@ -175,6 +181,10 @@ define([
         //      A list of each title group created for the picklist results.
         //      Used to destroy these widgets if needed.
         _titleGroups: [],
+
+        // showCounts: Boolean
+        //      Flag to turn on or off the counts for each level in the drilldown results.
+        showCounts: false,
 
         constructor: function (args) {
             declare.safeMixin(this, args);
@@ -364,7 +374,7 @@ define([
                                     for (i = 0; i < iL; i+=1) {
                                         // Create the list of premises
                                         titlePane = new TitlePane({
-                                            title: pickListItems[i].Description,
+                                            title: pickListItems[i].Description + _createCount(pickListItems[i].Addresses, this.showCounts),
                                             open: false,
                                             contentSet: false
                                         });
@@ -372,10 +382,10 @@ define([
                                         if (iL === 1) {
                                             titlePane.set("open", true);
                                             titlePane.set("contentSet", true);
-                                            titlePane.set("content", _createGroup(pickListItems[i]));
+                                            titlePane.set("content", _createGroup(pickListItems[i], this.showCounts));
                                         }
                                         else {
-                                            titlePane.own(titlePane.on("click", handlerFunc.bind(titlePane, pickListItems[i])));
+                                            titlePane.own(titlePane.on("click", handlerFunc.bind(titlePane, pickListItems[i], this.showCounts)));
                                         }
 
                                         // Output each street as a title pane
