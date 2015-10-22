@@ -55,7 +55,7 @@
 }
 
 .dijitTitlePane .dijitArrowNode, .dijitFieldset .dijitArrowNode {
-    background-image: url("../images/spriteArrows.png");
+    
     background-repeat: no-repeat;
     height: 8px;
     width: 7px;
@@ -134,7 +134,7 @@
 }
 
 .dijitTitlePane .dijitArrowNodeInner, .dijitFieldset .dijitArrowNodeInner {
-    display: none;
+    display: inline-block;
 }
 
 .dj_a11y .dijitTitlePane .dijitArrowNodeInner, .dj_a11y .dijitFieldset .dijitArrowNodeInner {

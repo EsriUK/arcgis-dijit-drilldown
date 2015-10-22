@@ -25,6 +25,16 @@ module.exports = function (grunt) {
                 src: ["dist/Drilldown.js"]
             }
         },
+        cssmin: {
+            style: {
+                files: [{
+                    expand: true,
+                    cwd: 'js/',
+                    src: ['resources/*.css'],
+                    dest: 'build/'
+                }]
+            }
+        },
         uglify: {
             locators: {
                 options: {
@@ -72,6 +82,10 @@ module.exports = function (grunt) {
                 },
                 src: ['dist/Drilldown.js'],
                 dest: 'dist/Drilldown.min.js'
+            },
+            css: {
+                src: ['build/resources/Drilldown.css'],
+                dest: 'dist/Drilldown.min.css'
             }
         },
         debug: {
@@ -199,19 +213,20 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-coveralls');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-coveralls');
     grunt.loadNpmTasks('grunt-webdriver');
- 
+    
 
     // Add default task(s)
     grunt.registerTask('default', ['jasmine:test']);
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 
-    grunt.registerTask('build', ['clean:pre', 'uglify', 'concat', 'clean:post']);
+    grunt.registerTask('build', ['clean:pre', 'uglify', 'cssmin', 'concat', 'clean:post']);
 
-    grunt.registerTask('travis', ['clean:pre', 'uglify', 'concat', 'clean:post', 'jasmine:coverageci']);
+    grunt.registerTask('travis', ['clean:pre', 'uglify', 'cssmin', 'concat', 'clean:post', 'jasmine:coverageci']);
 };
 
 
