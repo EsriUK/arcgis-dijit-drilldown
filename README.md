@@ -7,6 +7,8 @@ The drilldown widget provides hierarchical address search results for LLPG Locat
 
 The drilldown widget extends the functionality of the Esri Search widget, this means you use it in the same way. See the Esri Search widget doc [here](https://developers.arcgis.com/javascript/jsapi/search-amd.html)
 
+[View it live](http://appsstage.esriuk.com/app/Vanilla-Drilldown-demo/1/wmt/view/67eefa85647b496ba57e4bb0229129de/index.html)
+
 ## Quickstart
 
 ```javascript	
