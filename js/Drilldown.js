@@ -292,7 +292,10 @@ define([
                     this._titleGroups[m].destroy();
                 }
                 this._titleGroups = [];
-                domStyle.set(this.resultsElement, "height", 0);
+
+                if (!_isNullOrEmpty(this.resultsElement)) {
+                    domStyle.set(this.resultsElement, "height", 0);
+                }
             }
 
         },
