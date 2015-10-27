@@ -35,7 +35,7 @@ myWidget.startup();
 ## Requirements
 - LocatorHub 5.3 (or above) LLPG Locator
 - LLPG ArcGIS Locator (coming soon in beta)
-
+- Experience with the [ArcGIS Javascript API](http://www.esri.com/).
 
 
 ## Issues
