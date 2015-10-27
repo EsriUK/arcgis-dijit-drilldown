@@ -19,12 +19,23 @@ myWidget = new Drilldown({
         outFields: ["*"],
         name: "LH 5.3 LLPG",
         maxResults: 250	
-	}]
+	}],
+	enableSuggestions: false,
+    enableLabel: false,
+    enableHighlight: true,
+    autoNavigate: true,
+    showCounts: true
 }, "DrilldownWidget");
 
 myWidget.startup();
 ```
  [New to Github? Get started here.](https://github.com/)
+
+
+# Requirements
+- LocatorHub 5.3 (or above) LLPG Locator
+- LLPG ArcGIS Locator (coming soon in beta)
+
 
 
 ## Issues
