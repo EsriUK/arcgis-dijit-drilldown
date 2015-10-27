@@ -57,8 +57,9 @@ define([
     "dojo/on",
     "dojo/Deferred",
     "dojo/query",
+    "dojo/dom-style",
     "dojo/NodeList-data"
-], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query) {
+], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, domStyle) {
     var _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
@@ -291,7 +292,9 @@ define([
                     this._titleGroups[m].destroy();
                 }
                 this._titleGroups = [];
+                domStyle.set(this.resultsElement, "height", 0);
             }
+
         },
 
         _showNoResults: function() {
