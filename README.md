@@ -32,7 +32,7 @@ myWidget.startup();
  [New to Github? Get started here.](https://github.com/)
 
 
-# Requirements
+## Requirements
 - LocatorHub 5.3 (or above) LLPG Locator
 - LLPG ArcGIS Locator (coming soon in beta)
 
