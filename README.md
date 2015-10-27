@@ -9,6 +9,8 @@ The drilldown widget extends the functionality of the Esri Search widget, this m
 
 [View it live](http://appsstage.esriuk.com/app/Vanilla-Drilldown-demo/1/wmt/view/67eefa85647b496ba57e4bb0229129de/index.html)
 
+A build of the Drilldown widget is available for use with the [Web AppBuilder](https://github.com/EsriUK/wab-dijit-drilldown)
+
 ## Quickstart
 
 ```javascript	
