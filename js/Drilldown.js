@@ -351,7 +351,9 @@ define([
             this._clearPicklist();
 
             // Create the TitleGroup container
-            domConstruct.destroy(this.resultsElement);
+            if (!_isNullOrEmpty(this.resultsElement)) {
+                domConstruct.destroy(this.resultsElement);
+            }
             this.resultsElement = domConstruct.create("div", { "class": "arcgisSearch searchGroup picklistResults" }, this.domNode, "last");
 
             // Check to see if we only have a single results
