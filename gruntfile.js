@@ -261,7 +261,6 @@ module.exports = function (grunt) {
     grunt.initConfig(gruntconfig);
 
     // Load grunt tasks
-    grunt.loadNpmTasks('grunt-debug-task');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
