@@ -94,9 +94,10 @@ module.exports = function (grunt) {
             }
         },
         jasmine: {
-            test: {
+            testJSAPI14: {
                 options: {
-                    specs: './js/tests/unit_tests/spec/DrilldownSpec.js',
+                    version: '2.2.0',
+                    specs: './js/tests/unit_tests/spec/*.js',
                     helpers: [
                         './js/tests/helpers/agsllpgResults.js',
                         './js/tests/helpers/llpgLargeList.js',
@@ -109,10 +110,56 @@ module.exports = function (grunt) {
                             async: true,
                             has: { 'native-xhr2': false },
                             paths: {
-                                app: '/../../js'
+                                app: '/../js'
                             }
                         },
-                        dojoFile: 'http://js.arcgis.com/3.14/'
+                        dojoFile: 'http://js.arcgis.com/3.14/init.js'
+                    }
+                }
+            },
+            testJSAPI15: {
+                options: {
+                    version: '2.2.0',
+                    specs: './js/tests/unit_tests/spec/*.js',
+                    helpers: [
+                        './js/tests/helpers/agsllpgResults.js',
+                        './js/tests/helpers/llpgLargeList.js',
+                        './js/tests/helpers/llpgResults.js',
+                        './js/tests/helpers/orgTestResults.js',
+                        './js/tests/lib/sinon/sinon.js'],
+                    template: require('grunt-template-jasmine-dojo'),
+                    templateOptions: {
+                        dojoConfig: {
+                            async: true,
+                            has: { 'native-xhr2': false },
+                            paths: {
+                                app: '/../js'
+                            }
+                        },
+                        dojoFile: 'http://js.arcgis.com/3.15/init.js'
+                    }
+                }
+            },
+            testJSAPI16: {
+                options: {
+                    version: '2.2.0',
+                    specs: './js/tests/unit_tests/spec/*.js',
+                    helpers: [
+                        './js/tests/helpers/agsllpgResults.js',
+                        './js/tests/helpers/llpgLargeList.js',
+                        './js/tests/helpers/llpgResults.js',
+                        './js/tests/helpers/orgTestResults.js',
+                        './js/tests/lib/sinon/sinon.js'],
+                    template: require('grunt-template-jasmine-dojo'),
+                    templateOptions: {
+                        dojoConfig: {
+                            async: true,
+                            has: { 'native-xhr2': false },
+                            paths: {
+                                app: '/../js'
+                            }
+                        },
+                        dojoFile: 'http://js.arcgis.com/3.16/init.js'
                     }
                 }
             },
@@ -141,7 +188,7 @@ module.exports = function (grunt) {
                                     app: '/../.grunt/grunt-contrib-jasmine/js'
                                 }
                             },
-                            dojoFile: 'http://js.arcgis.com/3.14/'
+                            dojoFile: 'http://js.arcgis.com/3.14/init.js'
                         }
                     }
                 }
@@ -175,7 +222,7 @@ module.exports = function (grunt) {
                                     app: '/../.grunt/grunt-contrib-jasmine/js'
                                 }
                             },
-                            dojoFile: 'http://js.arcgis.com/3.14/'
+                            dojoFile: 'http://js.arcgis.com/3.14/init.js'
                         }
                     }
                 }
@@ -214,6 +261,7 @@ module.exports = function (grunt) {
     grunt.initConfig(gruntconfig);
 
     // Load grunt tasks
+    grunt.loadNpmTasks('grunt-debug-task');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -226,7 +274,9 @@ module.exports = function (grunt) {
     
 
     // Add default task(s)
-    grunt.registerTask('default', ['jasmine:test']);
+    grunt.registerTask('default', ['jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16']);
+
+    grunt.registerTask('test', ['jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16']);
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 

@@ -25,7 +25,7 @@ if (!String.prototype.trim) {
 
 if (!Array.prototype.filter) {
     Array.prototype.filter = function (fun/*, thisArg*/) {
-        'use strict';
+        "use strict";
 
         var t, len, res, thisArg, i = 0, val;
 
@@ -35,7 +35,7 @@ if (!Array.prototype.filter) {
 
         t = Object(this);
         len = t.length >>> 0;
-        if (typeof fun !== 'function') {
+        if (typeof fun !== "function") {
             throw new TypeError();
         }
 
