@@ -1,4 +1,4 @@
-﻿
+
 
 describe("A set of tests for the AGS LLPG Locator", function () {
     var _AGSLLPGLocator, widget, server,

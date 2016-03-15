@@ -1,4 +1,4 @@
-﻿var drilldownProps = {
+var drilldownProps = {
     sources: [{
         locator: null,
         singleLineFieldName: "LH_ADDRESS",

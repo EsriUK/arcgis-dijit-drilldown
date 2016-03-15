@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @license
  * lodash 3.10.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash compat -o ./lodash.js`

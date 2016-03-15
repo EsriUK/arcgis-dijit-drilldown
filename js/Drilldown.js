@@ -1,4 +1,4 @@
-﻿/*global define, console, declare */
+/*global define, console, declare */
 
 /*
  | Copyright 2015 ESRI (UK) Limited

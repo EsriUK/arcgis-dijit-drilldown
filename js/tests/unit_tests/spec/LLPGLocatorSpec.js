@@ -1,4 +1,4 @@
-﻿
+
 
 describe("A set of tests for the LLPG Locator", function () {
     var _LLPGLocator, widget, server,

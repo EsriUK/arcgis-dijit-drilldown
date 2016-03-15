@@ -1,4 +1,4 @@
-﻿var assert = require('assert'),
+var assert = require('assert'),
     webdriverio = require('webdriverio'),
     helper = require('../helpers/test_helper');
 

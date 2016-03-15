@@ -1,4 +1,4 @@
-﻿var llpgResults = {
+var llpgResults = {
     "spatialReference": {
         "wkid": 27700,
         "latestWkid": 27700

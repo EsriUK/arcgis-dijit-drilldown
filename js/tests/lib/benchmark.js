@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * Benchmark.js v1.0.0 <http://benchmarkjs.com/>
  * Copyright 2010-2012 Mathias Bynens <http://mths.be/>
  * Based on JSLitmus.js, copyright Robert Kieffer <http://broofa.com/>

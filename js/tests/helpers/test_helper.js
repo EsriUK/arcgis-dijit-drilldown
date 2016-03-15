@@ -1,4 +1,4 @@
-﻿
+
 /**
 * A set of useful commands for use with tests.
 */

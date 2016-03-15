@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Sinon.JS 1.16.1, 2015/08/20
  *
  * @author Christian Johansen (christian@cjohansen.no)

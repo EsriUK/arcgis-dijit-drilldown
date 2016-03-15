@@ -1,4 +1,4 @@
-﻿var orgResults = {
+var orgResults = {
     "spatialReference": {
         "wkid": 27700,
         "latestWkid": 27700

@@ -1,4 +1,4 @@
-﻿
+
 
 describe("A set of performance tests for the Base Locator", function () {
     var _locatorBase, widget, server,

@@ -1,4 +1,4 @@
-﻿var singleLevelMulti = {
+var singleLevelMulti = {
     "PickListItems": [{
         "Description": "CORSTORPHINE HIGH STREET, EDINBURGH, CITY OF EDINBURGH",
         "Addresses": [

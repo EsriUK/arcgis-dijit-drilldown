@@ -1,4 +1,4 @@
-﻿/*global define, console, document */
+/*global define, console, document */
 
 /*
  | Copyright 2015 ESRI (UK) Limited
@@ -17,7 +17,7 @@
  */
 if (!String.prototype.trim) {
     String.prototype.trim = function () {
-        return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
     };
 }
 
@@ -136,7 +136,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 return tz;
             }
 
-            var x = 0, aa = chunkify(a), bb = chunkify(b), c;
+            var x = 0, aa = chunkify(a), bb = chunkify(b), c, d;
 
             for (x = 0; aa[x] && bb[x]; x++) {
                 if (aa[x] !== bb[x]) {

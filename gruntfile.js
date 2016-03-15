@@ -253,9 +253,54 @@ module.exports = function (grunt) {
             testconfig: {
                 configFile: "js/tests/integration_tests/wdio.conf.js"
             }
+        },
+        bom: {
+            outputfile: {
+                files: [{
+                    expand: true,
+                    cwd: 'js/',
+                    src: ['**/*.js'],
+                    dest: 'js/'
+                }]
+            }
         }
     };
 
+
+    grunt.registerMultiTask('bom', 'byte order mark remove files.', function () {
+        grunt.log.writeln("Run BOM task");
+        var options = this.options();
+        grunt.verbose.writeflags(options, 'Options');
+
+        this.files.forEach(function (file) {
+            var bom;
+            var max = file.src.filter(function (filepath) {
+                // Warn on and remove invalid source files (if nonull was set).
+                if (!grunt.file.exists(filepath)) {
+                    grunt.log.warn('Source file "' + filepath + '" not found.');
+                    return false;
+                } else {
+                    return true;
+                }
+            })
+                .map(grunt.file.read)
+                .join(grunt.util.normalizelf(grunt.util.linefeed));
+
+            try {
+                bom = max.replace(/^\uFEFF/, '');
+
+            } catch (err) {
+                grunt.warn(file.src + '\n' + err);
+            }
+
+            if (bom.length < 1) {
+                grunt.log.warn('Destination not written because BOM file was empty.');
+            } else {
+                grunt.file.write(file.dest, bom);
+                grunt.log.writeln('File ' + file.dest + ' created.');
+            }
+        });
+    });
 
     // Project configuration.
     grunt.initConfig(gruntconfig);
@@ -279,7 +324,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 
-    grunt.registerTask('build', ['clean:pre', 'uglify', 'cssmin', 'concat', 'clean:post']);
+    grunt.registerTask('build', ['clean:pre', 'bom:outputfile', 'uglify', 'cssmin', 'concat', 'clean:post']);
 
     grunt.registerTask('travis', ['clean:pre', 'uglify', 'cssmin', 'concat', 'clean:post', 'jasmine:coverageci']);
 };

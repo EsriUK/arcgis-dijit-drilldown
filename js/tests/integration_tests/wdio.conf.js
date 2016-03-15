@@ -1,4 +1,4 @@
-﻿exports.config = {
+exports.config = {
 
 	//
 	// =================
