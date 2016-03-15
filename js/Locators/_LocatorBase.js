@@ -61,7 +61,7 @@ if (!Array.prototype.filter) {
 }
 
 define([
-    'dojo/_base/declare',
+    "dojo/_base/declare",
     "esri/tasks/locator",
     "./PickList",
     "./PickListItem",
@@ -136,30 +136,19 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 return tz;
             }
 
-            var aa = chunkify(a);
-            var bb = chunkify(b);
+            var x = 0, aa = chunkify(a), bb = chunkify(b), c;
 
             for (x = 0; aa[x] && bb[x]; x++) {
                 if (aa[x] !== bb[x]) {
-                    var c = Number(aa[x]), d = Number(bb[x]);
+                    c = Number(aa[x]), d = Number(bb[x]);
                     if (c == aa[x] && d == bb[x]) {
                         return c - d;
-                    } else return (aa[x] > bb[x]) ? 1 : -1;
+                    }
+                    return (aa[x] > bb[x]) ? 1 : -1;
                 }
             }
             return aa.length - bb.length;
         };
-
-        //sortAlphaNum = function (a, b) {
-        //    var aA = a.replace(reA, ""), bA = b.replace(reA, ""), aN, bN;
-
-        //    if (aA === bA) {
-        //        aN = parseInt(a.replace(reN, ""), 10);
-        //        bN = parseInt(b.replace(reN, ""), 10);
-        //        return aN === bN ? 0 : aN > bN ? 1 : -1;
-        //    }
-        //    return aA > bA ? 1 : -1;
-        //};
 
     return declare([Locator], {
         // summary:
@@ -208,7 +197,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             // tags:
             //      private
 
-            var description = "", streetF = this.streetFields, paoF = this.paoFields;
+            var description = "", streetF = this.streetFields;
 
             switch (level) {
                 case 1: // Sub Premise

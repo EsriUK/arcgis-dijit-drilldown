@@ -96,8 +96,13 @@ module.exports = function (grunt) {
         jasmine: {
             test: {
                 options: {
-                    specs: './js/tests/unit_tests/spec/*.js',
-                    helpers: ['./js/tests/helpers/*.js', './js/tests/lib/sinon/sinon.js'],
+                    specs: './js/tests/unit_tests/spec/DrilldownSpec.js',
+                    helpers: [
+                        './js/tests/helpers/agsllpgResults.js',
+                        './js/tests/helpers/llpgLargeList.js',
+                        './js/tests/helpers/llpgResults.js',
+                        './js/tests/helpers/orgTestResults.js',
+                        './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
                         dojoConfig: {
@@ -120,6 +125,7 @@ module.exports = function (grunt) {
                         './js/tests/helpers/agsllpgResults.js',
                         './js/tests/helpers/llpgLargeList.js',
                         './js/tests/helpers/llpgResults.js',
+                        './js/tests/helpers/orgTestResults.js',
                         './js/tests/lib/sinon/sinon.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),
