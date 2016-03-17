@@ -18,11 +18,11 @@ module.exports = function (grunt) {
         clean: {
             pre: {
                 options: { force: true },
-                src: ["build/", "dist/"]
+                src: ['build/', 'dist/']
             },
             post: {
                 options: { force: true },
-                src: ["dist/Drilldown.js"]
+                src: ['dist/Drilldown.js']
             }
         },
         cssmin: {
@@ -86,7 +86,7 @@ module.exports = function (grunt) {
             },
             final: {
                 options: {
-                    process: function (src, filepath) {
+                    process: function (src) {
                         return 'require({ cache: { '+ src +' } });';
                     }
                 },
@@ -271,7 +271,7 @@ module.exports = function (grunt) {
                 updateSauceJob: true
             },
             testconfig: {
-                configFile: "js/tests/integration_tests/wdio.conf.js"
+                configFile: 'js/tests/integration_tests/wdio.conf.js'
             }
         },
         bom: {
@@ -288,20 +288,18 @@ module.exports = function (grunt) {
 
 
     grunt.registerMultiTask('bom', 'byte order mark remove files.', function () {
-        grunt.log.writeln("Run BOM task");
+        grunt.log.writeln('Run BOM task');
         var options = this.options();
         grunt.verbose.writeflags(options, 'Options');
 
         this.files.forEach(function (file) {
-            var bom;
-            var max = file.src.filter(function (filepath) {
+            var bom, max = file.src.filter(function (filepath) {
                 // Warn on and remove invalid source files (if nonull was set).
                 if (!grunt.file.exists(filepath)) {
                     grunt.log.warn('Source file "' + filepath + '" not found.');
                     return false;
-                } else {
-                    return true;
-                }
+                } 
+                return true;
             })
                 .map(grunt.file.read)
                 .join(grunt.util.normalizelf(grunt.util.linefeed));
