@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                 options: {
                     separator: ',',
                     process: function (src, filepath) {
-                        return '"esriuk/dijit/' + filepath.replace(".js", "").replace("build/", "") + '": function () {' + src + '}';
+                        return '"esriuk/dijit/' + filepath.replace('.js', '').replace('build/', '') + '": function () {' + src + '}';
                     }
                 },
                 src: [
