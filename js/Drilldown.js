@@ -102,7 +102,7 @@ define([
         }));
     },
     _addressResults = function (results) {
-        return (!_isNullOrEmpty(results.Addresses) && results.Addresses.length > 1);
+        return (!_isNullOrEmpty(results) && results.length > 1);
     },
     _createGroup = function (pickList, showCounts) {
         // summary:

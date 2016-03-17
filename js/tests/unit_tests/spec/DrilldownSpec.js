@@ -4,7 +4,8 @@ var drilldownProps = {
         singleLineFieldName: "LH_ADDRESS",
         outFields: ["*"],
         name: "LH 5.3 LLPG",
-        maxResults: 250
+        maxResults: 250,
+        showCounts: true
     }],
 };
 
