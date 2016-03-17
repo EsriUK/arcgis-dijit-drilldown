@@ -18,10 +18,10 @@
 
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
-        if (typeof this !== 'function') {
+        if (typeof this !== "function") {
             // closest thing possible to the ECMAScript 5
             // internal IsCallable function
-            throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+            throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
         }
 
         var aArgs = Array.prototype.slice.call(arguments, 1),
@@ -101,20 +101,23 @@ define([
             open: false
         }));
     },
+    _addressResults = function (results) {
+        return (!_isNullOrEmpty(results.Addresses) && results.Addresses.length > 1);
+    },
     _createGroup = function (pickList, showCounts) {
         // summary:
         //      Creates a titlegroup. USed to create a premise level in the pick list.
 
         var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), premiseList, node;
 
-        if (!_isNullOrEmpty(pickList.Addresses) && pickList.Addresses.length > 1) {
+        if (_addressResults(pickList.Addresses)) {
 
             // Create a title group to hold the premise list
             premiseList = pickList.Addresses;
 
             for (j = 0, jL = premiseList.length; j < jL; j++) {
                 // Do we have a sub premise list?
-                if (!_isNullOrEmpty(premiseList[j].Addresses) && premiseList[j].Addresses.length > 1) {
+                if (_addressResults(premiseList[j].Addresses)) {
                     _createSubGroup(premiseList[j], premiseTitleGroup, showCounts);
                 }
                 else {
@@ -141,7 +144,7 @@ define([
                     content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0])
                 });
             }
-            else if (!_isNullOrEmpty(pickList.Addresses[0].Addresses) && pickList.Addresses[0].Addresses.length > 0) {
+            else if (_addressResults(pickList.Addresses[0].Addresses)) {
                 _createSubGroup(pickList.Addresses[0], premiseTitleGroup);
             }
         }

@@ -1,4 +1,4 @@
-/*global define, console, document, _paoSaoNumberRange, _isNullOrEmpty */
+/*global define, _paoSaoNumberRange, _isNullOrEmpty */
 
 /*
  | Copyright 2015 ESRI (UK) Limited

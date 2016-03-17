@@ -66,7 +66,7 @@ var _isNullOrEmpty = function (/*Anything*/ obj) {
     // tags:
     //		private
 
-    return (obj === undefined || obj === null || obj === '');
+    return (obj === undefined || obj === null || obj === "");
 },
 
 _paoSaoNumberRange = function (startNumber, startSuffix, endNumber, endSuffix) {
@@ -239,6 +239,15 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             return description;
         },
 
+        _buildPicklistItem: function (childAttributes, childAddressCandidate) {
+            return new PickListItem({
+                SortDescription: this._getPAOText(childAttributes, true),
+                Description: this._getListLevelDescription(1, childAttributes),
+                Addresses: [childAddressCandidate],
+                Level: 1
+            });
+        },
+
         _buildPickList: function (results) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
                 key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), childAttributes,
@@ -281,12 +290,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                                         premisePicklist[addressKey].addCandidate(childAddressCandidate);
                                     }
                                     else {
-                                        premisePicklist[addressKey] = new PickListItem({
-                                            SortDescription: this._getPAOText(childAttributes, true),
-                                            Description: this._getListLevelDescription(1, childAttributes),
-                                            Addresses: [childAddressCandidate],
-                                            Level: 1
-                                        });
+                                        premisePicklist[addressKey] = this._buildPicklistItem(childAttributes, childAddressCandidate);
                                     }
                                 }
                             }
