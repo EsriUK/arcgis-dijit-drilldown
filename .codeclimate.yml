@@ -24,20 +24,15 @@ ratings:
   - "**.py"
   - "**.rb"
 
-exclude_paths:
-- "js/tests/*"
-
 ecmaFeatures:
   modules: true
   jsx: true
-
 env:
   amd: true
   browser: true
   es6: true
   jquery: true
   node: true
-
 # http://eslint.org/docs/rules/
 rules:
   # Possible Errors
@@ -69,7 +64,6 @@ rules:
   use-isnan: 2
   valid-jsdoc: 0
   valid-typeof: 2
-
   # Best Practices
   accessor-pairs: 2
   block-scoped-var: 0
@@ -127,10 +121,8 @@ rules:
   vars-on-top: 0
   wrap-iife: 2
   yoda: 0
-
   # Strict
   strict: 0
-
   # Variables
   init-declarations: 0
   no-catch-shadow: 2
@@ -143,7 +135,6 @@ rules:
   no-undefined: 0
   no-unused-vars: 0
   no-use-before-define: 0
-
   # Node.js and CommonJS
   callback-return: 2
   global-require: 2
@@ -154,7 +145,6 @@ rules:
   no-process-exit: 2
   no-restricted-modules: 0
   no-sync: 0
-
   # Stylistic Issues
   array-bracket-spacing: 0
   block-spacing: 0
@@ -220,7 +210,6 @@ rules:
   space-unary-ops: 0
   spaced-comment: 0
   wrap-regex: 0
-
 # ECMAScript 6
 arrow-body-style: 0
 arrow-parens: 0
@@ -240,3 +229,7 @@ prefer-reflect: 0
 prefer-spread: 0
 prefer-template: 0
 require-yield: 0
+
+- "js/tests/*"
+- "LICENSE"
+- "README.md"
