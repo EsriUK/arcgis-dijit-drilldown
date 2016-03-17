@@ -9,6 +9,9 @@ before_script:
 - grunt travis
 script:
 - grunt coveralls:dijit_coverage --verbose
+after_script:
+- codeclimate-test-reporter < coverage/lcov/lcov.info
+
 after_success:
 
 - git config --global user.email "sbatterby@esriuk.com"
