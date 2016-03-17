@@ -34,7 +34,7 @@ function (declare, _LocatorBase) {
 
         // locatorType: String
         //              The type of locator.
-        locatorType: "LLPG",
+        locatorType: "ABX",
 
         // resultsPickList: PickList
         //              The picklist that contains the list of results.
@@ -42,7 +42,7 @@ function (declare, _LocatorBase) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["STREET_DESCRIPTOR", "LOCALITY_NAME", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
+        streetGrouping: ["STREET_DESCRIPTION", "LOCALITY_NAME", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
@@ -52,7 +52,7 @@ function (declare, _LocatorBase) {
         //              An object containing the field name value mappings for
         //              constructing the street description.
         streetFields: {
-            STREET_DESCRIPTOR: "STREET_DESCRIPTOR",
+            STREET_DESCRIPTOR: "STREET_DESCRIPTION",
             LOCALITY_NAME: "LOCALITY_NAME",
             TOWN_NAME: "TOWN_NAME",
             ADMINISTRATIVE_AREA: "ADMINISTRATIVE_AREA"

@@ -71,7 +71,17 @@ module.exports = function (grunt) {
                         return '"esriuk/dijit/' + filepath.replace(".js", "").replace("build/", "") + '": function () {' + src + '}';
                     }
                 },
-                src: ['build/Locators/PickListItem.js', 'build/Locators/PickList.js', 'build/Locators/_LocatorBase.js', 'build/Locators/AGSLLPGLocator.js', 'build/Locators/LLPGLocator.js', 'build/Drilldown.js'],
+                src: [
+                    'build/Locators/PickListItem.js',
+                    'build/Locators/PickList.js',
+                    'build/Locators/_LocatorBase.js',
+                    'build/Locators/AGSLLPGLocator.js',
+                    'build/Locators/LLPGLocator.js',
+                    'build/Locators/ABXLocator.js',
+                    'build/Locators/GMSLocator.js',
+                    'build/Locators/OSGLocator.js',
+                    'build/Drilldown.js'
+                ],
                 dest: 'dist/Drilldown.js' 
             },
             final: {
@@ -103,6 +113,8 @@ module.exports = function (grunt) {
                         './js/tests/helpers/llpgLargeList.js',
                         './js/tests/helpers/llpgResults.js',
                         './js/tests/helpers/orgTestResults.js',
+                        './js/tests/helpers/gmsResults.js',
+                        './js/tests/helpers/abxResults.js',
                         './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
@@ -126,6 +138,8 @@ module.exports = function (grunt) {
                         './js/tests/helpers/llpgLargeList.js',
                         './js/tests/helpers/llpgResults.js',
                         './js/tests/helpers/orgTestResults.js',
+                        './js/tests/helpers/gmsResults.js',
+                        './js/tests/helpers/abxResults.js',
                         './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
@@ -149,6 +163,8 @@ module.exports = function (grunt) {
                         './js/tests/helpers/llpgLargeList.js',
                         './js/tests/helpers/llpgResults.js',
                         './js/tests/helpers/orgTestResults.js',
+                        './js/tests/helpers/gmsResults.js',
+                        './js/tests/helpers/abxResults.js',
                         './js/tests/lib/sinon/sinon.js'],
                     template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
@@ -173,6 +189,8 @@ module.exports = function (grunt) {
                         './js/tests/helpers/llpgLargeList.js',
                         './js/tests/helpers/llpgResults.js',
                         './js/tests/helpers/orgTestResults.js',
+                        './js/tests/helpers/gmsResults.js',
+                        './js/tests/helpers/abxResults.js',
                         './js/tests/lib/sinon/sinon.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),
@@ -202,6 +220,8 @@ module.exports = function (grunt) {
                         './js/tests/helpers/agsllpgResults.js',
                         './js/tests/helpers/llpgLargeList.js',
                         './js/tests/helpers/llpgResults.js',
+                        './js/tests/helpers/gmsResults.js',
+                        './js/tests/helpers/abxResults.js',
                         './js/tests/lib/sinon/sinon.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),

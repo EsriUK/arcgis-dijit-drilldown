@@ -1,4 +1,4 @@
-/*global define, console, document */
+/*global define, console, document, _isNullOrEmpty */
 
 /*
  | Copyright 2015 ESRI (UK) Limited
@@ -22,7 +22,7 @@ define([
 ],
 function (declare, _LocatorBase) {
     // module:
-    //      LLPGLocator
+    //      OSGLocator
 
     return declare([_LocatorBase], {
         // summary:
@@ -34,7 +34,7 @@ function (declare, _LocatorBase) {
 
         // locatorType: String
         //              The type of locator.
-        locatorType: "LLPG",
+        locatorType: "OSG",
 
         // resultsPickList: PickList
         //              The picklist that contains the list of results.

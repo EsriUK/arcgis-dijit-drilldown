@@ -60,6 +60,29 @@ if (!Array.prototype.filter) {
     };
 }
 
+var _isNullOrEmpty = function (/*Anything*/ obj) {
+    // summary:
+    //		Checks to see if the passed in thing is undefined, null or empty.
+    // tags:
+    //		private
+
+    return (obj === undefined || obj === null || obj === '');
+},
+
+_paoSaoNumberRange = function (startNumber, startSuffix, endNumber, endSuffix) {
+    var start = startNumber.trim() + startSuffix.trim(),
+        end = endNumber.trim() + endSuffix.trim();
+
+    if ((_isNullOrEmpty(start) === false) && (_isNullOrEmpty(end) === false)) {
+        return start + "-" + end;
+    }
+
+    // Only start or end has a value so the below code will return the one 
+    // that has a value.
+
+    return start + end;
+};
+
 define([
     "dojo/_base/declare",
     "esri/tasks/locator",
@@ -71,8 +94,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
     // module:
     //      esriuk/dijit/locators/_LocatorBase
 
-    var reA = /[^a-zA-Z]/g, reN = /[^0-9]/g,
-        _getGroupedAddressValue = function (fields, attributes) {
+    var _getGroupedAddressValue = function (fields, attributes) {
             var i = 0, iL = fields.length, addressValue = "", fieldName, fieldValue, addressParts = [];
 
             for (i = 0; i < iL; i += 1) {
@@ -80,7 +102,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                 fieldValue = attributes[fieldName];
 
-                if (fieldValue.length > 0) {
+                if (fieldValue !== undefined && fieldValue.length > 0) {
                     addressParts.push(fieldValue);
                 }
             }
@@ -91,7 +113,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
             return addressValue;
         },
-        _getStreets = function (candidates, pickList, streetField, streetGroups) {
+        _getStreets = function (candidates, pickList, streetGroups) {
             var i = 0, iL = 0, candidate, attributes, addressKey;
 
             for (i = 0, iL = candidates.length; i < iL; i += 1) {
@@ -123,10 +145,10 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
         sortAlphaNum = function (a, b) {
             function chunkify(t) {
-                var tz = [], x = 0, y = -1, n = 0, i, j;
+                var tz = [], x = 0, y = -1, n = 0, i, j, m;
 
                 while (i = (j = t.charAt(x++)).charCodeAt(0)) {
-                    var m = (i == 46 || (i >= 48 && i <= 57));
+                    m = (i === 46 || (i >= 48 && i <= 57));
                     if (m !== n) {
                         tz[++y] = "";
                         n = m;
@@ -140,8 +162,9 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
             for (x = 0; aa[x] && bb[x]; x++) {
                 if (aa[x] !== bb[x]) {
-                    c = Number(aa[x]), d = Number(bb[x]);
-                    if (c == aa[x] && d == bb[x]) {
+                    c = Number(aa[x]);
+                    d = Number(bb[x]);
+                    if (c === aa[x] && d === bb[x]) {
                         return c - d;
                     }
                     return (aa[x] > bb[x]) ? 1 : -1;
@@ -174,6 +197,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             SAO_END_NUMBER: "",
             SAO_END_SUFFIX: ""
         },
+
 
         _geocodeHandler: function (results, b, k, g, c) {
             // Process the results, constructing the picklist if needed
@@ -218,7 +242,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
         _buildPickList: function (results) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
                 key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), childAttributes,
-                streetDescriptor = this.streetFields.STREET_DESCRIPTOR, streetGroups = this.streetGrouping, premiseGroups = this.premiseGrouping,
+                streetGroups = this.streetGrouping, premiseGroups = this.premiseGrouping,
                 descFunc = function (a, b) {
                     return descriptionSort(a.SortDescription, b.SortDescription);
                 },
@@ -227,10 +251,10 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 };
 
             // Build picklist entries by concatenating fields in list
-            if (results.candidates.length > 0) {
+            if (!_isNullOrEmpty(results.candidates) && results.candidates.length > 0) {
                 candidates = results.candidates;
 
-                _getStreets(candidates, pickList, streetDescriptor, streetGroups);
+                _getStreets(candidates, pickList, streetGroups);
 
                 for (key in pickList) {
                     // Now do premise lists

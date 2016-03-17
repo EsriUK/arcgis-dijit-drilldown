@@ -1,4 +1,4 @@
-/*global define, console, document */
+/*global define, console, document, _paoSaoNumberRange, _isNullOrEmpty */
 
 /*
  | Copyright 2015 ESRI (UK) Limited
@@ -26,15 +26,15 @@ function (declare, _LocatorBase) {
 
     return declare([_LocatorBase], {
         // summary:
-        //		        LLPG Locator
+        //		        GMS Locator
         // description: 
-        //              A Locator that can be used for address searches against an LLPG LocatorHub 5.3 locator.
+        //              A Locator that can be used for address searches against a GMS LocatorHub 5.3 locator.
         //              The Locator returns the address results as a picklist.
         //
 
         // locatorType: String
         //              The type of locator.
-        locatorType: "LLPG",
+        locatorType: "GMS",
 
         // resultsPickList: PickList
         //              The picklist that contains the list of results.
@@ -42,20 +42,20 @@ function (declare, _LocatorBase) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["STREET_DESCRIPTOR", "LOCALITY_NAME", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
+        streetGrouping: ["STREET_NAME", "LOCALITY_NAME", "TOWN_NAME", "COUNTY_NAME"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
-        premiseGrouping: ["PAO_TEXT", "PAO_END_SUFFIX", "PAO_END_NUMBER", "PAO_START_SUFFIX", "PAO_START_NUMBER"],
+        premiseGrouping: ["PAO_TEXT", "PAO_END_SFX", "PAO_END_NO", "PAO_START_SFX", "PAO_START_NO"],
 
         // streetFields: Object
         //              An object containing the field name value mappings for
         //              constructing the street description.
         streetFields: {
-            STREET_DESCRIPTOR: "STREET_DESCRIPTOR",
+            STREET_DESCRIPTOR: "STREET_NAME",
             LOCALITY_NAME: "LOCALITY_NAME",
             TOWN_NAME: "TOWN_NAME",
-            ADMINISTRATIVE_AREA: "ADMINISTRATIVE_AREA"
+            ADMINISTRATIVE_AREA: "COUNTY_NAME"
         },
 
         // paoFields: Object
@@ -63,10 +63,10 @@ function (declare, _LocatorBase) {
         //              constructing the PAO description.
         paoFields: {
             PAO_TEXT: "PAO_TEXT",
-            PAO_START_NUMBER: "PAO_START_NUMBER",
-            PAO_START_SUFFIX: "PAO_START_SUFFIX",
-            PAO_END_NUMBER: "PAO_END_NUMBER",
-            PAO_END_SUFFIX: "PAO_END_SUFFIX"
+            PAO_START_NUMBER: "PAO_START_NO",
+            PAO_START_SUFFIX: "PAO_START_SFX",
+            PAO_END_NUMBER: "PAO_END_NO",
+            PAO_END_SUFFIX: "PAO_END_SFX"
         },
 
         // saoFields: Object
@@ -74,10 +74,10 @@ function (declare, _LocatorBase) {
         //              constructing the SAO description.
         saoFields: {
             SAO_TEXT: "SAO_TEXT",
-            SAO_START_NUMBER: "SAO_START_NUMBER",
-            SAO_START_SUFFIX: "SAO_START_SUFFIX",
-            SAO_END_NUMBER: "SAO_END_NUMBER",
-            SAO_END_SUFFIX: "SAO_END_SUFFIX"
+            SAO_START_NUMBER: "SAO_START_NO",
+            SAO_START_SUFFIX: "SAO_START_SFX",
+            SAO_END_NUMBER: "SAO_END_NO",
+            SAO_END_SUFFIX: "SAO_END_SFX"
         },
 
 

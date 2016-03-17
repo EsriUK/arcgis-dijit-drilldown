@@ -25,15 +25,6 @@ function (declare, _LocatorBase) {
     // module:
     //      _LocatorBase
 
-    var _isNullOrEmpty = function (/*Anything*/ obj) {
-        // summary:
-        //		Checks to see if the passed in thing is undefined, null or empty.
-        // tags:
-        //		private
-
-        return (obj === undefined || obj === null || obj === '');
-    };
-
     return declare([_LocatorBase], {
         // summary:
         //		AGS LLPG Locator.
