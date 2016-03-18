@@ -27,12 +27,21 @@ ratings:
 ecmaFeatures:
   modules: true
   jsx: true
+
 env:
   amd: true
   browser: true
   es6: true
   jquery: true
   node: true
+
+exclude_paths:
+  - js/tests/**/*
+  - dist/*
+  - build/**/*
+  - "LICENSE"
+  - "README.md"
+
 # http://eslint.org/docs/rules/
 rules:
   # Possible Errors
@@ -229,7 +238,3 @@ prefer-reflect: 0
 prefer-spread: 0
 prefer-template: 0
 require-yield: 0
-
-- "js/tests/*"
-- "LICENSE"
-- "README.md"
