@@ -11,6 +11,9 @@ engines:
       - php
   eslint:
     enabled: true
+	# ... CONFIG CONTENT ...
+    exclude_fingerprints:
+    - 087d953719ccc586f7ab5b4edeaaf545
   fixme:
     enabled: true
 ratings:

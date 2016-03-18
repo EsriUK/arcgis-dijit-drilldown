@@ -89,14 +89,14 @@ define([
         var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
             subPremiseList = premiseList.Addresses;
 
-        for (k = 0, kL = subPremiseList.length; k < kL; k+=1) {
+        for (k = 0, kL = subPremiseList.length; k < kL; k += 1) {
             subPremiseTitleGroup.addChild(new ContentPane({
                 content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(subPremiseList[k].address, subPremiseList[k])]
             }));
         }
-        
+
         titleGroup.addChild(new TitlePane({
-            title: _createCount(subPremiseList, showCounts) + "<span class='drilldownTitle'>"+ premiseList.Description + "</span>",
+            title: _createCount(subPremiseList, showCounts) + "<span class='drilldownTitle'>" + premiseList.Description + "</span>",
             content: subPremiseTitleGroup,
             open: false
         }));
@@ -159,6 +159,19 @@ define([
             this.set("content", _createGroup(list, showCounts));
             this.set("contentSet", true);
         }
+    },
+    _pickListIsSingleResult = function (pickList) {
+        var isSingle = false;
+
+        if (pickList.length === 1 && pickList[0].Addresses.length === 1) {
+            if (_isNullOrEmpty(pickList[0].Addresses[0].Addresses)) {
+                isSingle = true;
+            }
+            if (!_isNullOrEmpty(pickList[0].Addresses[0].Addresses) && pickList[0].Addresses[0].Addresses.length === 1) {
+                isSingle = true;
+            }
+        }
+        return isSingle;
     };
 
     // module:
@@ -280,9 +293,9 @@ define([
                 }
                 return this.inherited(arguments);
             }
-            else {
-                c.errors = resultArray;
-            }
+            
+            c.errors = resultArray;
+            
             return c;
         },
 
@@ -329,16 +342,7 @@ define([
 
             if (numberOfResults === 1) {
                 pickListItems = results[singleSource].PickListItems;
-
-                if (pickListItems.length === 1 && pickListItems[0].Addresses.length === 1) {
-                    if (_isNullOrEmpty(pickListItems[0].Addresses[0].Addresses)) {
-                        return true;
-                    }
-                    if (!_isNullOrEmpty(pickListItems[0].Addresses[0].Addresses) && pickListItems[0].Addresses[0].Addresses.length === 1) {
-                        return true;
-                    }
-                }
-                return false;
+                return _pickListIsSingleResult(pickListItems);
             }
 
             return false;
