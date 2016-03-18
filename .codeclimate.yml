@@ -41,6 +41,8 @@ exclude_paths:
   - build/**/*
   - "LICENSE"
   - "README.md"
+  - "gruntfile.js"
+  - "package.json"
 
 # http://eslint.org/docs/rules/
 rules:
