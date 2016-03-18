@@ -78,14 +78,6 @@ function (declare, _LocatorBase) {
             SAO_START_SUFFIX: "SAO_START_SFX",
             SAO_END_NUMBER: "SAO_END_NO",
             SAO_END_SUFFIX: "SAO_END_SFX"
-        },
-
-
-        constructor: function () {
-            // summary:
-            //      Initializes the Locator
-
-            this.inherited(arguments);
-        }        
+        }      
     });
 });
