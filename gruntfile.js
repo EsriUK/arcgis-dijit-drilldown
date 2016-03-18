@@ -78,6 +78,7 @@ module.exports = function (grunt) {
                     'build/Locators/AGSLLPGLocator.js',
                     'build/Locators/LLPGLocator.js',
                     'build/Locators/ABXLocator.js',
+                    'build/Locators/ABXDPALocator.js',
                     'build/Locators/GMSLocator.js',
                     'build/Locators/OSGLocator.js',
                     'build/Drilldown.js'
@@ -104,19 +105,22 @@ module.exports = function (grunt) {
             }
         },
         jasmine: {
+            options: {
+                version: '2.2.0',
+                specs: './js/tests/unit_tests/spec/*.js',
+                helpers: [
+                    './js/tests/helpers/agsllpgResults.js',
+                    './js/tests/helpers/llpgLargeList.js',
+                    './js/tests/helpers/llpgResults.js',
+                    './js/tests/helpers/orgTestResults.js',
+                    './js/tests/helpers/gmsResults.js',
+                    './js/tests/helpers/abxResults.js',
+                    './js/tests/helpers/abxDpaResults.js',
+                    './js/tests/lib/sinon/sinon.js'],
+                template: require('grunt-template-jasmine-dojo')
+            },
             testJSAPI14: {
                 options: {
-                    version: '2.2.0',
-                    specs: './js/tests/unit_tests/spec/*.js',
-                    helpers: [
-                        './js/tests/helpers/agsllpgResults.js',
-                        './js/tests/helpers/llpgLargeList.js',
-                        './js/tests/helpers/llpgResults.js',
-                        './js/tests/helpers/orgTestResults.js',
-                        './js/tests/helpers/gmsResults.js',
-                        './js/tests/helpers/abxResults.js',
-                        './js/tests/lib/sinon/sinon.js'],
-                    template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
                         dojoConfig: {
                             async: true,
@@ -131,17 +135,6 @@ module.exports = function (grunt) {
             },
             testJSAPI15: {
                 options: {
-                    version: '2.2.0',
-                    specs: './js/tests/unit_tests/spec/*.js',
-                    helpers: [
-                        './js/tests/helpers/agsllpgResults.js',
-                        './js/tests/helpers/llpgLargeList.js',
-                        './js/tests/helpers/llpgResults.js',
-                        './js/tests/helpers/orgTestResults.js',
-                        './js/tests/helpers/gmsResults.js',
-                        './js/tests/helpers/abxResults.js',
-                        './js/tests/lib/sinon/sinon.js'],
-                    template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
                         dojoConfig: {
                             async: true,
@@ -156,17 +149,6 @@ module.exports = function (grunt) {
             },
             testJSAPI16: {
                 options: {
-                    version: '2.2.0',
-                    specs: './js/tests/unit_tests/spec/*.js',
-                    helpers: [
-                        './js/tests/helpers/agsllpgResults.js',
-                        './js/tests/helpers/llpgLargeList.js',
-                        './js/tests/helpers/llpgResults.js',
-                        './js/tests/helpers/orgTestResults.js',
-                        './js/tests/helpers/gmsResults.js',
-                        './js/tests/helpers/abxResults.js',
-                        './js/tests/lib/sinon/sinon.js'],
-                    template: require('grunt-template-jasmine-dojo'),
                     templateOptions: {
                         dojoConfig: {
                             async: true,
@@ -181,18 +163,7 @@ module.exports = function (grunt) {
             },
             coverage: {
                 src: ['js/*.js', 'js/Locators/*.js'],
-
                 options: {
-                    specs: ['./js/tests/unit_tests/spec/*.js'],
-                    helpers: [
-                        './js/tests/helpers/agsllpgResults.js',
-                        './js/tests/helpers/llpgLargeList.js',
-                        './js/tests/helpers/llpgResults.js',
-                        './js/tests/helpers/orgTestResults.js',
-                        './js/tests/helpers/gmsResults.js',
-                        './js/tests/helpers/abxResults.js',
-                        './js/tests/lib/sinon/sinon.js'
-                    ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'coverage/coverage.json',
@@ -213,17 +184,7 @@ module.exports = function (grunt) {
             },
             coverageci: {
                 src: ['js/*.js', 'js/Locators/*.js'],
-
                 options: {
-                    specs: ['./js/tests/unit_tests/spec/*.js'],
-                    helpers: [
-                        './js/tests/helpers/agsllpgResults.js',
-                        './js/tests/helpers/llpgLargeList.js',
-                        './js/tests/helpers/llpgResults.js',
-                        './js/tests/helpers/gmsResults.js',
-                        './js/tests/helpers/abxResults.js',
-                        './js/tests/lib/sinon/sinon.js'
-                    ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'coverage/coverage.json',

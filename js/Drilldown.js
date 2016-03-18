@@ -252,8 +252,8 @@ define([
                 results: null
             }, d = {}, e = {}, b = 0;
 
-            if (resultArray) {
-                if(sourceIndex === this._allIndex) {
+            if (resultArray && !_isNullOrEmpty(resultArray[0].PickListItems)) {
+                if (sourceIndex === this._allIndex) {
                     // Using all locators
                     for (b = 0; b < resultArray.length; b++) {
                         if (!_isNullOrEmpty(this.sources[b].locator.locatorType)) {
@@ -269,7 +269,7 @@ define([
                     c.err = d;
                     return c;
                 }
-                
+
                 if (!_isNullOrEmpty(this.activeSource.locator.locatorType)) {
                     // Custom locator with picklists
                     e[sourceIndex] = resultArray[0];
@@ -279,7 +279,9 @@ define([
                     return c;
                 }
                 return this.inherited(arguments);
-                
+            }
+            else {
+                c.errors = resultArray;
             }
             return c;
         },
