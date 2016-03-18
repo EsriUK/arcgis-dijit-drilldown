@@ -9,11 +9,8 @@ before_script:
 - grunt travis
 script:
 - grunt coveralls:dijit_coverage --verbose
-after_script:
-- codeclimate-test-reporter < coverage/lcov/lcov.info
-
 after_success:
-
+- CODECLIMATE_REPO_TOKEN codeclimate-test-reporter < coverage/lcov/lcov.info
 - git config --global user.email "sbatterby@esriuk.com"
 - git config --global user.name "Travis CI"
 - git clone https://github.com/EsriUK/wab-dijit-drilldown.git
