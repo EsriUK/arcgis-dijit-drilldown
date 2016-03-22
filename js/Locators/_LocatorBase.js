@@ -139,16 +139,13 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             }
         },
 
-        descriptionSort = function (a, b) {
-            return a.localeCompare(b);
-        },
-
         sortAlphaNum = function (a, b) {
             function chunkify(t) {
-                var tz = [], x = 0, y = -1, n = 0, i, j, m;
+                var tz = new Array();
+                var x = 0, y = -1, n = 0, i, j;
 
                 while (i = (j = t.charAt(x++)).charCodeAt(0)) {
-                    m = (i === 46 || (i >= 48 && i <= 57));
+                    var m = (i == 46 || (i >= 48 && i <= 57));
                     if (m !== n) {
                         tz[++y] = "";
                         n = m;
@@ -158,13 +155,13 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 return tz;
             }
 
-            var x = 0, aa = chunkify(a), bb = chunkify(b), c, d;
+            var aa = chunkify(a.toLowerCase());
+            var bb = chunkify(b.toLowerCase());
 
             for (x = 0; aa[x] && bb[x]; x++) {
                 if (aa[x] !== bb[x]) {
-                    c = Number(aa[x]);
-                    d = Number(bb[x]);
-                    if (c === aa[x] && d === bb[x]) {
+                    var c = Number(aa[x]), d = Number(bb[x]);
+                    if (c == aa[x] && d == bb[x]) {
                         return c - d;
                     }
                     return (aa[x] > bb[x]) ? 1 : -1;
@@ -274,7 +271,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
         _buildPicklistItem: function (childAttributes, childAddressCandidate) {
             return new PickListItem({
-                SortDescription: this._getPAOText(childAttributes, true),
+                SortDescription: this._getPAOText(childAttributes, false),
                 Description: this._getListLevelDescription(1, childAttributes),
                 Addresses: [childAddressCandidate],
                 Level: 1
@@ -285,9 +282,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
                 key, item, children, k = 0, kL = 0, premKey, childAddressCandidate, resultsPickList = new PickList(), childAttributes,
                 streetGroups = this.streetGrouping, premiseGroups = this.premiseGrouping,
-                descFunc = function (a, b) {
-                    return descriptionSort(a.SortDescription, b.SortDescription);
-                },
                 sortFunc = function (a, b) {
                     return sortAlphaNum(a.SortDescription, b.SortDescription);
                 };
@@ -317,7 +311,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                                 if (addressKey.length > 0) {
                                     childAddressCandidate = children[k];
-                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes, true);
+                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes, false);
 
                                     if (premisePicklist.hasOwnProperty(addressKey)) {
                                         premisePicklist[addressKey].addCandidate(childAddressCandidate);
@@ -348,7 +342,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 }
 
                 // Sort street list
-                resultsPickList.PickListItems.sort(descFunc);
+                resultsPickList.PickListItems.sort(sortFunc);
 
                 this.resultsPickList = resultsPickList;
 
