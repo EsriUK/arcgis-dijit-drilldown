@@ -70,10 +70,22 @@ var _isNullOrEmpty = function (/*Anything*/ obj) {
 },
 
 _paoSaoNumberRange = function (startNumber, startSuffix, endNumber, endSuffix) {
-    var start = startNumber.trim() + startSuffix.trim(),
-        end = endNumber.trim() + endSuffix.trim();
+    var start = "", end = "";
 
-    if ((_isNullOrEmpty(start) === false) && (_isNullOrEmpty(end) === false)) {
+    if (!_isNullOrEmpty(startNumber)) {
+        start = startNumber.trim();
+    }
+    if (!_isNullOrEmpty(startSuffix)) {
+        start += startSuffix.trim();
+    }
+    if (!_isNullOrEmpty(endNumber)) {
+        end = endNumber.trim();
+    }
+    if (!_isNullOrEmpty(endSuffix)) {
+        end += endSuffix.trim();
+    }
+
+    if ((!_isNullOrEmpty(start)) && (!_isNullOrEmpty(end))) {
         return start + "-" + end;
     }
 
@@ -102,7 +114,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                 fieldValue = attributes[fieldName];
 
-                if (fieldValue !== undefined && fieldValue.length > 0) {
+                if (!_isNullOrEmpty(fieldValue)) {
                     addressParts.push(fieldValue);
                 }
             }
