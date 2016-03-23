@@ -283,7 +283,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
         _buildPicklistItem: function (childAttributes, childAddressCandidate) {
             return new PickListItem({
-                SortDescription: this._getPAOText(childAttributes, false),
+                SortDescription: this._getPAOText(childAttributes, true),
                 Description: this._getListLevelDescription(1, childAttributes),
                 Addresses: [childAddressCandidate],
                 Level: 1

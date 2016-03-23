@@ -271,8 +271,8 @@ define([
                     for (b = 0; b < resultArray.length; b++) {
                         if (!_isNullOrEmpty(this.sources[b].locator.locatorType)) {
                             // Custom locator with picklists
-                            e[sourceIndex] = resultArray[0];
-                            c.numResults += resultArray[0].PickListItems.length;
+                            e[b] = resultArray[b];
+                            c.numResults += resultArray[b].PickListItems.length;
                         }
                         else {
                             c = this.inherited(arguments);
