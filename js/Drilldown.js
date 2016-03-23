@@ -382,8 +382,27 @@ define([
                                 iL = pickListItems.length;
 
                                 if (iL > 0) {
-                                    sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
-                                    resultsContainer = new TitleGroup(null, sourceContainer);
+                                    if (_this.activeSourceIndex === "all") {
+                                        // Multiple sources
+                                        var sourceTitleContainer = domConstruct.create("div", { id: resultSource + _this.sources[resultSource].name }, _this.resultsElement, "last");
+                                        
+                                        sourceContainer = domConstruct.create("div", { id: resultSource }, _this.resultsElement, "last");
+                                        var sourceTitle = new TitleGroup(null, sourceTitleContainer);
+                                        resultsContainer = new TitleGroup();
+
+                                        sourceTitle.addChild(new TitlePane({
+                                            title: _this.sources[resultSource].name,
+                                            open: false,
+                                            content: resultsContainer
+                                        }));
+                                    }
+                                    else {
+                                        sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
+                                        resultsContainer = new TitleGroup(null, sourceContainer);
+                                    }
+                                    // Create container for results
+                                    
+                                    
 
                                     // Keep a list of all groups
                                     this._titleGroups.push(resultsContainer);
