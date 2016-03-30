@@ -142,11 +142,11 @@ define([
             // Single result
             if (!_isNullOrEmpty(pickList.Addresses[0].address)) {
                 premiseTitleGroup = new ContentPane({
-                    content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0])
+                    content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0], sourceIndex)
                 });
             }
             else if (_addressResults(pickList.Addresses[0].Addresses)) {
-                _createSubGroup(pickList.Addresses[0], premiseTitleGroup);
+                _createSubGroup(pickList.Addresses[0], premiseTitleGroup, sourceIndex);
             }
         }
         return premiseTitleGroup;
