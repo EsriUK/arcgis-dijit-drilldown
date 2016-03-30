@@ -22,7 +22,6 @@ if (!String.prototype.trim) {
 }
 
 
-
 if (!Array.prototype.filter) {
     Array.prototype.filter = function (fun/*, thisArg*/) {
         "use strict";
@@ -57,6 +56,19 @@ if (!Array.prototype.filter) {
         }
 
         return res;
+    };
+}
+
+if (!Object.keys) {
+    Object.keys = function (obj) {
+        var arr = [],
+            key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                arr.push(key);
+            }
+        }
+        return arr;
     };
 }
 
@@ -304,53 +316,65 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                 _getStreets(candidates, pickList, streetGroups);
 
-                for (key in pickList) {
-                    // Now do premise lists
-                    if (pickList.hasOwnProperty(key) && pickList[key].Addresses.length > 1) {
-
-                        premisePicklist = {};
-
-                        item = new PickListItem({ Description: key, SortDescription: pickList[key].SortDescription });
-
-                        // We have more than 1 results so need another picklist level
-                        children = pickList[key].Addresses;
-
-                        for (k = 0, kL = children.length; k < kL; k += 1) {
-                            childAttributes = children[k].attributes;
-                            addressKey = _getGroupedAddressValue(premiseGroups, childAttributes);
-                            childAddressCandidate = null;
-
-                            if (addressKey.length > 0) {
-                                childAddressCandidate = children[k];
-                                childAddressCandidate.SortDescription = this._getSAOText(childAttributes, false);
-
-                                if (premisePicklist.hasOwnProperty(addressKey)) {
-                                    premisePicklist[addressKey].addCandidate(childAddressCandidate);
-                                }
-                                else {
-                                    premisePicklist[addressKey] = this._buildPicklistItem(childAttributes, childAddressCandidate);
-                                }
-                            }
-                        }
-
-                        for (premKey in premisePicklist) {
-                            if (premisePicklist.hasOwnProperty(premKey)) {
-                                premisePicklist[premKey].Addresses.sort(sortFunc);
-                                item.addCandidate(premisePicklist[premKey]);
-                            }
-                        }
-
-                        // Sort premise list
-                        item.Addresses.sort(sortFunc);
-
-                        resultsPickList.addItem(item);
+                if (Object.keys(pickList).length === 0) {
+                    // Didnt find any of the required fields, just ouput everything
+                    for (var a = 0; a < candidates.length; a++) {
+                        resultsPickList.addItem(new PickListItem({ 
+                            Description: candidates[a].attributes.Match_addr,
+                            SortDescription: candidates[a].attributes.Match_addr,
+                            Addresses: [candidates[a]]
+                        }));
                     }
-                    else {
-                        // no children
-                        resultsPickList.addItem(pickList[key]);
+                    
+                }
+                else {
+                    for (key in pickList) {
+                        // Now do premise lists
+                        if (pickList.hasOwnProperty(key) && pickList[key].Addresses.length > 1) {
+
+                            premisePicklist = {};
+
+                            item = new PickListItem({ Description: key, SortDescription: pickList[key].SortDescription });
+
+                            // We have more than 1 results so need another picklist level
+                            children = pickList[key].Addresses;
+
+                            for (k = 0, kL = children.length; k < kL; k += 1) {
+                                childAttributes = children[k].attributes;
+                                addressKey = _getGroupedAddressValue(premiseGroups, childAttributes);
+                                childAddressCandidate = null;
+
+                                if (addressKey.length > 0) {
+                                    childAddressCandidate = children[k];
+                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes, false);
+
+                                    if (premisePicklist.hasOwnProperty(addressKey)) {
+                                        premisePicklist[addressKey].addCandidate(childAddressCandidate);
+                                    }
+                                    else {
+                                        premisePicklist[addressKey] = this._buildPicklistItem(childAttributes, childAddressCandidate);
+                                    }
+                                }
+                            }
+
+                            for (premKey in premisePicklist) {
+                                if (premisePicklist.hasOwnProperty(premKey)) {
+                                    premisePicklist[premKey].Addresses.sort(sortFunc);
+                                    item.addCandidate(premisePicklist[premKey]);
+                                }
+                            }
+
+                            // Sort premise list
+                            item.Addresses.sort(sortFunc);
+
+                            resultsPickList.addItem(item);
+                        }
+                        else {
+                            // no children
+                            resultsPickList.addItem(pickList[key]);
+                        }
                     }
                 }
-
                 // Do we have results but no keys pulled out? No matching fields so just dump out the results.
 
                 // Sort street list
