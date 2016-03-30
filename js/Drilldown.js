@@ -46,6 +46,7 @@ if (!Function.prototype.bind) {
 
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "dijit/_Widget",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
@@ -59,20 +60,20 @@ define([
     "dojo/query",
     "dojo/dom-style",
     "dojo/NodeList-data"
-], function (declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, domStyle) {
+], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, domStyle) {
     var _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
 
         return (obj === undefined || obj === null || obj === '');
     },
-    _createNodeWithData = function (address, addressData) {
+    _createNodeWithData = function (address, addressData, sourceIndex) {
         // summary:
         //      Creates a DOM node witht he address results data attched. This data is used
         //      when clicking on an address.
 
         var node = domConstruct.toDom("<span class='drilldownResult'>" + address + "</span>");
-        query(node).data("result", addressData);
+        query(node).data("result", lang.mixin(addressData, { "sourceIndex": sourceIndex }));
 
         return node;
     },
@@ -82,7 +83,7 @@ define([
         }
         return "";
     },
-    _createSubGroup = function (premiseList, titleGroup, showCounts) {
+    _createSubGroup = function (premiseList, titleGroup, showCounts, sourceIndex) {
         // summary:
         //      Creates the lowest level in the picklist. Creates the address results with the attached data.
 
@@ -91,7 +92,7 @@ define([
 
         for (k = 0, kL = subPremiseList.length; k < kL; k += 1) {
             subPremiseTitleGroup.addChild(new ContentPane({
-                content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(subPremiseList[k].address, subPremiseList[k])]
+                content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(subPremiseList[k].address, subPremiseList[k], sourceIndex)]
             }));
         }
 
@@ -104,7 +105,7 @@ define([
     _addressResults = function (results) {
         return (!_isNullOrEmpty(results) && results.length > 1);
     },
-    _createGroup = function (pickList, showCounts) {
+    _createGroup = function (pickList, showCounts, sourceIndex) {
         // summary:
         //      Creates a titlegroup. USed to create a premise level in the pick list.
 
@@ -118,16 +119,16 @@ define([
             for (j = 0, jL = premiseList.length; j < jL; j++) {
                 // Do we have a sub premise list?
                 if (_addressResults(premiseList[j].Addresses)) {
-                    _createSubGroup(premiseList[j], premiseTitleGroup, showCounts);
+                    _createSubGroup(premiseList[j], premiseTitleGroup, showCounts, sourceIndex);
                 }
                 else {
                     // Single premise
 
                     if (!_isNullOrEmpty(premiseList[j].address)) {
-                        node = _createNodeWithData(premiseList[j].address, premiseList[j]);
+                        node = _createNodeWithData(premiseList[j].address, premiseList[j], sourceIndex);
                     }
                     else {
-                        node = _createNodeWithData(premiseList[j].Addresses[0].address, premiseList[j].Addresses[0]);
+                        node = _createNodeWithData(premiseList[j].Addresses[0].address, premiseList[j].Addresses[0], sourceIndex);
                     }
                     premiseTitleGroup.addChild(new ContentPane({
                         content: ["<span class='drilldownResultIcon'></span>", node]
@@ -150,13 +151,13 @@ define([
         }
         return premiseTitleGroup;
     },
-    handlerFunc = function (list, showCounts) {
+    handlerFunc = function (list, showCounts, sourceIndex) {
         // summary:
         //      Handles the onclick event of a titlepane and lazy loads any child results.
         //      Constructs the results if they have not been created yet.
 
         if (this.get("contentSet") === false) {
-            this.set("content", _createGroup(list, showCounts));
+            this.set("content", _createGroup(list, showCounts, sourceIndex));
             this.set("contentSet", true);
         }
     },
@@ -271,8 +272,10 @@ define([
                     for (b = 0; b < resultArray.length; b++) {
                         if (!_isNullOrEmpty(this.sources[b].locator.locatorType)) {
                             // Custom locator with picklists
-                            e[b] = resultArray[b];
-                            c.numResults += resultArray[b].PickListItems.length;
+                            if (!_isNullOrEmpty(resultArray[b].PickListItems)) {
+                                e[b] = resultArray[b];
+                                c.numResults += resultArray[b].PickListItems.length;
+                            }
                         }
                         else {
                             c = this.inherited(arguments);
@@ -348,13 +351,61 @@ define([
             return false;
         },
 
+        _createPremise: function (picklistItem, showCounts, handlerFunc, isOpen, sourceIndex) {
+            // Create the list of premises
+            var titlePane = new TitlePane({
+                title: _createCount(picklistItem.Addresses, showCounts) + "<span class='drilldownTitle'>" + picklistItem.Description + "</span>",
+                open: false,
+                contentSet: false
+            });
+
+            if (isOpen) {
+                titlePane.set("open", true);
+                titlePane.set("contentSet", true);
+                titlePane.set("content", _createGroup(picklistItem, showCounts, sourceIndex));
+            }
+            else {
+                titlePane.own(titlePane.on("click", handlerFunc.bind(titlePane, picklistItem, showCounts, sourceIndex)));
+            }
+
+            return titlePane;
+        },
+
+
+        _createResultsContainer: function (allSources, resultSource, resultElement) {
+            var resultsContainer, sourceContainer, sourceTitleContainer, sourceTitle;
+
+            if (allSources) {
+                // Multiple sources
+                sourceTitleContainer = domConstruct.create("div", { id: resultSource + this.sources[resultSource].name }, resultElement, "last");
+
+                sourceContainer = domConstruct.create("div", { id: resultSource }, sourceTitleContainer, "last");
+                sourceTitle = new TitleGroup(null, sourceContainer);
+
+                this._titleGroups.push(sourceTitle);
+                resultsContainer = new TitleGroup();
+
+                sourceTitle.addChild(new TitlePane({
+                    title: this.sources[resultSource].name,
+                    open: false,
+                    content: resultsContainer
+                }));
+            }
+            else {
+                sourceContainer = domConstruct.create("div", { id: resultSource }, resultElement, "last");
+                resultsContainer = new TitleGroup(null, sourceContainer);
+            }
+
+            return resultsContainer;
+        },
+
         _buildPickListUi: function(results) {
             // summary:
             //      Main code used to construct the picklist UI. The picklist is built using nested titlegroups and titlepanes.
             //      Only one level is constructed, the lower levels are lazy loaded when clicking on a title.
 
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer,
-                resultSource, noResults = false, res, sourceContainer, titlePane, finished = new Deferred();
+                resultSource, noResults = false, sourceResults = false, res, finished = new Deferred();
 
             // Clear list of title groups
             this._clearPicklist();
@@ -382,50 +433,17 @@ define([
                                 iL = pickListItems.length;
 
                                 if (iL > 0) {
-                                    if (_this.activeSourceIndex === "all") {
-                                        // Multiple sources
-                                        var sourceTitleContainer = domConstruct.create("div", { id: resultSource + _this.sources[resultSource].name }, _this.resultsElement, "last");
-                                        
-                                        sourceContainer = domConstruct.create("div", { id: resultSource }, _this.resultsElement, "last");
-                                        var sourceTitle = new TitleGroup(null, sourceTitleContainer);
-                                        resultsContainer = new TitleGroup();
-
-                                        sourceTitle.addChild(new TitlePane({
-                                            title: _this.sources[resultSource].name,
-                                            open: false,
-                                            content: resultsContainer
-                                        }));
-                                    }
-                                    else {
-                                        sourceContainer = domConstruct.create("div", { id: resultSource }, this.resultsElement, "last");
-                                        resultsContainer = new TitleGroup(null, sourceContainer);
-                                    }
                                     // Create container for results
-                                    
-                                    
+                                    resultsContainer = this._createResultsContainer((this.activeSourceIndex === "all"), resultSource, this.resultsElement);
 
                                     // Keep a list of all groups
                                     this._titleGroups.push(resultsContainer);
 
+                                    sourceResults = true;
+
                                     for (i = 0; i < iL; i+=1) {
-                                        // Create the list of premises
-                                        titlePane = new TitlePane({
-                                            title: _createCount(pickListItems[i].Addresses, this.showCounts) + "<span class='drilldownTitle'>" + pickListItems[i].Description + "</span>",
-                                            open: false,
-                                            contentSet: false
-                                        });
-
-                                        if (iL === 1) {
-                                            titlePane.set("open", true);
-                                            titlePane.set("contentSet", true);
-                                            titlePane.set("content", _createGroup(pickListItems[i], this.showCounts));
-                                        }
-                                        else {
-                                            titlePane.own(titlePane.on("click", handlerFunc.bind(titlePane, pickListItems[i], this.showCounts)));
-                                        }
-
-                                        // Output each street as a title pane
-                                        resultsContainer.addChild(titlePane);
+                                        // Create the list of premises. Output each street as a title pane
+                                        resultsContainer.addChild(this._createPremise(pickListItems[i], this.showCounts, handlerFunc, (iL === 1), resultSource));
                                         noResults = false;
                                     }
                                 }
@@ -443,7 +461,7 @@ define([
                     finished.resolve();
                 }
 
-                if (noResults) {
+                if (noResults && !sourceResults) {
                     this._showNoResults();
                 }
 
@@ -451,7 +469,7 @@ define([
                 if (!_isNullOrEmpty(this.resultsElement)) {
                     on(this.resultsElement, ".drilldownResult:click", function () {
                         var loc = query(this).data()[0],
-                            res = _this._hydrateResult(loc.result, _this.activeSourceIndex, false);
+                            res = _this._hydrateResult(loc.result, loc.result.sourceIndex, false);
                         _this.select(res);
                         _this._clearPicklist();
                     });
