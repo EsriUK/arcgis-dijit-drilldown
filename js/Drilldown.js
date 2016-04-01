@@ -146,7 +146,7 @@ define([
                 });
             }
             else if (_addressResults(pickList.Addresses[0].Addresses)) {
-                _createSubGroup(pickList.Addresses[0], premiseTitleGroup, sourceIndex);
+                _createSubGroup(pickList.Addresses[0], premiseTitleGroup, showCounts, sourceIndex);
             }
         }
         return premiseTitleGroup;
