@@ -85,16 +85,16 @@ _paoSaoNumberRange = function (startNumber, startSuffix, endNumber, endSuffix) {
     var start = "", end = "";
 
     if (!_isNullOrEmpty(startNumber)) {
-        start = startNumber.trim();
+        start = startNumber + "".trim();
     }
     if (!_isNullOrEmpty(startSuffix)) {
-        start += startSuffix.trim();
+        start += startSuffix + "".trim();
     }
     if (!_isNullOrEmpty(endNumber)) {
-        end = endNumber.trim();
+        end = endNumber + "".trim();
     }
     if (!_isNullOrEmpty(endSuffix)) {
-        end += endSuffix.trim();
+        end += endSuffix + "".trim();
     }
 
     if ((!_isNullOrEmpty(start)) && (!_isNullOrEmpty(end))) {
@@ -162,7 +162,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
                 }
             }
         },
-
         sortAlphaNum = function (a, b) {
             function chunkify(t) {
                 var tz = new Array();
@@ -202,7 +201,6 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
         streetGrouping: [],
         premiseGrouping: [],
         
-
         paoFields: {
             PAO_TEXT: "",
             PAO_START_NUMBER: "",
@@ -293,14 +291,28 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             return description;
         },
 
+        _getSortDescription: function (sortString) {
+            var parsedSort;
+
+            parsedSort = parseInt(sortString);
+
+            if (isNaN(parsedSort)) {
+                return sortString;
+            }
+            return parsedSort.toString();
+
+        },
+
         _buildPicklistItem: function (childAttributes, childAddressCandidate) {
             return new PickListItem({
-                SortDescription: this._getPAOText(childAttributes, true),
+                SortDescription: this._getSortDescription(this._getPAOText(childAttributes, true)),
                 Description: this._getListLevelDescription(1, childAttributes),
                 Addresses: [childAddressCandidate],
                 Level: 1
             });
         },
+
+        
 
         _buildPickList: function (results) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
@@ -346,7 +358,7 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
 
                                 if (addressKey.length > 0) {
                                     childAddressCandidate = children[k];
-                                    childAddressCandidate.SortDescription = this._getSAOText(childAttributes, false);
+                                    childAddressCandidate.SortDescription = this._getSortDescription(this._getSAOText(childAttributes, false));
 
                                     if (premisePicklist.hasOwnProperty(addressKey)) {
                                         premisePicklist[addressKey].addCandidate(childAddressCandidate);

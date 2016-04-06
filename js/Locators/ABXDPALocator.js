@@ -18,9 +18,10 @@
 
 define([
     "dojo/_base/declare",
-    "./_LocatorBase"
+    "./_LocatorBase",
+    "./PickListItem"
 ],
-function (declare, _LocatorBase) {
+function (declare, _LocatorBase, PickListItem) {
     // module:
     //      LLPGLocator
 
@@ -42,42 +43,52 @@ function (declare, _LocatorBase) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["DPA_THOROUGHFARE", "DPA_DEP_LOCALITY", "DPA_POST_TOWN"],
+        streetGrouping: ["DPA_DEP_THOROUGHFARE", "DPA_THOROUGHFARE", "DPA_DEP_LOCALITY", "DPA_LOCALITY", "DPA_POST_TOWN"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
-        premiseGrouping: ["PAO_TEXT", "PAO_END_SUFFIX", "PAO_END_NUMBER", "PAO_START_SUFFIX", "PAO_START_NUMBER"],
+        premiseGrouping: ["DPA_BUILDING_NAME", "DPA_BUILDING_NUMBER", "DPA_DEP_THOROUGHFARE"],
 
         // streetFields: Object
         //              An object containing the field name value mappings for
         //              constructing the street description.
         streetFields: {
+           
             STREET_DESCRIPTOR: "DPA_THOROUGHFARE",
-            LOCALITY_NAME: "DPA_DEP_LOCALITY",
+            LOCALITY_NAME: "DPA_LOCALITY",
             TOWN_NAME: "DPA_POST_TOWN",
-            ADMINISTRATIVE_AREA: "ADMINISTRATIVE_AREA"
+            ADMINISTRATIVE_AREA: "DPA_DEP_LOCALITY"
         },
 
         // paoFields: Object
         //              An object containing the field name value mappings for
         //              constructing the PAO description.
         paoFields: {
-            PAO_TEXT: "PAO_TEXT",
-            PAO_START_NUMBER: "PAO_START_NUMBER",
-            PAO_START_SUFFIX: "PAO_START_SUFFIX",
-            PAO_END_NUMBER: "PAO_END_NUMBER",
-            PAO_END_SUFFIX: "PAO_END_SUFFIX"
+            PAO_TEXT: "DPA_BUILDING_NAME",
+            PAO_START_NUMBER: "DPA_BUILDING_NUMBER",
+            PAO_START_SUFFIX: "",
+            PAO_END_NUMBER: "",
+            PAO_END_SUFFIX: ""
         },
 
         // saoFields: Object
         //              An object containing the field name value mappings for
         //              constructing the SAO description.
         saoFields: {
-            SAO_TEXT: "SAO_TEXT",
-            SAO_START_NUMBER: "SAO_START_NUMBER",
-            SAO_START_SUFFIX: "SAO_START_SUFFIX",
-            SAO_END_NUMBER: "SAO_END_NUMBER",
-            SAO_END_SUFFIX: "SAO_END_SUFFIX"
-        }       
+            SAO_TEXT: "DPA_SUB_BUILDING_NAME",
+            SAO_START_NUMBER: "DPA_BUILDING_NUMBER",
+            SAO_START_SUFFIX: "DPA_BUILDING_NAME",
+            SAO_END_NUMBER: "",
+            SAO_END_SUFFIX: ""
+        },
+
+        _buildPicklistItem: function (childAttributes, childAddressCandidate) {
+            return new PickListItem({
+                SortDescription: this._getSortDescription(this._getSAOText(childAttributes, true)),
+                Description: this._getListLevelDescription(1, childAttributes),
+                Addresses: [childAddressCandidate],
+                Level: 1
+            });
+        }
     });
 });
