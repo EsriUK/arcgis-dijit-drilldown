@@ -7,7 +7,7 @@ The drilldown widget provides hierarchical address search results allowing the u
 
 The drilldown widget extends the functionality of the Esri Search widget, this means you use it in the same way. See the Esri Search widget doc [here](https://developers.arcgis.com/javascript/jsapi/search-amd.html)
 
-[View it live](http://appsstage.esriuk.com/app/Vanilla-Drilldown-demo/1/wmt/view/67eefa85647b496ba57e4bb0229129de/index.html)
+[View it live](http://appsstage.esriuk.com/app/Drilldown-demo/50/wmt/view/416bf5a4f02f45158a0a893c73450878/index.html)
 
 A build of the Drilldown widget is available for use with the [Web AppBuilder](https://developers.arcgis.com/web-appbuilder/) and can be found [here](https://github.com/EsriUK/wab-dijit-drilldown)
 
