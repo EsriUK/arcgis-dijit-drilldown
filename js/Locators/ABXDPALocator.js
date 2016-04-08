@@ -47,13 +47,12 @@ function (declare, _LocatorBase, PickListItem) {
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
-        premiseGrouping: ["DPA_BUILDING_NAME", "DPA_BUILDING_NUMBER", "DPA_DEP_THOROUGHFARE"],
+        premiseGrouping: ["DPA_BUILDING_NAME", "DPA_BUILDING_NUMBER"],
 
         // streetFields: Object
         //              An object containing the field name value mappings for
         //              constructing the street description.
         streetFields: {
-           
             STREET_DESCRIPTOR: "DPA_THOROUGHFARE",
             LOCALITY_NAME: "DPA_LOCALITY",
             TOWN_NAME: "DPA_POST_TOWN",

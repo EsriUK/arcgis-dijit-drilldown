@@ -92,14 +92,16 @@ define([
 
         for (k = 0, kL = subPremiseList.length; k < kL; k += 1) {
             subPremiseTitleGroup.addChild(new ContentPane({
-                content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(subPremiseList[k].address, subPremiseList[k], sourceIndex)]
+                content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(subPremiseList[k].address, subPremiseList[k], sourceIndex)],
+                tabindex: 0
             }));
         }
 
         titleGroup.addChild(new TitlePane({
             title: _createCount(subPremiseList, showCounts) + "<span class='drilldownTitle'>" + premiseList.Description + "</span>",
             content: subPremiseTitleGroup,
-            open: false
+            open: false,
+            tabindex: 0
         }));
     },
     _addressResults = function (results) {
@@ -131,7 +133,8 @@ define([
                         node = _createNodeWithData(premiseList[j].Addresses[0].address, premiseList[j].Addresses[0], sourceIndex);
                     }
                     premiseTitleGroup.addChild(new ContentPane({
-                        content: ["<span class='drilldownResultIcon'></span>", node]
+                        content: ["<span class='drilldownResultIcon'></span>", node],
+                        tabindex: 0
                     }));
                 }
             }
@@ -142,7 +145,8 @@ define([
             // Single result
             if (!_isNullOrEmpty(pickList.Addresses[0].address)) {
                 premiseTitleGroup = new ContentPane({
-                    content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0], sourceIndex)
+                    content: _createNodeWithData(pickList.Addresses[0].address, pickList.Addresses[0], sourceIndex),
+                    tabindex: 0
                 });
             }
             else if (_addressResults(pickList.Addresses[0].Addresses)) {
@@ -199,6 +203,10 @@ define([
         //      A list of each title group created for the picklist results.
         //      Used to destroy these widgets if needed.
         _titleGroups: [],
+
+        // _tabIndex: Integer
+        //      Current tab index to use for an element.
+        _tabIndex: 0,
 
         // showCounts: Boolean
         //      Flag to turn on or off the counts for each level in the drilldown results.
