@@ -59,8 +59,9 @@ define([
     "dojo/Deferred",
     "dojo/query",
     "dojo/dom-style",
+    "dojo/keys",
     "dojo/NodeList-data"
-], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, domStyle) {
+], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, domStyle, keys) {
     var _isNullOrEmpty = function (/*Anything*/ obj) {
         // summary:
         //		Checks to see if the passed in thing is undefined, null or empty.
@@ -413,7 +414,12 @@ define([
             //      Only one level is constructed, the lower levels are lazy loaded when clicking on a title.
 
             var _this = this, pickListItems, i = 0, iL = 0, resultsContainer,
-                resultSource, noResults = false, sourceResults = false, res, finished = new Deferred();
+                resultSource, noResults = false, sourceResults = false, res, finished = new Deferred(),
+                _selectResult = function (loc) {
+                    res = _this._hydrateResult(loc.result, loc.result.sourceIndex, false);
+                    _this.select(res);
+                    _this._clearPicklist();
+                };
 
             // Clear list of title groups
             this._clearPicklist();
@@ -473,13 +479,27 @@ define([
                     this._showNoResults();
                 }
 
+
                 // Set up the onclick event for an individual address.
                 if (!_isNullOrEmpty(this.resultsElement)) {
                     on(this.resultsElement, ".drilldownResult:click", function () {
-                        var loc = query(this).data()[0],
-                            res = _this._hydrateResult(loc.result, loc.result.sourceIndex, false);
-                        _this.select(res);
-                        _this._clearPicklist();
+                        var loc = query(this).data()[0];
+                        _selectResult(loc);
+                    });
+
+                    on(this.resultsElement, "keydown", function (evt) {
+                        var charOrCode = evt.charCode || evt.keyCode, loc;
+
+                        switch (charOrCode) {
+                            case keys.ENTER:
+                            case keys.NUMPAD_ENTER:
+                                loc = query(".drilldownResult", evt.target).data()[0];
+                                _selectResult(loc);
+                                break;
+
+                            default:
+                                return false;
+                        }
                     });
                 }
             }
