@@ -229,7 +229,10 @@ module.exports = function (grunt) {
                 port: 80,
                 user: 'danbatsb',
                 key: 'fbaa5a4c-de4f-4969-8119-14eafd496572',
-                updateSauceJob: true
+                //user: 'pbradbury',
+                //key: 'c83fd6cd-23a5-4dbf-98d8-6246be844251',
+                updateSauceJob: true,
+                throttled: 1
             },
             testconfig: {
                 configFile: 'js/tests/integration_tests/wdio.conf.js'
