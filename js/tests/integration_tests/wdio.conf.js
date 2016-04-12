@@ -16,6 +16,7 @@ exports.config = {
 	// once the test is done. This option is set to `true` by default.
 	//
 	updateJob: true, // will get overwritten
+    throttled: 1,
 
 	//
 	// ==================
@@ -52,6 +53,7 @@ exports.config = {
 	    name: "Drilldown - Chrome",
 	    tags: ["Drilldown", "Chrome"],
 	    build: process.env.TRAVIS_BUILD_NUMBER
+        //throttled: 1
 	}, {
 	    browserName: 'firefox',
 	    platform: "Windows 7",
@@ -80,7 +82,7 @@ exports.config = {
 	    tags: ["Drilldown", "Explorer11"],
 	    build: process.env.TRAVIS_BUILD_NUMBER
 	},{
-	    //browserName: 'safari',
+	    browserName: 'safari',
 	    platform: "OS",
 	    deviceName: "iPhone 5",
 	    deviceOrientation: "portait",
@@ -88,12 +90,26 @@ exports.config = {
 	    tags: ["Drilldown", "iPhone5"],
 	    build: process.env.TRAVIS_BUILD_NUMBER
 	},{
+	    browserName: 'safari',
+        platformName: "iOS",
+        deviceName: "iPad Retina",
+        deviceOrientation: "portait",
+        name: "Drilldown - iPad",
+        tags: ["Drilldown", "iPad"],
+        build: process.env.TRAVIS_BUILD_NUMBER
+    },{
 	    browserName: 'chrome',
-        platform: "Linux",
+	    platform: "Linux",
         name: "Drilldown - ChromeAndroid",
         tags: ["Drilldown", "ChromeAndroid"],
         build: process.env.TRAVIS_BUILD_NUMBER
-    },
+    //},{
+	    //browserName: 'MicrosoftEdge',
+        //platform: "Windows 10",
+        //name: "Drilldown - Windows10Edge",
+        //tags: ["Drilldown", "Windows10Edge"],
+        //build: process.env.TRAVIS_BUILD_NUMBER
+	},
 	],
 		
 	//
