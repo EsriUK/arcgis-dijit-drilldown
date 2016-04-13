@@ -42,7 +42,7 @@ function (declare, _LocatorBase) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["STREET_DESCRIPTION", "LOCALITY_NAME", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
+        streetGrouping: ["STREET_DESCRIPTION", "LOCALITY", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
