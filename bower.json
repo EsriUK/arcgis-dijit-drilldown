@@ -1,0 +1,28 @@
+{
+  "name": "arcgis-dijit-drilldown",
+  "homepage": "https://github.com/EsriUK/arcgis-dijit-drilldown",
+  "authors": [
+    "Seth <sbatterby@gmail.com>"
+  ],
+  "description": "A hierarchical address search widget",
+  "main": "Drilldown.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "Dojo",
+    "Esri",
+    "dijit",
+    "Esri",
+    "UK"
+  ],
+  "license": "APACHE",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+	"js/tests"
+  ]
+}
