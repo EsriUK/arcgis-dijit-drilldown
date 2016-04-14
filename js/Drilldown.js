@@ -330,7 +330,7 @@ define([
 
         },
 
-        _showNoResults: function() {
+        _showNoResults: function(details) {
             // summary:
             //      Function used to call the base no results functions. 
 

@@ -232,7 +232,7 @@ module.exports = function (grunt) {
                 //user: 'pbradbury',
                 //key: 'c83fd6cd-23a5-4dbf-98d8-6246be844251',
                 updateSauceJob: true,
-                throttled: 1
+                throttled: 2
             },
             testconfig: {
                 configFile: 'js/tests/integration_tests/wdio.conf.js'

@@ -291,28 +291,30 @@ function (declare, Locator, PickList, PickListItem, Deferred) {
             return description;
         },
 
-        _getSortDescription: function (sortString) {
-            var parsedSort;
+        _getSortDescription: function (sortString, defaultSort) {
+            var testString = sortString, parsedSort;
 
-            parsedSort = parseInt(sortString);
+            if (_isNullOrEmpty(testString) && !_isNullOrEmpty(defaultSort)) {
+                testString = defaultSort;
+            }
+
+            parsedSort = parseInt(testString);
 
             if (isNaN(parsedSort)) {
-                return sortString;
+                return testString;
             }
-            return parsedSort.toString();
+            return testString.toString();
 
         },
 
         _buildPicklistItem: function (childAttributes, childAddressCandidate) {
             return new PickListItem({
-                SortDescription: this._getSortDescription(this._getPAOText(childAttributes, true)),
+                SortDescription: this._getSortDescription(this._getPAOText(childAttributes, true), this._getPAOText(childAttributes, false)),
                 Description: this._getListLevelDescription(1, childAttributes),
                 Addresses: [childAddressCandidate],
                 Level: 1
             });
         },
-
-        
 
         _buildPickList: function (results) {
             var result = new Deferred(), pickList = {}, premisePicklist = {}, candidates, addressKey, 
