@@ -305,10 +305,8 @@ define([
                 }
                 return this.inherited(arguments);
             }
-            
-            c.errors = resultArray;
-            
-            return c;
+                       
+            return this.inherited(arguments);
         },
 
         _clearPicklist: function() {

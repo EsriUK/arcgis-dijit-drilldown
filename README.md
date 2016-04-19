@@ -5,6 +5,8 @@ arcgis-dijit-drilldown
 ## Features
 The drilldown widget provides hierarchical address search results allowing the user to drilldown into the list of results and find a specific location.
 
+For further information on when this might be useful to you, demo sites and details on how to get started using the widget please see our [blog](http://communityhub.esriuk.com/geoxchange/2015/11/23/need-a-more-flexible-way-to-search-for-addresses?rq=drilldown).
+
 The drilldown widget extends the functionality of the Esri Search widget, this means you use it in the same way. See the Esri Search widget doc [here](https://developers.arcgis.com/javascript/jsapi/search-amd.html)
 
 [View it live](http://appsstage.esriuk.com/app/Drilldown-demo/50/wmt/view/416bf5a4f02f45158a0a893c73450878/index.html)
@@ -35,8 +37,14 @@ myWidget.startup();
 
 
 ## Requirements
-- LocatorHub 5.3 (or above) LLPG Locator
-- LLPG ArcGIS Locator (coming soon in beta)
+- ArcGIS Online or Portal for ArcGIS 
+- JavaScript API v3.14 or above
+- LocatorHub 5.3 (or above) and one of the following locators:
+	- Addressbase Premium (Epoch 39 or above, requires LocatorHub 5.4)
+	- LLPG
+	- IDOX GMS
+	- One Scotland Gazetteer
+	- Merge or Cascade locators using an appropriate standardised schema
 - Experience with the [ArcGIS Javascript API](https://developers.arcgis.com/javascript/jsapi/).
 
 
