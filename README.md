@@ -37,14 +37,15 @@ myWidget.startup();
 
 
 ## Requirements
-- ArcGIS Online or Portal for ArcGIS 
+- ArcGIS Online or Portal for ArcGIS 10.4
 - JavaScript API v3.14 or above
+- Supported Browsers, these can be found [here](https://github.com/EsriUK/arcgis-dijit-drilldown/wiki/Supported-Browsers)
 - LocatorHub 5.3 (or above) and one of the following locators:
 	- Addressbase Premium (Epoch 39 or above, requires LocatorHub 5.4)
 	- LLPG
 	- IDOX GMS
 	- One Scotland Gazetteer
-	- Merge or Cascade locators using an appropriate standardised schema
+	- Merge or Cascade locators using an appropriate standardised schema.
 - Experience with the [ArcGIS Javascript API](https://developers.arcgis.com/javascript/jsapi/).
 
 
