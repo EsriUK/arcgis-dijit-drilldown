@@ -13,6 +13,8 @@ The drilldown widget extends the functionality of the Esri Search widget, this m
 
 A build of the Drilldown widget is available for use with the [Web AppBuilder](https://developers.arcgis.com/web-appbuilder/) and can be found [here](https://github.com/EsriUK/wab-dijit-drilldown)
 
+The [wiki](https://github.com/EsriUK/arcgis-dijit-drilldown/wiki) provides information on supported locators, browsers and using a standardised schema.
+
 ## Quickstart
 
 ```javascript	
@@ -46,6 +48,7 @@ myWidget.startup();
 	- IDOX GMS
 	- One Scotland Gazetteer
 	- Merge or Cascade locators using an appropriate standardised schema.
+	  For further information on the schema please see [here](https://github.com/EsriUK/arcgis-dijit-drilldown/wiki/Standardised-Schema)
 - Experience with the [ArcGIS Javascript API](https://developers.arcgis.com/javascript/jsapi/).
 
 
