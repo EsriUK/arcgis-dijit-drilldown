@@ -26,7 +26,7 @@ function (declare, _LocatorBase) {
 
     return declare([_LocatorBase], {
         // summary:
-        //		        LLPG Locator
+        //		        OSG Locator
         // description: 
         //              A Locator that can be used for address searches against an LLPG LocatorHub 5.3 locator.
         //              The Locator returns the address results as a picklist.
@@ -42,7 +42,7 @@ function (declare, _LocatorBase) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["STREET_DESCRIPTOR", "LOCALITY_NAME", "TOWN_NAME", "ADMINISTRATIVE_AREA"],
+        streetGrouping: ["STREET_DESCRIPTOR", "LOCALITY", "TOWN", "ADMINISTRATIVE_AREA"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
