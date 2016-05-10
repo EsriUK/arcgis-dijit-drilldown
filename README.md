@@ -39,7 +39,6 @@ myWidget.startup();
 
 
 ## Requirements
-- ArcGIS Online or Portal for ArcGIS 10.4
 - JavaScript API v3.14 or above
 - Supported Browsers, these can be found [here](https://github.com/EsriUK/arcgis-dijit-drilldown/wiki/Supported-Browsers)
 - LocatorHub 5.3 (or above) and one of the following locators:
