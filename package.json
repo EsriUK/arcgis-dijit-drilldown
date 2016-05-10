@@ -26,7 +26,7 @@
     "grunt-template-jasmine-istanbul": "git+https://github.com/danbatsb/grunt-template-jasmine-istanbul.git",
 	"grunt-coveralls": "^1.0.0",
 	"mocha": "*",
-    "webdriverio": "3.2.4",
+    "webdriverio": "*",
     "adm-zip": "*",
 	"grunt-webdriver": "*",
 	"codeclimate-test-reporter": "*"
