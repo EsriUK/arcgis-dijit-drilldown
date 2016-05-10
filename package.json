@@ -2,7 +2,7 @@
   "name": "Drilldown-widget",
   "version": "0.1.0",
   "description": "Search for and display address details in a hierarchical list",
-  "license": "APACHE",
+  "license": "Apache-2.0",
   "repository": "EsriUK/arcgis-dijit-drilldown",
   "scripts": {
     "test": "grunt coverci"
