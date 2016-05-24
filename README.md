@@ -46,7 +46,7 @@ myWidget.startup();
 	- LLPG
 	- IDOX GMS
 	- One Scotland Gazetteer
-	- Merge or Cascade locators using an appropriate standardised schema.
+	- Merge or Cascade locators using an appropriate standardised schema (requires LocatorHub 5.4).
 	  For further information on the schema please see [here](https://github.com/EsriUK/arcgis-dijit-drilldown/wiki/Standardised-Schema)
 - Experience with the [ArcGIS Javascript API](https://developers.arcgis.com/javascript/jsapi/).
 
