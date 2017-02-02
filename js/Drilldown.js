@@ -350,7 +350,7 @@ define([
                 }
             }
 
-            if (numberOfResults === 1) {
+            if (numberOfResults === 1 && !_isNullOrEmpty(results[singleSource].PickListItems)) {
                 pickListItems = results[singleSource].PickListItems;
                 return _pickListIsSingleResult(pickListItems);
             }
