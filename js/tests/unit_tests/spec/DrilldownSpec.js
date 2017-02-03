@@ -5,7 +5,8 @@ var drilldownProps = {
         outFields: ["*"],
         name: "LH 5.3 LLPG",
         maxResults: 250,
-        showCounts: true
+        showCounts: true,
+        flatMatch: false
     }],
 };
 

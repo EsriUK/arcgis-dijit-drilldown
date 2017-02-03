@@ -156,6 +156,32 @@ define([
         }
         return premiseTitleGroup;
     },
+    _createFlatList = function (addressList, sourceIndex) {
+        // summary:
+        //      Creates a flat list of results for display when not using a locator that 
+        //      supports the drilldown functionality.
+
+        var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), subPremiseTitleGroup = new TitleGroup();
+
+        
+
+        for (j = 0, jL = addressList.length; j < jL; j++) {
+            subPremiseTitleGroup.addChild(new ContentPane({
+                content: ["<span class='drilldownResultIcon'></span>", _createNodeWithData(addressList[j].address, addressList[j], sourceIndex)],
+                tabindex: 0
+            }));
+        }
+
+        premiseTitleGroup.addChild(new TitlePane({
+            title: "Results found: "+ jL,
+            content: subPremiseTitleGroup,
+            open: true,
+            tabindex: 0
+        }));
+
+        premiseTitleGroup.startup();
+        return premiseTitleGroup;
+    },
     handlerFunc = function (list, showCounts, sourceIndex) {
         // summary:
         //      Handles the onclick event of a titlepane and lazy loads any child results.
@@ -213,6 +239,8 @@ define([
         //      Flag to turn on or off the counts for each level in the drilldown results.
         showCounts: false,
 
+        flatMatch: false,
+
         constructor: function (args) {
             declare.safeMixin(this, args);
         },
@@ -258,6 +286,10 @@ define([
 
             if (a.PickListItems) {
                 return a;
+            }
+            if (this.flatMatch) {
+                return a;
+
             }
             return this.inherited(arguments);
         },
@@ -328,7 +360,7 @@ define([
 
         },
 
-        _showNoResults: function(details) {
+        _showNoResults: function() {
             // summary:
             //      Function used to call the base no results functions. 
 
@@ -353,6 +385,9 @@ define([
             if (numberOfResults === 1 && !_isNullOrEmpty(results[singleSource].PickListItems)) {
                 pickListItems = results[singleSource].PickListItems;
                 return _pickListIsSingleResult(pickListItems);
+            }
+            if (numberOfResults === 1 && this.flatMatch) {
+                return results[singleSource].length === 1;
             }
 
             return false;
@@ -427,11 +462,18 @@ define([
                 domConstruct.destroy(this.resultsElement);
             }
             this.resultsElement = domConstruct.create("div", { "class": "arcgisSearch searchGroup picklistResults" }, this.domNode, "last");
-
+            
             // Check to see if we only have a single results
             if ((_this.activeSourceIndex !== this._allIndex) && this._isSingleResult(results)) {
                 // Single result may not be first source so use active source index
-                res = this._hydrateResult(results[_this.activeSourceIndex].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
+
+                if (this.flatMatch) {
+                    res = this._hydrateResult(results[_this.activeSourceIndex][0], _this.activeSourceIndex, false);
+                }
+                else {
+                    res = this._hydrateResult(results[_this.activeSourceIndex].PickListItems[0].Addresses[0], _this.activeSourceIndex, false);
+                }
+
                 this.select(res);
             }
             else {
@@ -439,6 +481,7 @@ define([
                     for (resultSource in results) {
                         if (results.hasOwnProperty(resultSource)) {
                             // Check we have some results
+                           
                             if (!_isNullOrEmpty(results[resultSource]) && !_isNullOrEmpty(results[resultSource].PickListItems)) {
                                 // Get the picklist
                                 pickListItems = results[resultSource].PickListItems;
@@ -465,21 +508,39 @@ define([
                                 }
                             }
                             else {
-                                // Output and error message
-                                noResults = true;
+                                
+                                if (this.flatMatch && !_isNullOrEmpty(results[resultSource]) && results[resultSource].length > 0) {
+                                    // We have some results but not a picklist, most likely not using the drilldown functionality.
+                                    // Just ouput a flat list
+
+                                    iL = results[resultSource].length;
+
+                                    // Create container for results
+                                    resultsContainer = this._createResultsContainer((this.activeSourceIndex === "all"), resultSource, this.resultsElement);
+
+                                    // Keep a list of all groups
+                                    this._titleGroups.push(resultsContainer);
+
+                                    resultsContainer.addChild(_createFlatList(results[resultSource], resultSource));
+                                    noResults = false;
+                                    
+                                }
+                                else {
+                                    noResults = true;
+                                }
                             }
                         }
                     }
                     finished.resolve();
                 }
 
-                if (noResults && !sourceResults) {
+                if ((!this.activeSource.enableSuggestions) && (noResults && !sourceResults)) {
                     this._showNoResults();
                 }
 
 
                 // Set up the onclick event for an individual address.
-                if (!_isNullOrEmpty(this.resultsElement)) {
+                if (!_isNullOrEmpty(this.resultsElement) && !this.activeSource.enableSuggestions) {
                     on(this.resultsElement, ".drilldownResult:click", function () {
                         var loc = query(this).data()[0];
                         _selectResult(loc);

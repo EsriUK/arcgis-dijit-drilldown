@@ -116,6 +116,7 @@ module.exports = function (grunt) {
                     './js/tests/helpers/gmsResults.js',
                     './js/tests/helpers/abxResults.js',
                     './js/tests/helpers/abxDpaResults.js',
+                    './js/tests/helpers/flatListResults.js',
                     './js/tests/lib/sinon/sinon.js'],
                 template: require('grunt-template-jasmine-dojo')
             },
@@ -161,6 +162,20 @@ module.exports = function (grunt) {
                     }
                 }
             },
+            testJSAPI19: {
+                options: {
+                    templateOptions: {
+                        dojoConfig: {
+                            async: true,
+                            has: { 'native-xhr2': false },
+                            paths: {
+                                app: '/../js'
+                            }
+                        },
+                        dojoFile: 'http://js.arcgis.com/3.19/init.js'
+                    }
+                }
+            },
             coverage: {
                 src: ['js/*.js', 'js/Locators/*.js'],
                 options: {
@@ -177,7 +192,7 @@ module.exports = function (grunt) {
                                     app: '/../.grunt/grunt-contrib-jasmine/js'
                                 }
                             },
-                            dojoFile: 'http://js.arcgis.com/3.14/init.js'
+                            dojoFile: 'http://js.arcgis.com/3.19/init.js'
                         }
                     }
                 }
@@ -203,7 +218,7 @@ module.exports = function (grunt) {
                                     app: '/../.grunt/grunt-contrib-jasmine/js'
                                 }
                             },
-                            dojoFile: 'http://js.arcgis.com/3.14/init.js'
+                            dojoFile: 'http://js.arcgis.com/3.19/init.js'
                         }
                     }
                 }
@@ -300,9 +315,9 @@ module.exports = function (grunt) {
     
 
     // Add default task(s)
-    grunt.registerTask('default', ['jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16']);
+    grunt.registerTask('default', ['jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16', 'jasmine:testJSAPI19']);
 
-    grunt.registerTask('test', ['jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16']);
+    grunt.registerTask('test', ['jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16', 'jasmine:testJSAPI19']);
 
     grunt.registerTask('cover', ['jasmine:coverage']);
 
