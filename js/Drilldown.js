@@ -534,13 +534,13 @@ define([
                     finished.resolve();
                 }
 
-                if ((!this.activeSource.enableSuggestions) && (noResults && !sourceResults)) {
+                if ((!this.enableSuggestions) && (noResults && !sourceResults)) {
                     this._showNoResults();
                 }
 
 
                 // Set up the onclick event for an individual address.
-                if (!_isNullOrEmpty(this.resultsElement) && !this.activeSource.enableSuggestions) {
+                if (!_isNullOrEmpty(this.resultsElement) && !this.enableSuggestions) {
                     on(this.resultsElement, ".drilldownResult:click", function () {
                         var loc = query(this).data()[0];
                         _selectResult(loc);
