@@ -275,7 +275,7 @@ define([
             var _this = this, results = new Deferred();
             this.errors = null;
 
-            this.inherited(arguments).then(function (res, a, b) {
+            this.inherited(arguments).then(function (res) {
                 _this._buildPickListUi(res);
                 results.resolve();
             });
@@ -373,19 +373,19 @@ define([
         },
 
         _noResults: function (val) {
-            var errorMsg = "";
+            var errorMsg = "", d;
 
             if (!_isNullOrEmpty(this.errors)) {
                 switch (this.errors["1"].details[0]) {
                     case "NoMatchTooVague":
-                        errorMsg = this.value + ": No match, too vague"
+                        errorMsg = this.value + ": No match, too vague";
                         break;
 
                     default:
                         break;
                 }
                 
-                var d = domConstruct.create("div", {
+                d = domConstruct.create("div", {
                     className: this.css.searchNoResultsBody
                 });
 
@@ -398,7 +398,7 @@ define([
                     textContent: errorMsg
                 }, d);
 
-                domConstruct.place(d, this.noResultsMenuNode, "only")
+                domConstruct.place(d, this.noResultsMenuNode, "only");
             }
             else {
                 this.inherited(arguments);
