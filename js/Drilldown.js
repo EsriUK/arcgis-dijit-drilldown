@@ -241,8 +241,18 @@ define([
 
         flatMatch: false,
 
+        erros: null,
+
         constructor: function (args) {
+            var _this = this;
+
             declare.safeMixin(this, args);
+
+            on(this, 'search-results', function (e) {
+                if(!_isNullOrEmpty(e) && !_isNullOrEmpty(e.errors)) {
+                    _this.errors = e.errors;
+                }
+            });
         },
 
         destroy: function () {
@@ -263,8 +273,9 @@ define([
             //      When we get the results back it will be a picklist so construct the picklist UI.
 
             var _this = this, results = new Deferred();
+            this.errors = null;
 
-            this.inherited(arguments).then(function (res) {
+            this.inherited(arguments).then(function (res, a, b) {
                 _this._buildPickListUi(res);
                 results.resolve();
             });
@@ -278,6 +289,7 @@ define([
 
             this._clearPicklist();
             this.inherited(arguments);
+            this.errors = null;
         },
 
         _hydrateResults: function (a) {
@@ -360,9 +372,43 @@ define([
 
         },
 
+        _noResults: function (val) {
+            var errorMsg = "";
+
+            if (!_isNullOrEmpty(this.errors)) {
+                switch (this.errors["1"].details[0]) {
+                    case "NoMatchTooVague":
+                        errorMsg = this.value + ": No match, too vague"
+                        break;
+
+                    default:
+                        break;
+                }
+                
+                var d = domConstruct.create("div", {
+                    className: this.css.searchNoResultsBody
+                });
+
+                domConstruct.create("div", {
+                    className: this.css.searchNoResultsHeader,
+                    textContent: "No Results"
+                }, d);
+                domConstruct.create("div", {
+                    className: this.css.searchNoResultsText,
+                    textContent: errorMsg
+                }, d);
+
+                domConstruct.place(d, this.noResultsMenuNode, "only")
+            }
+            else {
+                this.inherited(arguments);
+            }            
+        },
+
         _showNoResults: function() {
             // summary:
             //      Function used to call the base no results functions. 
+            
 
             this._noResults(this.value);
             this._showNoResultsMenu();
@@ -532,6 +578,9 @@ define([
                         }
                     }
                     finished.resolve();
+                }
+                else {
+                    noResults = true;
                 }
 
                 if ((!this.enableSuggestions) && (noResults && !sourceResults)) {
