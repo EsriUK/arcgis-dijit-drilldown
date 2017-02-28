@@ -248,7 +248,7 @@ define([
 
             declare.safeMixin(this, args);
 
-            on(this, 'search-results', function (e) {
+            on(this, "search-results", function (e) {
                 if(!_isNullOrEmpty(e) && !_isNullOrEmpty(e.errors)) {
                     _this.errors = e.errors;
                 }
@@ -264,9 +264,8 @@ define([
         },
 
         search: function () {
-            // summary: 
+            // summary:
             //      Override the Search widget search method.
-            //      
             // description:
             //      Call the base search method to get the results, this will use the custom locator, if set up, and build
             //      the picklist from the results.
