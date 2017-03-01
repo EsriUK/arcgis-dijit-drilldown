@@ -24,10 +24,7 @@ if (!Function.prototype.bind) {
             throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
         }
 
-        var aArgs = Array.prototype.slice.call(arguments, 1),
-            fToBind = this,
-            FNOP = function () { },
-            fBound = function () {
+        var aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, FNOP = function () { }, fBound = function () {
                 return fToBind.apply(this instanceof FNOP
                        ? this
                        : oThis,
@@ -52,8 +49,8 @@ define([
     "dijit/_WidgetsInTemplateMixin",
     "esri/dijit/Search",
     "dojo/dom-construct",
-    "dijit/layout/ContentPane", 
-    "dijit/TitlePane", 
+    "dijit/layout/ContentPane",
+    "dijit/TitlePane",
     "dojox/widget/TitleGroup",
     "dojo/on",
     "dojo/Deferred",
@@ -63,10 +60,10 @@ define([
     "dojo/NodeList-data"
 ], function (declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search, domConstruct, ContentPane, TitlePane, TitleGroup, on, Deferred, query, domStyle, keys) {
     var _isNullOrEmpty = function (/*Anything*/ obj) {
-        // summary:
-        //		Checks to see if the passed in thing is undefined, null or empty.
+        // Summary:
+        //      Checks to see if the passed in thing is undefined, null or empty.
 
-        return (obj === undefined || obj === null || obj === '');
+        return (obj === undefined || obj === null || obj === "");
     },
     _createNodeWithData = function (address, addressData, sourceIndex) {
         // summary:
@@ -88,8 +85,7 @@ define([
         // summary:
         //      Creates the lowest level in the picklist. Creates the address results with the attached data.
 
-        var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(),
-            subPremiseList = premiseList.Addresses;
+        var k = 0, kL = 0, subPremiseTitleGroup = new TitleGroup(), subPremiseList = premiseList.Addresses;
 
         for (k = 0, kL = subPremiseList.length; k < kL; k += 1) {
             subPremiseTitleGroup.addChild(new ContentPane({
@@ -158,12 +154,10 @@ define([
     },
     _createFlatList = function (addressList, sourceIndex) {
         // summary:
-        //      Creates a flat list of results for display when not using a locator that 
+        //      Creates a flat list of results for display when not using a locator that
         //      supports the drilldown functionality.
 
         var j = 0, jL = 0, premiseTitleGroup = new TitleGroup(), subPremiseTitleGroup = new TitleGroup();
-
-        
 
         for (j = 0, jL = addressList.length; j < jL; j++) {
             subPremiseTitleGroup.addChild(new ContentPane({
@@ -212,13 +206,12 @@ define([
     return declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, Search], {
         // summary:
         //      A hierarchical address search widget that extends the functionality of the Esri Search widget.
-        //  
-        // description: 
-        //      Search for and display address details in a hierarchical list. The Drilldown widget works with custom locators to 
+        //
+        // description:
+        //      Search for and display address details in a hierarchical list. The Drilldown widget works with custom locators to
         //      create a picklist from the address results and output this as an interactive list.
         //      Custom locators have their own class that can be used when creating the sources.
 
-        
         baseClass: "drilldown",
         widgetsInTemplate: true,
 
@@ -258,7 +251,7 @@ define([
         destroy: function () {
             // connections/subscriptions will be cleaned up during the destroy() lifecycle phase
             // call the superclass method of the same name.
-            
+
             this._clearPicklist();
             this.inherited(arguments);
         },
@@ -348,14 +341,13 @@ define([
                 }
                 return this.inherited(arguments);
             }
-                       
             return this.inherited(arguments);
         },
 
         _clearPicklist: function() {
             // summary:
-            //      Clear the picklist results if we have any. Go throught the list of 
-            //      title groups and destroy them. 
+            //      Clear the picklist results if we have any. Go throught the list of
+            //      title groups and destroy them.
 
             var m, mL;
             if (this._titleGroups.length > 0) {
@@ -383,7 +375,7 @@ define([
                     default:
                         break;
                 }
-                
+
                 d = domConstruct.create("div", {
                     className: this.css.searchNoResultsBody
                 });
@@ -401,13 +393,12 @@ define([
             }
             else {
                 this.inherited(arguments);
-            }            
+            }
         },
 
         _showNoResults: function() {
             // summary:
-            //      Function used to call the base no results functions. 
-            
+            //      Function used to call the base no results functions.
 
             this._noResults(this.value);
             this._showNoResultsMenu();
@@ -507,7 +498,7 @@ define([
                 domConstruct.destroy(this.resultsElement);
             }
             this.resultsElement = domConstruct.create("div", { "class": "arcgisSearch searchGroup picklistResults" }, this.domNode, "last");
-            
+
             // Check to see if we only have a single results
             if ((_this.activeSourceIndex !== this._allIndex) && this._isSingleResult(results)) {
                 // Single result may not be first source so use active source index
@@ -526,7 +517,7 @@ define([
                     for (resultSource in results) {
                         if (results.hasOwnProperty(resultSource)) {
                             // Check we have some results
-                           
+
                             if (!_isNullOrEmpty(results[resultSource]) && !_isNullOrEmpty(results[resultSource].PickListItems)) {
                                 // Get the picklist
                                 pickListItems = results[resultSource].PickListItems;
@@ -553,7 +544,6 @@ define([
                                 }
                             }
                             else {
-                                
                                 if (this.flatMatch && !_isNullOrEmpty(results[resultSource]) && results[resultSource].length > 0) {
                                     // We have some results but not a picklist, most likely not using the drilldown functionality.
                                     // Just ouput a flat list
@@ -568,7 +558,9 @@ define([
 
                                     resultsContainer.addChild(_createFlatList(results[resultSource], resultSource));
                                     noResults = false;
-                                    
+                                }
+                                else if (results[resultSource].length > 0 && (!_isNullOrEmpty(this.activeSource.locator) && !_isNullOrEmpty(this.activeSource.locator.declaredClass) && this.activeSource.locator.declaredClass.toLowerCase() === "esri.tasks.locator")) {
+                                    noResults = false;
                                 }
                                 else {
                                     noResults = true;
