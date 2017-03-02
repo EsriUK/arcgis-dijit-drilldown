@@ -323,7 +323,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['clean:pre', 'bom:outputfile', 'uglify', 'cssmin', 'concat', 'clean:post']);
 
-    grunt.registerTask('travis', ['clean:pre', 'uglify', 'cssmin', 'concat', 'clean:post', 'jasmine:coverageci']);
+    grunt.registerTask('travis', ['clean:pre', 'uglify', 'cssmin', 'concat', 'clean:post', 'jasmine:testJSAPI14', 'jasmine:testJSAPI15', 'jasmine:testJSAPI16', 'jasmine:testJSAPI19', 'jasmine:coverageci']);
 };
 
 

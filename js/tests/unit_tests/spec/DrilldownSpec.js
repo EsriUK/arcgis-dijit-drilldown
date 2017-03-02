@@ -29,29 +29,12 @@ describe("A set of tests for the Drilldown widget", function () {
 
 
     var setupSinon = function () {
-        server = sinon.fakeServer.create();
-        server.autoRespond = true;
-        server.autoRespondAfter = 257;
-        server.respondImmediately = true;
 
-        server.respondWith("http://testserver/LocatorHub/arcgis/rest/info?f=json", [
-            200,
-            {
-                "Content-Type": "application/json"
-            },
-            JSON.stringify("")
-        ]);
 
-        server.respondWith("GET", "http://testserver/LocatorHub/arcgis/rest/services/FAKELOCATOR/ADDRESS/GeocodeServer/findAddressCandidates?LH_ADDRESS=EH8%208AS&f=json&outSR=%7B%22wkid%22%3A4326%7D&outFields=*&maxLocations=250&callback=dojo.io.script.jsonp_dojoIoScript1._jsonpCallback", [
-            200,
-            {
-                "Content-Type": "application/json"
-            },
-            JSON.stringify(postcodeResults)
-        ]);
     };
 
     beforeEach(function (done) {
+        setupSinon();
         loadWidget(done);
     });
 
@@ -64,6 +47,7 @@ describe("A set of tests for the Drilldown widget", function () {
         if (server) {
             server.restore();
         }
+
     });
 
     it("should not be null", function (done) {
@@ -88,7 +72,7 @@ describe("A set of tests for the Drilldown widget", function () {
 
     it("should search for an address and return a picklist", function (done) {
         //setupSinon();
-        var searchStub = sinon.stub(widget, "search", function () {
+        var searchStub = sinon.stub(widget, "search").callsFake(function () {
             var res = this._hydrateResults(postcodeResults);
             this._buildPickListUi([res]);
         });
@@ -101,7 +85,7 @@ describe("A set of tests for the Drilldown widget", function () {
     it("should clear the results of a search", function (done) {
         //setupSinon();
 
-        var searchStub = sinon.stub(widget, "search", function () {
+        var searchStub = sinon.stub(widget, "search").callsFake(function () {
             var res = this._hydrateResults(postcodeResults);
             this._buildPickListUi([res]);
         });
@@ -123,7 +107,7 @@ describe("A set of tests for the Drilldown widget", function () {
         expect(widget._titleGroups.length).toEqual(0);
         widget.clear();
 
-        var searchStub = sinon.stub(widget, "search", function () {
+        var searchStub = sinon.stub(widget, "search").callsFake(function () {
             var res = { PickListItems: []};
             this._buildPickListUi([res]);
         });
@@ -133,7 +117,7 @@ describe("A set of tests for the Drilldown widget", function () {
     });
 
     it("should handle a single result", function (done) {
-        var searchStub = sinon.stub(widget, "search", function () {
+        var searchStub = sinon.stub(widget, "search").callsFake(function () {
             var res = this._hydrateResults(singleResult);
             this._buildPickListUi([res]);
         });
@@ -147,7 +131,7 @@ describe("A set of tests for the Drilldown widget", function () {
     });
 
     it("should handle a single level with multiple result", function (done) {
-        var searchStub = sinon.stub(widget, "search", function () {
+        var searchStub = sinon.stub(widget, "search").callsFake(function () {
             var res = this._hydrateResults(singleLevelMulti);
             this._buildPickListUi([res]);
         });
@@ -162,7 +146,8 @@ describe("A set of tests for the Drilldown widget", function () {
 
     it("should handle a LocatorHub error message", function (done) {
         require(["dojo/Deferred"], function (Deferred) {
-            var searchStub = sinon.stub(widget, "search", function () {
+            widget.activeSourceIndex = 1;
+            var searchStub = sinon.stub(widget, "search").callsFake(function () {
                 var def = new Deferred();
 
                 this.emit("search-results", { "activeSourceIndex": 1, "errors": { 1: { "code": 400, "message": "Unable to complete operation", "details": ["NoMatchTooVague"] } } });
@@ -176,6 +161,54 @@ describe("A set of tests for the Drilldown widget", function () {
             expect(widget.errors).not.toEqual(null);
 
             done();
+        });
+    });
+
+    it("should handle searching all sources", function (done) {
+        if (widget) {
+            widget.clear();
+            widget.destroy();
+            widget = null;
+        }
+      
+        require(["app/Locators/LLPGLocator", "esri/SpatialReference", "dojo/Deferred", "app/Locators/PickList", "app/Locators/PickListItem"], function (LLPGLocator, SpatialReference, Deferred, PickList, PickListItem) {
+            var llpgLocator = new LLPGLocator("http://testserver/LocatorHub/arcgis/rest/services/FAKELOCATOR/ADDRESS/GeocodeServer");
+            llpgLocator.setOutSpatialReference(new SpatialReference({ wkid: 27700 }));
+
+            drilldownProps.sources.push({
+                locator: llpgLocator,
+                singleLineFieldName: "LH_ADDRESS",
+                outFields: ["*"],
+                name: "LH 5.3 LLPG 2",
+                maxResults: 250,
+                showCounts: true,
+                flatMatch: false
+            });
+
+            loadWidget(function () {
+                var searchStub = sinon.stub(widget, "_searchDeferred").callsFake(function (a) {
+                    var p = new PickList();
+                    p.addItem(new PickListItem({
+                        Description: "1 High Street",
+                        SortDescription: "1 High Street",
+                        Addresses: []
+                    }));
+                    var def = new Deferred();
+                    var res = this._formatResults([p], this.activeSourceIndex, this.value);
+
+                    return def.resolve([res]);
+                });
+                widget.activeSourceIndex = "all";
+                widget.activeSource = null;
+                widget.clear();
+                widget.search("High street");
+
+                expect(widget._titleGroups.length).toEqual(0);
+                widget.clear();
+
+                done();
+
+            });
         });
     });
 });
