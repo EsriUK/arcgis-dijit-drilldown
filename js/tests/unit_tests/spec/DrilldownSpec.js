@@ -159,4 +159,23 @@ describe("A set of tests for the Drilldown widget", function () {
 
         done();
     });
+
+    it("should handle a LocatorHub error message", function (done) {
+        require(["dojo/Deferred"], function (Deferred) {
+            var searchStub = sinon.stub(widget, "search", function () {
+                var def = new Deferred();
+
+                this.emit("search-results", { "activeSourceIndex": 1, "errors": { 1: { "code": 400, "message": "Unable to complete operation", "details": ["NoMatchTooVague"] } } });
+                return def.resolve([]);
+            });
+
+
+
+            widget.search("1 Harrison Road")
+
+            expect(widget.errors).not.toEqual(null);
+
+            done();
+        });
+    });
 });

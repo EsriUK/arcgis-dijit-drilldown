@@ -366,8 +366,8 @@ define([
         _noResults: function (val) {
             var errorMsg = "", d;
 
-            if (!_isNullOrEmpty(this.errors)) {
-                switch (this.errors["1"].details[0]) {
+            if (!_isNullOrEmpty(this.errors) && !_isNullOrEmpty(this.errors[this.activeSourceIndex])) {
+                switch (this.errors[this.activeSourceIndex].details[0]) {
                     case "NoMatchTooVague":
                         errorMsg = this.value + ": No match, too vague";
                         break;
