@@ -1,4 +1,5 @@
 var drilldownProps = {
+    enableSuggestions: false,
     sources: [{
         locator: null,
         singleLineFieldName: "LH_ADDRESS",
@@ -144,25 +145,7 @@ describe("A set of tests for the Drilldown widget", function () {
         done();
     });
 
-    it("should handle a LocatorHub error message", function (done) {
-        require(["dojo/Deferred"], function (Deferred) {
-            widget.activeSourceIndex = 1;
-            var searchStub = sinon.stub(widget, "search").callsFake(function () {
-                var def = new Deferred();
-
-                this.emit("search-results", { "activeSourceIndex": 1, "errors": { 1: { "code": 400, "message": "Unable to complete operation", "details": ["NoMatchTooVague"] } } });
-                return def.resolve([]);
-            });
-
-
-
-            widget.search("1 Harrison Road")
-
-            expect(widget.errors).not.toEqual(null);
-
-            done();
-        });
-    });
+  
 
     it("should handle searching all sources", function (done) {
         if (widget) {
@@ -209,6 +192,25 @@ describe("A set of tests for the Drilldown widget", function () {
                 done();
 
             });
+        });
+    });
+
+    it("should handle a LocatorHub error message", function (done) {
+        require(["dojo/Deferred"], function (Deferred) {
+            widget.activeSourceIndex = 1;
+            var searchStub = sinon.stub(widget, "search").callsFake(function () {
+                var def = new Deferred();
+
+                this.emit("search-results", { "activeSourceIndex": 1, "errors": { 1: { "code": 400, "message": "Unable to complete operation", "details": ["NoMatchTooVague"] } } });
+                this._buildPickListUi();
+          
+            });
+
+            widget.search("1 Harrison Road")
+
+            expect(widget.errors).not.toEqual(null);
+
+            done();
         });
     });
 });
