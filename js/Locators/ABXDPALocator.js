@@ -43,7 +43,7 @@ function (declare, _LocatorBase, PickListItem) {
 
         // streetGrouping: Array
         //              An array of the street level field names to use for grouping.
-        streetGrouping: ["DPA_DEP_THOROUGHFARE", "DPA_THOROUGHFARE", "DPA_DEP_LOCALITY", "DPA_LOCALITY", "DPA_POST_TOWN"],
+        streetGrouping: ["DPA_DEP_THOROUGHFARE", "DPA_THOROUGHFARE", "DPA_DBL_DEP_LOCALITY", "DPA_DEP_LOCALITY", "DPA_POST_TOWN"],
 
         // premiseGrouping: Array
         //              An array of the premise level field names to use for grouping.
@@ -54,7 +54,7 @@ function (declare, _LocatorBase, PickListItem) {
         //              constructing the street description.
         streetFields: {
             STREET_DESCRIPTOR: "DPA_THOROUGHFARE",
-            LOCALITY_NAME: "DPA_LOCALITY",
+            LOCALITY_NAME: "DPA_DBL_DEP_LOCALITY",
             TOWN_NAME: "DPA_POST_TOWN",
             ADMINISTRATIVE_AREA: "DPA_DEP_LOCALITY"
         },
