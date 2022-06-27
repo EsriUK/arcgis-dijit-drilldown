@@ -2,6 +2,9 @@ arcgis-dijit-drilldown
 ====================
 [![Build Status](https://travis-ci.org/EsriUK/arcgis-dijit-drilldown.svg?branch=master)](https://travis-ci.org/EsriUK/arcgis-dijit-drilldown) [![Coverage Status](https://coveralls.io/repos/EsriUK/arcgis-dijit-drilldown/badge.svg?branch=master)](https://coveralls.io/r/EsriUK/arcgis-dijit-drilldown?branch=master) [![Code Climate](https://codeclimate.com/github/EsriUK/arcgis-dijit-drilldown/badges/gpa.svg)](https://codeclimate.com/github/EsriUK/arcgis-dijit-drilldown)
 
+## Deprecation Notice
+Following the [announcement](https://communityhub.esriuk.com/technicalsupport/2021/4/29/locatorhub-is-retiring) that LocatorHub will be retired in December 2023, this repo will archived at this time. 
+
 ## Features
 The drilldown widget provides hierarchical address search results allowing the user to drilldown into the list of results and find a specific location.
 
